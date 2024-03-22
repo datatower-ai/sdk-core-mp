@@ -1,5 +1,6 @@
 import { Component, EditBox, _decorator } from "cc";
 import * as DataTower from "../libs/index.mjs";
+import { LogLevel } from "../libs/index.mjs";
 
 const { ccclass, property } = _decorator;
 
@@ -24,7 +25,7 @@ export class init extends Component {
           config.appId = "dt_beb231f90a5a20ba"
           config.serverUrl = "https://test.roiquery.com"
           config.isDebug = true
-          config.logLevel = 2
+          config.logLevel = LogLevel.DEBUG
 
           DataTower.init(config);
           // console.log("submit init：", event._string);
