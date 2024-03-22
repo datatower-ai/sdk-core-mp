@@ -81,6 +81,8 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 
 + (void)initSDK:(NSString *)config {
     
+    return;
+    
     NSDictionary *configDict = [config jsonDictionary];
     NSString *appId = [configDict[@"appId"] stringValue];
     NSString *serverUrl = [configDict[@"serverUrl"] stringValue];
@@ -98,21 +100,14 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     }
 }
 
-NSString* getDataTowerId() {
++ (NSString *)getDataTowerId {
     NSString *result = [DTAnalytics getDataTowerId];
     return result;
 }
 
-void trackEvent(NSString *eventName, NSString *jsonStr) {
-    if(jsonStr != NULL)
-    {
-        NSDictionary *dictParam = [jsonStr jsonDictionary];
-        [DTAnalytics trackEventName:eventName properties:dictParam];
-    }
-    else
-    {
-        [DTAnalytics trackEventName:eventName];
-    }
++ (void)trackEvent:(NSString *)eventName properties:(NSString *)jsonStr {
+    NSDictionary *dictParam = [jsonStr jsonDictionary];
+    [DTAnalytics trackEventName:eventName properties:dictParam];
 }
 
 @end
