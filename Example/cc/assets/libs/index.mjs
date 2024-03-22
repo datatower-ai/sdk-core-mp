@@ -1,5 +1,428 @@
-var x=Object.defineProperty;var l=(t,n)=>{for(var d in n)x(t,d,{get:n[d],enumerable:!0});};var u={};l(u,{clearCommonProperties:()=>E,clearStaticCommonProperties:()=>W,enableTrack:()=>A,getDataTowerId:()=>R,getDistinctId:()=>U,init:()=>S,setAccountId:()=>T,setAdjustId:()=>K,setAppsFlyerId:()=>F,setCommonProperties:()=>q,setDistinctId:()=>w,setFirebaseAppInstanceId:()=>k,setKochavaId:()=>O,setStaticCommonProperties:()=>N,track:()=>b,userAdd:()=>j,userAppend:()=>P,userDel:()=>h,userSet:()=>D,userSetOnce:()=>y,userUniqAppend:()=>M,userUnset:()=>C});var I={string:"Ljava/lang/String;",number:"Ljava/lang/Double;",boolean:"Ljava/lang/Boolean;",map:"Ljava/util/Map;",array:"Ljava/util/List;"};function s(t){return `(${t.map(n=>I[n]).join("")})V`}function a(...t){console.log("[DataTower SDK]:",...t);}var r=new Proxy({},{get(t,n){return (...d)=>console.log(`${n}(${d.join(", ")})`)}});function S(t){if(t.isDebug)return a("Web","init",t);r.init(t);}function b(t,n){r.track(t,n);}function A(){r.enableTrack();}function D(t){r.userSet(t);}function y(t){r.userSetOnce(t);}function j(t){r.userAdd(t);}function C(...t){r.userUnset(...t);}function h(){r.userDel();}function P(...t){r.userAppend(...t);}function M(...t){r.userUniqAppend(...t);}function R(t){if(!t)return Promise.resolve("data tower id");t("data tower id");}function T(t){r.setAccountId(t);}function w(t){r.setDistinctId(t);}function U(){return r.getDistinctId()}function k(t){r.setFirebaseAppInstanceId(t);}function F(t){r.setAppsFlyerId(t);}function O(t){r.setKochavaId(t);}function K(t){r.setAdjustId(t);}function q(t){r.setCommonProperties(t);}function E(){r.clearCommonProperties();}function N(t){r.setStaticCommonProperties(t);}function W(){r.clearStaticCommonProperties();}var f={};l(f,{clearCommonProperties:()=>nt,clearStaticCommonProperties:()=>ct,enableTrack:()=>V,getDataTowerId:()=>m,getDistinctId:()=>L,init:()=>B,setAccountId:()=>Z,setAdjustId:()=>it,setAppsFlyerId:()=>et,setCommonProperties:()=>rt,setDistinctId:()=>_,setFirebaseAppInstanceId:()=>tt,setKochavaId:()=>ot,setStaticCommonProperties:()=>st,track:()=>$,userAdd:()=>H,userAppend:()=>X,userDel:()=>Q,userSet:()=>G,userSetOnce:()=>z,userUniqAppend:()=>Y,userUnset:()=>J});var p={context:{},appId:"",serverUrl:"",channel:"",isDebug:!1,logLevel:1,manualEnableUpload:!1,commonProperties:{}},e="ai/datatower/analytics/DT",o="DT";function B(t){if(t=Object.assign({},p,t),t.isDebug)return a("Android","init",t);jsb.reflection.callStaticMethod(e,"initSDK",s(["map"]),t);}function $(t,n){jsb.reflection.callStaticMethod(e,"track",s(["string","map"]),t,n);}function V(){jsb.reflection.callStaticMethod(e,"enableTrack");}function G(t){jsb.reflection.callStaticMethod(e,"userSet",s(["map"]),t);}function z(t){jsb.reflection.callStaticMethod(e,"userSetOnce",s(["map"]),t);}function H(t){jsb.reflection.callStaticMethod(e,"userAdd",s(["map"]),t);}function J(...t){jsb.reflection.callStaticMethod(e,"userUnset",s(["array"]),t);}function Q(){jsb.reflection.callStaticMethod(e,"userDel");}function X(...t){jsb.reflection.callStaticMethod(e,"userAppend",s(["array"]),t);}function Y(...t){jsb.reflection.callStaticMethod(e,"userUniqAppend",s(["array"]),t);}function m(t){if(!t)return new Promise(n=>m(n));jsb.reflection.callStaticMethod(e,"getDataTowerId",s(["string"]),t);}function Z(t){jsb.reflection.callStaticMethod(e,"setAccountId",s(["string"]),t);}function _(t){jsb.reflection.callStaticMethod(e,"setDistinctId",s(["string"]),t);}function L(){jsb.reflection.callStaticMethod(e,"getDistinctId");}function tt(t){jsb.reflection.callStaticMethod(e,"setFirebaseAppInstanceId",s(["string"]),t);}function et(t){jsb.reflection.callStaticMethod(e,"setAppsFlyerId",s(["string"]),t);}function ot(t){jsb.reflection.callStaticMethod(e,"setKochavaId",s(["string"]),t);}function it(t){jsb.reflection.callStaticMethod(e,"setAdjustId",s(["string"]),t);}function rt(t){jsb.reflection.callStaticMethod(e,"setCommonProperties",s(["map"]),t);}function nt(){jsb.reflection.callStaticMethod(e,"clearCommonProperties");}function st(t){jsb.reflection.callStaticMethod(e,"setStaticCommonProperties",s(["map"]),t);}function ct(){jsb.reflection.callStaticMethod(e,"clearStaticCommonProperties");}var g={};l(g,{clearCommonProperties:()=>ht,clearStaticCommonProperties:()=>Mt,enableTrack:()=>pt,getDataTowerId:()=>v,getDistinctId:()=>bt,init:()=>at,setAccountId:()=>It,setAdjustId:()=>jt,setAppsFlyerId:()=>Dt,setCommonProperties:()=>Ct,setDistinctId:()=>St,setFirebaseAppInstanceId:()=>At,setKochavaId:()=>yt,setStaticCommonProperties:()=>Pt,track:()=>dt,userAdd:()=>ft,userAppend:()=>vt,userDel:()=>mt,userSet:()=>lt,userSetOnce:()=>ut,userUniqAppend:()=>xt,userUnset:()=>gt});function at(t){if(t=Object.assign({},p,t),t.isDebug)return a("IOS","init",t);jsb.reflection.callStaticMethod(o,"initSDK:",t);}function dt(t,n){jsb.reflection.callStaticMethod(o,"track:properties:",t,n);}function pt(){jsb.reflection.callStaticMethod(o,"enableTrack");}function lt(t){jsb.reflection.callStaticMethod(o,"userSet:",t);}function ut(t){jsb.reflection.callStaticMethod(o,"userSetOnce:",t);}function ft(t){jsb.reflection.callStaticMethod(o,"userAdd:",t);}function gt(...t){jsb.reflection.callStaticMethod(o,"userUnset:",t);}function mt(){jsb.reflection.callStaticMethod(o,"userDel");}function vt(...t){jsb.reflection.callStaticMethod(o,"userAppend:",t);}function xt(...t){jsb.reflection.callStaticMethod(o,"userUniqAppend:",t);}function v(t){if(!t)return new Promise(n=>v(n));jsb.reflection.callStaticMethod(o,"getDataTowerId:",t);}function It(t){jsb.reflection.callStaticMethod(o,"setAccountId:",t);}function St(t){jsb.reflection.callStaticMethod(o,"setDistinctId:",t);}function bt(){jsb.reflection.callStaticMethod(o,"getDistinctId");}function At(t){jsb.reflection.callStaticMethod(o,"setFirebaseAppInstanceId:",t);}function Dt(t){jsb.reflection.callStaticMethod(o,"setAppsFlyerId:",t);}function yt(t){jsb.reflection.callStaticMethod(o,"setKochavaId:",t);}function jt(t){jsb.reflection.callStaticMethod(o,"setAdjustId:",t);}function Ct(t){jsb.reflection.callStaticMethod(o,"setCommonProperties:",t);}function ht(){jsb.reflection.callStaticMethod(o,"clearCommonProperties");}function Pt(t){jsb.reflection.callStaticMethod(o,"setStaticCommonProperties:",t);}function Mt(){jsb.reflection.callStaticMethod(o,"clearStaticCommonProperties");}var Rt=(c=>(c[c.VERBOSE=1]="VERBOSE",c[c.ASSERT=2]="ASSERT",c[c.DEBUG=3]="DEBUG",c[c.INFO=4]="INFO",c[c.WARN=5]="WARN",c[c.ERROR=6]="ERROR",c))(Rt||{});var Tt=[[cc.sys.isNativeAndroid,f],[cc.sys.isNativeIOS,g],[!0,u]],i=Tt.find(t=>t[0])[1];function Wt(t){i.init(t);}function Bt(t,n){i.track(t,n);}function $t(){i.enableTrack();}function Vt(t){i.userSet(t);}function Gt(t){i.userSetOnce(t);}function zt(t){i.userAdd(t);}function Ht(...t){i.userUnset(...t);}function Jt(){i.userDel();}function Qt(...t){i.userAppend(...t);}function Xt(...t){i.userUniqAppend(...t);}function Yt(t){return i.getDataTowerId(t)}function Zt(t){i.setAccountId(t);}function _t(t){i.setDistinctId(t);}function Lt(){return i.getDistinctId()}function te(t){i.setFirebaseAppInstanceId(t);}function ee(t){i.setAppsFlyerId(t);}function oe(t){i.setKochavaId(t);}function ie(t){i.setAdjustId(t);}function re(t){i.setCommonProperties(t);}function ne(){i.clearCommonProperties();}function se(t){i.setStaticCommonProperties(t);}function ce(){i.clearStaticCommonProperties();}
+var __defProp = Object.defineProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 
-export { Rt as LogLevel, ne as clearCommonProperties, ce as clearStaticCommonProperties, $t as enableTrack, Yt as getDataTowerId, Lt as getDistinctId, Wt as init, Zt as setAccountId, ie as setAdjustId, ee as setAppsFlyerId, re as setCommonProperties, _t as setDistinctId, te as setFirebaseAppInstanceId, oe as setKochavaId, se as setStaticCommonProperties, Bt as track, zt as userAdd, Qt as userAppend, Jt as userDel, Vt as userSet, Gt as userSetOnce, Xt as userUniqAppend, Ht as userUnset };
+// src/Web/index.ts
+var Web_exports = {};
+__export(Web_exports, {
+  clearCommonProperties: () => clearCommonProperties,
+  clearStaticCommonProperties: () => clearStaticCommonProperties,
+  enableTrack: () => enableTrack,
+  getDataTowerId: () => getDataTowerId,
+  getDistinctId: () => getDistinctId,
+  init: () => init,
+  setAccountId: () => setAccountId,
+  setAdjustId: () => setAdjustId,
+  setAppsFlyerId: () => setAppsFlyerId,
+  setCommonProperties: () => setCommonProperties,
+  setDistinctId: () => setDistinctId,
+  setFirebaseAppInstanceId: () => setFirebaseAppInstanceId,
+  setKochavaId: () => setKochavaId,
+  setStaticCommonProperties: () => setStaticCommonProperties,
+  track: () => track,
+  userAdd: () => userAdd,
+  userAppend: () => userAppend,
+  userDel: () => userDel,
+  userSet: () => userSet,
+  userSetOnce: () => userSetOnce,
+  userUniqAppend: () => userUniqAppend,
+  userUnset: () => userUnset
+});
+
+// src/utils.ts
+var typeMap = {
+  string: "Ljava/lang/String;",
+  number: "Ljava/lang/Double;",
+  boolean: "Ljava/lang/Boolean;",
+  map: "Ljava/util/Map;",
+  array: "Ljava/util/List;"
+};
+function generateSignature(types) {
+  return `(${types.map((type) => typeMap[type]).join("")})V`;
+}
+function logger(...args) {
+  console.log("[DataTower SDK]:", ...args);
+}
+
+// src/Web/index.ts
+var CurrentPlatform = new Proxy(
+  {},
+  {
+    get(target, key) {
+      return (...args) => console.log(`${key}(${args.join(", ")})`);
+    }
+  }
+);
+function init(config) {
+  if (config.isDebug)
+    return logger("Web", "init", config);
+  CurrentPlatform.init(config);
+}
+function track(eventName, properties) {
+  CurrentPlatform.track(eventName, properties);
+}
+function enableTrack() {
+  CurrentPlatform.enableTrack();
+}
+function userSet(properties) {
+  CurrentPlatform.userSet(properties);
+}
+function userSetOnce(properties) {
+  CurrentPlatform.userSetOnce(properties);
+}
+function userAdd(properties) {
+  CurrentPlatform.userAdd(properties);
+}
+function userUnset(...properties) {
+  CurrentPlatform.userUnset(...properties);
+}
+function userDel() {
+  CurrentPlatform.userDel();
+}
+function userAppend(...properties) {
+  CurrentPlatform.userAppend(...properties);
+}
+function userUniqAppend(...properties) {
+  CurrentPlatform.userUniqAppend(...properties);
+}
+function getDataTowerId(callback) {
+  if (!callback)
+    return Promise.resolve("data tower id");
+  callback("data tower id");
+}
+function setAccountId(id) {
+  CurrentPlatform.setAccountId(id);
+}
+function setDistinctId(id) {
+  CurrentPlatform.setDistinctId(id);
+}
+function getDistinctId() {
+  return CurrentPlatform.getDistinctId();
+}
+function setFirebaseAppInstanceId(id) {
+  CurrentPlatform.setFirebaseAppInstanceId(id);
+}
+function setAppsFlyerId(id) {
+  CurrentPlatform.setAppsFlyerId(id);
+}
+function setKochavaId(id) {
+  CurrentPlatform.setKochavaId(id);
+}
+function setAdjustId(id) {
+  CurrentPlatform.setAdjustId(id);
+}
+function setCommonProperties(properties) {
+  CurrentPlatform.setCommonProperties(properties);
+}
+function clearCommonProperties() {
+  CurrentPlatform.clearCommonProperties();
+}
+function setStaticCommonProperties(properties) {
+  CurrentPlatform.setStaticCommonProperties(properties);
+}
+function clearStaticCommonProperties() {
+  CurrentPlatform.clearStaticCommonProperties();
+}
+
+// src/CocosCreator/Android.ts
+var Android_exports = {};
+__export(Android_exports, {
+  clearCommonProperties: () => clearCommonProperties2,
+  clearStaticCommonProperties: () => clearStaticCommonProperties2,
+  enableTrack: () => enableTrack2,
+  getDataTowerId: () => getDataTowerId2,
+  getDistinctId: () => getDistinctId2,
+  init: () => init2,
+  setAccountId: () => setAccountId2,
+  setAdjustId: () => setAdjustId2,
+  setAppsFlyerId: () => setAppsFlyerId2,
+  setCommonProperties: () => setCommonProperties2,
+  setDistinctId: () => setDistinctId2,
+  setFirebaseAppInstanceId: () => setFirebaseAppInstanceId2,
+  setKochavaId: () => setKochavaId2,
+  setStaticCommonProperties: () => setStaticCommonProperties2,
+  track: () => track2,
+  userAdd: () => userAdd2,
+  userAppend: () => userAppend2,
+  userDel: () => userDel2,
+  userSet: () => userSet2,
+  userSetOnce: () => userSetOnce2,
+  userUniqAppend: () => userUniqAppend2,
+  userUnset: () => userUnset2
+});
+
+// src/constant.ts
+var DefaultConfig = {
+  context: {},
+  appId: "",
+  serverUrl: "",
+  channel: "",
+  isDebug: false,
+  logLevel: 1,
+  manualEnableUpload: false,
+  commonProperties: {}
+};
+var AndroidClass = "ai/datatower/analytics/DT";
+var IOSClass = "DT";
+
+// src/CocosCreator/Android.ts
+function init2(config) {
+  config = Object.assign({}, DefaultConfig, config);
+  if (config.isDebug)
+    return logger("Android", "init", config);
+  jsb.reflection.callStaticMethod(AndroidClass, "initSDK", generateSignature(["map"]), config);
+}
+function track2(eventName, properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "track", generateSignature(["string", "map"]), eventName, properties);
+}
+function enableTrack2() {
+  jsb.reflection.callStaticMethod(AndroidClass, "enableTrack");
+}
+function userSet2(properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "userSet", generateSignature(["map"]), properties);
+}
+function userSetOnce2(properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "userSetOnce", generateSignature(["map"]), properties);
+}
+function userAdd2(properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "userAdd", generateSignature(["map"]), properties);
+}
+function userUnset2(...properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "userUnset", generateSignature(["array"]), properties);
+}
+function userDel2() {
+  jsb.reflection.callStaticMethod(AndroidClass, "userDel");
+}
+function userAppend2(...properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "userAppend", generateSignature(["array"]), properties);
+}
+function userUniqAppend2(...properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "userUniqAppend", generateSignature(["array"]), properties);
+}
+function getDataTowerId2(callback) {
+  if (!callback)
+    return new Promise((resolve) => getDataTowerId2(resolve));
+  jsb.reflection.callStaticMethod(AndroidClass, "getDataTowerId", generateSignature(["string"]), callback);
+}
+function setAccountId2(id) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setAccountId", generateSignature(["string"]), id);
+}
+function setDistinctId2(id) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setDistinctId", generateSignature(["string"]), id);
+}
+function getDistinctId2() {
+  jsb.reflection.callStaticMethod(AndroidClass, "getDistinctId");
+}
+function setFirebaseAppInstanceId2(id) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setFirebaseAppInstanceId", generateSignature(["string"]), id);
+}
+function setAppsFlyerId2(id) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setAppsFlyerId", generateSignature(["string"]), id);
+}
+function setKochavaId2(id) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setKochavaId", generateSignature(["string"]), id);
+}
+function setAdjustId2(id) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setAdjustId", generateSignature(["string"]), id);
+}
+function setCommonProperties2(properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setCommonProperties", generateSignature(["map"]), properties);
+}
+function clearCommonProperties2() {
+  jsb.reflection.callStaticMethod(AndroidClass, "clearCommonProperties");
+}
+function setStaticCommonProperties2(properties) {
+  jsb.reflection.callStaticMethod(AndroidClass, "setStaticCommonProperties", generateSignature(["map"]), properties);
+}
+function clearStaticCommonProperties2() {
+  jsb.reflection.callStaticMethod(AndroidClass, "clearStaticCommonProperties");
+}
+
+// src/CocosCreator/IOS.ts
+var IOS_exports = {};
+__export(IOS_exports, {
+  clearCommonProperties: () => clearCommonProperties3,
+  clearStaticCommonProperties: () => clearStaticCommonProperties3,
+  enableTrack: () => enableTrack3,
+  getDataTowerId: () => getDataTowerId3,
+  getDistinctId: () => getDistinctId3,
+  init: () => init3,
+  setAccountId: () => setAccountId3,
+  setAdjustId: () => setAdjustId3,
+  setAppsFlyerId: () => setAppsFlyerId3,
+  setCommonProperties: () => setCommonProperties3,
+  setDistinctId: () => setDistinctId3,
+  setFirebaseAppInstanceId: () => setFirebaseAppInstanceId3,
+  setKochavaId: () => setKochavaId3,
+  setStaticCommonProperties: () => setStaticCommonProperties3,
+  track: () => track3,
+  userAdd: () => userAdd3,
+  userAppend: () => userAppend3,
+  userDel: () => userDel3,
+  userSet: () => userSet3,
+  userSetOnce: () => userSetOnce3,
+  userUniqAppend: () => userUniqAppend3,
+  userUnset: () => userUnset3
+});
+function init3(config) {
+  config = Object.assign({}, DefaultConfig, config);
+  if (config.isDebug)
+    return logger("IOS", "init", config);
+  jsb.reflection.callStaticMethod(IOSClass, "initSDK:", config);
+}
+function track3(eventName, properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "track:properties:", eventName, properties);
+}
+function enableTrack3() {
+  jsb.reflection.callStaticMethod(IOSClass, "enableTrack");
+}
+function userSet3(properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "userSet:", properties);
+}
+function userSetOnce3(properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "userSetOnce:", properties);
+}
+function userAdd3(properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "userAdd:", properties);
+}
+function userUnset3(...properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "userUnset:", properties);
+}
+function userDel3() {
+  jsb.reflection.callStaticMethod(IOSClass, "userDel");
+}
+function userAppend3(...properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "userAppend:", properties);
+}
+function userUniqAppend3(...properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "userUniqAppend:", properties);
+}
+function getDataTowerId3(callback) {
+  if (!callback)
+    return new Promise((resolve) => getDataTowerId3(resolve));
+  jsb.reflection.callStaticMethod(IOSClass, "getDataTowerId:", callback);
+}
+function setAccountId3(id) {
+  jsb.reflection.callStaticMethod(IOSClass, "setAccountId:", id);
+}
+function setDistinctId3(id) {
+  jsb.reflection.callStaticMethod(IOSClass, "setDistinctId:", id);
+}
+function getDistinctId3() {
+  jsb.reflection.callStaticMethod(IOSClass, "getDistinctId");
+}
+function setFirebaseAppInstanceId3(id) {
+  jsb.reflection.callStaticMethod(IOSClass, "setFirebaseAppInstanceId:", id);
+}
+function setAppsFlyerId3(id) {
+  jsb.reflection.callStaticMethod(IOSClass, "setAppsFlyerId:", id);
+}
+function setKochavaId3(id) {
+  jsb.reflection.callStaticMethod(IOSClass, "setKochavaId:", id);
+}
+function setAdjustId3(id) {
+  jsb.reflection.callStaticMethod(IOSClass, "setAdjustId:", id);
+}
+function setCommonProperties3(properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "setCommonProperties:", properties);
+}
+function clearCommonProperties3() {
+  jsb.reflection.callStaticMethod(IOSClass, "clearCommonProperties");
+}
+function setStaticCommonProperties3(properties) {
+  jsb.reflection.callStaticMethod(IOSClass, "setStaticCommonProperties:", properties);
+}
+function clearStaticCommonProperties3() {
+  jsb.reflection.callStaticMethod(IOSClass, "clearStaticCommonProperties");
+}
+
+// src/type.ts
+var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
+  LogLevel2[LogLevel2["VERBOSE"] = 1] = "VERBOSE";
+  LogLevel2[LogLevel2["ASSERT"] = 2] = "ASSERT";
+  LogLevel2[LogLevel2["DEBUG"] = 3] = "DEBUG";
+  LogLevel2[LogLevel2["INFO"] = 4] = "INFO";
+  LogLevel2[LogLevel2["WARN"] = 5] = "WARN";
+  LogLevel2[LogLevel2["ERROR"] = 6] = "ERROR";
+  return LogLevel2;
+})(LogLevel || {});
+
+// src/CocosCreator/index.ts
+var SupportPlatforms = [
+  [cc.sys.isNativeAndroid, Android_exports],
+  [cc.sys.isNativeIOS, IOS_exports],
+  [true, Web_exports]
+];
+var CurrentPlatform2 = SupportPlatforms.find((item) => item[0])[1];
+function init4(config) {
+  CurrentPlatform2.init(config);
+}
+function track4(eventName, properties) {
+  CurrentPlatform2.track(eventName, properties);
+}
+function enableTrack4() {
+  CurrentPlatform2.enableTrack();
+}
+function userSet4(properties) {
+  CurrentPlatform2.userSet(properties);
+}
+function userSetOnce4(properties) {
+  CurrentPlatform2.userSetOnce(properties);
+}
+function userAdd4(properties) {
+  CurrentPlatform2.userAdd(properties);
+}
+function userUnset4(...properties) {
+  CurrentPlatform2.userUnset(...properties);
+}
+function userDel4() {
+  CurrentPlatform2.userDel();
+}
+function userAppend4(...properties) {
+  CurrentPlatform2.userAppend(...properties);
+}
+function userUniqAppend4(...properties) {
+  CurrentPlatform2.userUniqAppend(...properties);
+}
+function getDataTowerId4(callback) {
+  return CurrentPlatform2.getDataTowerId(callback);
+}
+function setAccountId4(id) {
+  CurrentPlatform2.setAccountId(id);
+}
+function setDistinctId4(id) {
+  CurrentPlatform2.setDistinctId(id);
+}
+function getDistinctId4() {
+  return CurrentPlatform2.getDistinctId();
+}
+function setFirebaseAppInstanceId4(id) {
+  CurrentPlatform2.setFirebaseAppInstanceId(id);
+}
+function setAppsFlyerId4(id) {
+  CurrentPlatform2.setAppsFlyerId(id);
+}
+function setKochavaId4(id) {
+  CurrentPlatform2.setKochavaId(id);
+}
+function setAdjustId4(id) {
+  CurrentPlatform2.setAdjustId(id);
+}
+function setCommonProperties4(properties) {
+  CurrentPlatform2.setCommonProperties(properties);
+}
+function clearCommonProperties4() {
+  CurrentPlatform2.clearCommonProperties();
+}
+function setStaticCommonProperties4(properties) {
+  CurrentPlatform2.setStaticCommonProperties(properties);
+}
+function clearStaticCommonProperties4() {
+  CurrentPlatform2.clearStaticCommonProperties();
+}
+
+export { LogLevel, clearCommonProperties4 as clearCommonProperties, clearStaticCommonProperties4 as clearStaticCommonProperties, enableTrack4 as enableTrack, getDataTowerId4 as getDataTowerId, getDistinctId4 as getDistinctId, init4 as init, setAccountId4 as setAccountId, setAdjustId4 as setAdjustId, setAppsFlyerId4 as setAppsFlyerId, setCommonProperties4 as setCommonProperties, setDistinctId4 as setDistinctId, setFirebaseAppInstanceId4 as setFirebaseAppInstanceId, setKochavaId4 as setKochavaId, setStaticCommonProperties4 as setStaticCommonProperties, track4 as track, userAdd4 as userAdd, userAppend4 as userAppend, userDel4 as userDel, userSet4 as userSet, userSetOnce4 as userSetOnce, userUniqAppend4 as userUniqAppend, userUnset4 as userUnset };
 //# sourceMappingURL=out.js.map
 //# sourceMappingURL=index.mjs.map
