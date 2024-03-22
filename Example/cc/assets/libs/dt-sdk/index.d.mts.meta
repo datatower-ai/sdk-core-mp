@@ -2,10 +2,10 @@
   "ver": "1.0.1",
   "importer": "*",
   "imported": true,
-  "uuid": "5102f4db-a0e7-4c42-a0db-cc49ca82a04e",
+  "uuid": "7444d515-9381-42e9-868d-5eef4890e7fc",
   "files": [
     ".json",
-    ".map"
+    ".mts"
   ],
   "subMetas": {},
   "userData": {}

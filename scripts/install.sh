@@ -70,13 +70,3 @@ if ! command -v pnpm &> /dev/null; then
 else
     echo "pnpm 已安装。"
 fi
-
-# build client
-echo "构建客户端..."
-cd ../src/client
-pnpm install
-pnpm build
-
-# copy client to cc
-echo "复制client js到 cc..."
-cp -r dist/CocosCreator/* ../../Example/cc/assets/libs/

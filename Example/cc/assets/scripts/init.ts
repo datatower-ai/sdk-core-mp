@@ -1,5 +1,5 @@
 import { Component, EditBox, _decorator } from "cc";
-import { DataTower } from "../libs/index.mjs";
+import { DataTower } from "../libs/dt-sdk/index.mjs";
 
 const { ccclass, property } = _decorator;
 
