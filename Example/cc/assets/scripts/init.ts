@@ -20,12 +20,16 @@ export class init extends Component {
         "editing-did-ended",
         (event) => {
           // DataTower.init(JSON.parse(event._string));
-
-          var config: DataTower.Config
-          config.appId = "dt_beb231f90a5a20ba"
-          config.serverUrl = "https://test.roiquery.com"
-          config.isDebug = true
-          config.logLevel = LogLevel.DEBUG
+          var config: DataTower.Config = {
+            appId: "dt_beb231f90a5a20ba",
+            serverUrl: "https://test.roiquery.com",
+            isDebug: true,
+            logLevel: LogLevel.DEBUG,
+            context: {},
+            channel: "",
+            manualEnableUpload: true,
+            commonProperties: undefined
+          }
 
           DataTower.init(config);
           // console.log("submit init：", event._string);
