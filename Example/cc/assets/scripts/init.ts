@@ -18,13 +18,21 @@ export class init extends Component {
       editBox.node.on(
         "editing-did-ended",
         (event) => {
-          DataTower.init(JSON.parse(event._string));
-          console.log("submit init：", event._string);
+          // DataTower.init(JSON.parse(event._string));
+
+          var config: DataTower.Config
+          config.appId = "dt_beb231f90a5a20ba"
+          config.serverUrl = "https://test.roiquery.com"
+          config.isDebug = true
+          config.logLevel = 2
+
+          DataTower.init(config);
+          // console.log("submit init：", event._string);
         },
         this
       );
     }
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) { }
 }
