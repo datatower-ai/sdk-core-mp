@@ -79,8 +79,17 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 
 @implementation DTCocosCreatorProxyApi
 
-void initSDK(NSString *appId, NSString *serverUrl, BOOL isDebug, int logLevel, NSString *jsonStr) {
++ (void)initSDK:(NSString *)config {
     
+    return;
+    
+    NSDictionary *configDict = [config jsonDictionary];
+    NSString *appId = [configDict[@"appId"] stringValue];
+    NSString *serverUrl = [configDict[@"serverUrl"] stringValue];
+    int logLevel = [configDict[@"logLevel"] intValue];
+    NSString *jsonStr = [configDict[@"commonProperties"] stringValue];
+    BOOL isDebug = [configDict[@"isDebug"] boolValue];
+
     DTLoggingLevel iOSLogLevel = convertUnityLogLevel((enum MPLogLevel)logLevel);
     
     if (jsonStr != NULL) {
@@ -91,21 +100,14 @@ void initSDK(NSString *appId, NSString *serverUrl, BOOL isDebug, int logLevel, N
     }
 }
 
-NSString* getDataTowerId() {
++ (NSString *)getDataTowerId {
     NSString *result = [DTAnalytics getDataTowerId];
     return result;
 }
 
-void trackEvent(NSString *eventName, NSString *jsonStr) {
-    if(jsonStr != NULL)
-    {
-        NSDictionary *dictParam = [jsonStr jsonDictionary];
-        [DTAnalytics trackEventName:eventName properties:dictParam];
-    }
-    else
-    {
-        [DTAnalytics trackEventName:eventName];
-    }
++ (void)trackEvent:(NSString *)eventName properties:(NSString *)jsonStr {
+    NSDictionary *dictParam = [jsonStr jsonDictionary];
+    [DTAnalytics trackEventName:eventName properties:dictParam];
 }
 
 @end
