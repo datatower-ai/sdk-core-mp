@@ -79,8 +79,15 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 
 @implementation DTCocosCreatorProxyApi
 
-void initSDK(NSString *appId, NSString *serverUrl, BOOL isDebug, int logLevel, NSString *jsonStr) {
++ (void)initSDK:(NSString *)config {
     
+    NSDictionary *configDict = [config jsonDictionary];
+    NSString *appId = [configDict[@"appId"] stringValue];
+    NSString *serverUrl = [configDict[@"serverUrl"] stringValue];
+    int logLevel = [configDict[@"logLevel"] intValue];
+    NSString *jsonStr = [configDict[@"commonProperties"] stringValue];
+    BOOL isDebug = [configDict[@"isDebug"] boolValue];
+
     DTLoggingLevel iOSLogLevel = convertUnityLogLevel((enum MPLogLevel)logLevel);
     
     if (jsonStr != NULL) {
