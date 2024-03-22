@@ -11,6 +11,11 @@ export function generateSignature(types: (keyof typeof typeMap)[]): string {
   return `(${types.map((type) => typeMap[type]).join('')})V`;
 }
 
+// 序列号
+export function format(obj?: Record<string, any>) {
+  return obj && JSON.stringify(obj);
+}
+
 export function logger(...args: any[]) {
   console.log('[DataTower SDK]:', ...args);
 }

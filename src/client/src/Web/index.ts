@@ -1,82 +1,101 @@
-import { Config } from '../type';
+import { DataTower } from '../DataTower';
+import { DefaultConfig } from '../constant';
+import type { Config } from '../type';
 import { logger } from '../utils';
+export * from '../type';
 
 const CurrentPlatform: any = new Proxy(
   {},
   {
     get(target, key: string) {
-      return (...args: any[]) => console.log(`${key}(${args.join(', ')})`);
+      return (...args: any[]) => {
+        const params = args.map((arg) => (typeof arg === 'function' ? arg.toString() : JSON.stringify(arg))).join(', ');
+        console.log(`${key}(${params})`);
+      };
     },
   },
 );
 
-export function init(config: Config) {
-  if (config.isDebug) return logger('Web', 'init', config);
-  CurrentPlatform.init(config);
+// TODO: 待实现
+class Web extends DataTower {
+  constructor(config?: Config) {
+    super();
+    if (config) this.init(config);
+  }
+  init(config: Config) {
+    config = Object.assign({}, DefaultConfig, config);
+    if (config.isDebug) return logger('Web', 'init', config);
+    CurrentPlatform.init(config);
+  }
+  track(eventName: string, properties?: Record<string, any>): void {
+    CurrentPlatform.track(eventName, properties);
+  }
+  enableTrack(): void {
+    CurrentPlatform.enableTrack();
+  }
+  userSet(properties: Record<string, any>): void {
+    CurrentPlatform.userSet(properties);
+  }
+  userSetOnce(properties: Record<string, any>): void {
+    CurrentPlatform.userSetOnce(properties);
+  }
+  userAdd(properties: Record<string, any>): void {
+    CurrentPlatform.userAdd(properties);
+  }
+  userUnset(...properties: string[]): void {
+    CurrentPlatform.userUnset(...properties);
+  }
+  userDel(): void {
+    CurrentPlatform.userDel();
+  }
+  userAppend(...properties: string[]): void {
+    CurrentPlatform.userAppend(...properties);
+  }
+  userUniqAppend(...properties: string[]): void {
+    CurrentPlatform.userUniqAppend(...properties);
+  }
+  getDataTowerId(callback: (id: string) => void): void;
+  getDataTowerId(): Promise<string>;
+  getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
+    CurrentPlatform.getDataTowerId(callback);
+    if (!callback) return Promise.resolve('data tower id');
+    callback('data tower id');
+  }
+  setAccountId(id: string): void {
+    CurrentPlatform.setAccountId(id);
+  }
+  setDistinctId(id: string): void {
+    CurrentPlatform.setDistinctId(id);
+  }
+  getDistinctId(): string | void | null {
+    return CurrentPlatform.getDistinctId();
+  }
+  setFirebaseAppInstanceId(id: string): void {
+    CurrentPlatform.setFirebaseAppInstanceId(id);
+  }
+  setAppsFlyerId(id: string): void {
+    CurrentPlatform.setAppsFlyerId(id);
+  }
+  setKochavaId(id: string): void {
+    CurrentPlatform.setKochavaId(id);
+  }
+  setAdjustId(id: string): void {
+    CurrentPlatform.setAdjustId(id);
+  }
+  setCommonProperties(properties: Record<string, any>): void {
+    CurrentPlatform.setCommonProperties(properties);
+  }
+  clearCommonProperties(): void {
+    CurrentPlatform.clearCommonProperties();
+  }
+  setStaticCommonProperties(properties: Record<string, any>): void {
+    CurrentPlatform.setStaticCommonProperties(properties);
+  }
+  clearStaticCommonProperties(): void {
+    CurrentPlatform.clearStaticCommonProperties();
+  }
 }
-export function track(eventName: string, properties?: Record<string, any>): void {
-  CurrentPlatform.track(eventName, properties);
-}
-export function enableTrack(): void {
-  CurrentPlatform.enableTrack();
-}
-export function userSet(properties: Record<string, any>): void {
-  CurrentPlatform.userSet(properties);
-}
-export function userSetOnce(properties: Record<string, any>): void {
-  CurrentPlatform.userSetOnce(properties);
-}
-export function userAdd(properties: Record<string, any>): void {
-  CurrentPlatform.userAdd(properties);
-}
-export function userUnset(...properties: string[]): void {
-  CurrentPlatform.userUnset(...properties);
-}
-export function userDel(): void {
-  CurrentPlatform.userDel();
-}
-export function userAppend(...properties: string[]): void {
-  CurrentPlatform.userAppend(...properties);
-}
-export function userUniqAppend(...properties: string[]): void {
-  CurrentPlatform.userUniqAppend(...properties);
-}
-export function getDataTowerId(callback: (id: string) => void): void;
-export function getDataTowerId(): Promise<string>;
-export function getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
-  if (!callback) return Promise.resolve('data tower id');
-  callback('data tower id');
-}
-export function setAccountId(id: string): void {
-  CurrentPlatform.setAccountId(id);
-}
-export function setDistinctId(id: string): void {
-  CurrentPlatform.setDistinctId(id);
-}
-export function getDistinctId(): string | void | null {
-  return CurrentPlatform.getDistinctId();
-}
-export function setFirebaseAppInstanceId(id: string): void {
-  CurrentPlatform.setFirebaseAppInstanceId(id);
-}
-export function setAppsFlyerId(id: string): void {
-  CurrentPlatform.setAppsFlyerId(id);
-}
-export function setKochavaId(id: string): void {
-  CurrentPlatform.setKochavaId(id);
-}
-export function setAdjustId(id: string): void {
-  CurrentPlatform.setAdjustId(id);
-}
-export function setCommonProperties(properties: Record<string, any>): void {
-  CurrentPlatform.setCommonProperties(properties);
-}
-export function clearCommonProperties(): void {
-  CurrentPlatform.clearCommonProperties();
-}
-export function setStaticCommonProperties(properties: Record<string, any>): void {
-  CurrentPlatform.setStaticCommonProperties(properties);
-}
-export function clearStaticCommonProperties(): void {
-  CurrentPlatform.clearStaticCommonProperties();
-}
+
+DataTower.instance = new Web();
+export { Web as DataTower };
+export default Web;

@@ -1,5 +1,5 @@
 import { Component, EditBox, _decorator } from "cc";
-import * as DataTower from "../libs/index.mjs";
+import { DataTower } from "../libs/index.mjs";
 
 const { ccclass, property } = _decorator;
 
@@ -19,11 +19,9 @@ export class init extends Component {
       editBox.node.on(
         "editing-did-ended",
         (event) => {
-          try {
-            const data = JSON.parse(event._string);
-            DataTower.init(data);
-            console.log("submit init：", event._string);
-          } catch {}
+          const data = JSON.parse(event._string);
+          DataTower.init(data);
+          console.log("submit init：", event._string);
         },
         this
       );

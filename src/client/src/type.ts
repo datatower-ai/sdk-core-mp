@@ -1,5 +1,5 @@
 export interface Context {
-  /* TODO: */
+  /* TODO: Context */
 }
 
 export enum LogLevel {
@@ -22,35 +22,10 @@ export interface Config {
   commonProperties: Record<string, any>;
 }
 
-export interface DataTower {
-  init(config: Config): void;
-  enableTrack(): void;
-  track(eventName: string, properties?: Record<string, any>): void;
-  userSet(properties: Record<string, any>): void;
-  userSetOnce(properties: Record<string, any>): void;
-  userAdd(properties: Record<string, any>): void;
-  userUnset(...properties: string[]): void;
-  userDel(): void;
-  userAppend(...properties: string[]): void;
-  userUniqAppend(...properties: string[]): void;
-  getDataTowerId(callback: (id: string) => void): void; // 异步获取 dt_id
-  getDataTowerId(): Promise<string>; // 异步获取 dt_id
-  setAccountId(id: string): void; // 设置 acid（空字符串则对应 logout）
-  setDistinctId(id: string): void; // 设置访客 id
-  getDistinctId(): string | null | void; // 获取访客 id
-  setFirebaseAppInstanceId(id: string): void;
-  setAppsFlyerId(id: string): void;
-  setKochavaId(id: string): void;
-  setAdjustId(id: string): void;
-  setCommonProperties(properties: Record<string, any>): void; // 设置动态公共属性
-  clearCommonProperties(): void; // 清除动态公共属性
-  setStaticCommonProperties(properties: Record<string, any>): void; // 设置静态公共属性
-  clearStaticCommonProperties(): void; // 清除静态公共属性
-}
-
-declare global {
-  interface Window {
-    DataTower: DataTower;
-  }
-}
-declare var DataTower: DataTower;
+// TODO: iife
+// declare global {
+//   interface Window {
+//     DataTower: DataTower;
+//   }
+// }
+// declare var DataTower: DataTower;

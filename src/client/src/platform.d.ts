@@ -5,17 +5,21 @@ interface CC {
     isNativeIOS: boolean;
     isNativeAndroid: boolean;
     platform: number;
-
-    WECHAT_GAME: number;
-    BAIDU_GAME: number;
-    OPPO_GAME: number;
-    VIVO_GAME: number;
-    QQ_PLAY: number;
-    FB_PLAYABLE_ADS: number;
-    TT_GAME: number;
-    XIAOMI_GAME: number;
-    HUAWEI_GAME: number;
-    ALIPAY_GAME: number;
+    Platform: {
+      ANDROID: 1;
+      IOS: 2;
+      WEB: 3;
+      WECHAT_GAME: 4;
+      BAIDU_GAME: 5;
+      OPPO_GAME: 6;
+      VIVO_GAME: 7;
+      QQ_PLAY: 8;
+      FB_PLAYABLE_ADS: 9;
+      TT_GAME: 10;
+      XIAOMI_GAME: 11;
+      HUAWEI_GAME: 12;
+      ALIPAY_GAME: 13;
+    };
   };
 }
 

@@ -1,5 +1,5 @@
 import { _decorator, Component, EditBox } from "cc";
-import * as DataTower from "../libs/index.mjs";
+import { DataTower } from "../libs/index.mjs";
 
 const { ccclass, property } = _decorator;
 
@@ -19,7 +19,8 @@ export class track extends Component {
       editBox.node.on(
         "editing-did-ended",
         (event) => {
-          DataTower.track(JSON.parse(event._string));
+          const { eventName, properties } = JSON.parse(event._string);
+          DataTower.track(eventName, properties);
           console.log("submit track：", event._string);
         },
         this

@@ -79,4 +79,4 @@ pnpm build
 
 # copy client to cc
 echo "复制client js到 cc..."
-cp -r dist/CocosCreator/index.mjs ../../Example/cc/assets/libs/
+cp -r dist/CocosCreator/* ../../Example/cc/assets/libs/

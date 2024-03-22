@@ -1,5 +1,5 @@
 import { _decorator, Button, Component } from "cc";
-import * as DataTower from "../libs/index.mjs";
+import { DataTower } from "../libs/index.mjs";
 import { getDataTowerIdMessage } from "./getDataTowerIdMessage";
 
 const { ccclass, property } = _decorator;

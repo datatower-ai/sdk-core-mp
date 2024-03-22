@@ -2,7 +2,6 @@ import { build, type Options } from 'tsup';
 
 const DefaultConfig: Options = {
   sourcemap: true,
-  bundle: true,
   // minify: true,
   clean: true,
   dts: true,
@@ -22,7 +21,7 @@ const ConfigMap: Record<Platform, Options> = {
   CocosCreator: {
     entry: ['src/CocosCreator/index.ts'],
     outDir: 'dist/CocosCreator',
-    format: ['cjs', 'esm', 'iife'],
+    format: ['esm', 'cjs'],
     globalName: 'DataTower',
   },
 };
