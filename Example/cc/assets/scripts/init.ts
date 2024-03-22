@@ -7,6 +7,7 @@ const { ccclass, property } = _decorator;
 export class init extends Component {
   start() {
     const editBox = this.node.getComponent(EditBox);
+    editBox.maxLength = -1;
     if (editBox) {
       editBox.node.on(
         "text-changed",
