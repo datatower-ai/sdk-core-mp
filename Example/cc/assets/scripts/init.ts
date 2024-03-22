@@ -1,6 +1,5 @@
 import { Component, EditBox, _decorator } from "cc";
 import * as DataTower from "../libs/index.mjs";
-import { LogLevel } from "../libs/index.mjs";
 
 const { ccclass, property } = _decorator;
 
@@ -19,25 +18,16 @@ export class init extends Component {
       editBox.node.on(
         "editing-did-ended",
         (event) => {
-          // DataTower.init(JSON.parse(event._string));
-          var config: DataTower.Config = {
-            appId: "dt_beb231f90a5a20ba",
-            serverUrl: "https://test.roiquery.com",
-            isDebug: true,
-            logLevel: LogLevel.DEBUG,
-            context: {},
-            channel: "",
-            manualEnableUpload: true,
-            commonProperties: undefined
-          }
-
-          DataTower.init(config);
-          // console.log("submit init：", event._string);
+          try {
+            const data = JSON.parse(event._string);
+            DataTower.init(data);
+            console.log("submit init：", event._string);
+          } catch {}
         },
         this
       );
     }
   }
 
-  update(deltaTime: number) { }
+  update(deltaTime: number) {}
 }

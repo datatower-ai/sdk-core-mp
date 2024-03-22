@@ -1,5 +1,6 @@
-import { _decorator, Button, Component, Label } from "cc";
+import { _decorator, Button, Component } from "cc";
 import * as DataTower from "../libs/index.mjs";
+import { getDataTowerIdMessage } from "./getDataTowerIdMessage";
 
 const { ccclass, property } = _decorator;
 
@@ -16,14 +17,11 @@ export class getDataTowerId extends Component {
 
   onButtonClick() {
     DataTower.getDataTowerId((id) => {
-      const button = this.node.getComponent(Button);
-      if (button) {
-        // 获取按钮的标签组件
-        const label = button.node.getChildByName("Label").getComponent(Label);
-        if (label) {
-          // 设置按钮标签的文本内容
-          label.string = "getDataTowerId：" + id;
-        }
+      const toastNode = this.node
+        .getChildByName("message")
+        .getComponent(getDataTowerIdMessage);
+      if (toastNode) {
+        toastNode.showToast(id);
       }
       console.log("getDataTowerId：", id);
     });
