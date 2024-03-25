@@ -5,7 +5,7 @@ export const DefaultConfig: Config = {
   appId: '',
   serverUrl: '',
   channel: '',
-  isDebug: false,
+  isDebug: true,
   logLevel: 1,
   manualEnableUpload: false,
   commonProperties: {},

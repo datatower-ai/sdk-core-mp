@@ -1,88 +1,92 @@
 import { DataTower } from '../DataTower';
 import { DefaultConfig, IOSClass } from '../constant';
 import type { Config } from '../type';
-import { format, logger } from '../utils';
+import { format } from '../utils';
 
 /**
  * cocos creator IOS bridge
  */
 class IOS extends DataTower {
   static instance = new IOS();
+  private config: Config = DefaultConfig;
   constructor(config?: Config) {
     super();
     if (config) this.init(config);
   }
+
+  private callStaticMethod(method: string, ...args: any[]): any {
+    return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
+  }
+
   init(config: Config) {
-    config = Object.assign({}, DefaultConfig, config);
-    console.log("lilinli invoke iOS init, config is " + format(config));
-    jsb.reflection.callStaticMethod(IOSClass, 'initSDK:', format(config));
+    this.config = Object.assign({}, DefaultConfig, config);
+    this.callStaticMethod('initSDK:', format(this.config));
   }
   track(eventName: string, properties?: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'trackEvent:properties:', eventName, format(properties));
+    this.callStaticMethod('track:properties:', eventName, format(properties));
   }
   enableTrack(): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'enableTrack');
+    this.callStaticMethod('enableTrack');
   }
   userSet(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userSet:', format(properties));
+    this.callStaticMethod('userSet:', format(properties));
   }
   userSetOnce(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userSetOnce:', format(properties));
+    this.callStaticMethod('userSetOnce:', format(properties));
   }
   userAdd(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userAdd:', format(properties));
+    this.callStaticMethod('userAdd:', format(properties));
   }
   userUnset(...properties: string[]): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userUnset:', format(properties));
+    this.callStaticMethod('userUnset:', format(properties));
   }
   userDel(): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userDel');
+    this.callStaticMethod('userDel');
   }
   userAppend(...properties: string[]): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userAppend:', format(properties));
+    this.callStaticMethod('userAppend:', format(properties));
   }
   userUniqAppend(...properties: string[]): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'userUniqAppend:', format(properties));
+    this.callStaticMethod('userUniqAppend:', format(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
-    console.log('lilinli invoke getDataTowerId');
-    jsb.reflection.callStaticMethod(IOSClass, 'getDataTowerId');
+    this.callStaticMethod('getDataTowerId:', callback);
   }
   setAccountId(id: string): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setAccountId:', id);
+    this.callStaticMethod('setAccountId:', id);
   }
   setDistinctId(id: string): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setDistinctId:', id);
+    this.callStaticMethod('setDistinctId:', id);
   }
   getDistinctId(): string | void | null {
-    jsb.reflection.callStaticMethod(IOSClass, 'getDistinctId');
+    this.callStaticMethod('getDistinctId');
   }
   setFirebaseAppInstanceId(id: string): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setFirebaseAppInstanceId:', id);
+    this.callStaticMethod('setFirebaseAppInstanceId:', id);
   }
   setAppsFlyerId(id: string): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setAppsFlyerId:', id);
+    this.callStaticMethod('setAppsFlyerId:', id);
   }
   setKochavaId(id: string): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setKochavaId:', id);
+    this.callStaticMethod('setKochavaId:', id);
   }
   setAdjustId(id: string): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setAdjustId:', id);
+    this.callStaticMethod('setAdjustId:', id);
   }
   setCommonProperties(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setCommonProperties:', format(properties));
+    this.callStaticMethod('setCommonProperties:', format(properties));
   }
   clearCommonProperties(): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'clearCommonProperties');
+    this.callStaticMethod('clearCommonProperties');
   }
   setStaticCommonProperties(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'setStaticCommonProperties:', format(properties));
+    this.callStaticMethod('setStaticCommonProperties:', format(properties));
   }
   clearStaticCommonProperties(): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'clearStaticCommonProperties');
+    this.callStaticMethod('clearStaticCommonProperties');
   }
 }
 

@@ -1,34 +1,27 @@
-import { _decorator, Component, EditBox } from "cc";
+import { Button, Component, EditBox, _decorator } from "cc";
 import { DataTower } from "../libs/dt.cc.mjs";
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
-@ccclass("track")
-export class track extends Component {
+@ccclass("init")
+export class init extends Component {
   start() {
-    const editBox = this.node.getComponent(EditBox);
-    editBox.maxLength = -1;
-    if (editBox) {
-      editBox.node.on(
-        "text-changed",
-        (event) => {
-          console.log("track：", event._string);
-        },
-        this
-      );
-      editBox.node.on(
-        "editing-did-ended",
-        (event) => {
-          // const { eventName, properties } = JSON.parse(event._string);
-          // DataTower.track(eventName, properties);
-          var json = { "name": "myName" };
-          DataTower.track("simple_event", json);
-          console.log("submit track：", event._string);
-        },
-        this
-      );
-    }
-  }
+    const _eventName = this.node
+      .getChildByName("eventName")
+      .getComponent(EditBox);
+    _eventName.maxLength = -1;
 
-  update(deltaTime: number) { }
+    const _properties = this.node
+      .getChildByName("properties")
+      .getComponent(EditBox);
+    _properties.maxLength = -1;
+
+    const submit = () => {
+      const eventName = _eventName.string;
+      const properties = JSON.parse(_properties.string);
+      DataTower.track(eventName, properties);
+    };
+    const button = this.node.getComponentInChildren(Button);
+    button.node.on("click", submit, this);
+  }
 }

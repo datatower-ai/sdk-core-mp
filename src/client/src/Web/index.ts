@@ -4,96 +4,90 @@ import type { Config } from '../type';
 import { logger } from '../utils';
 export * from '../type';
 
-const CurrentPlatform: any = new Proxy(
-  {},
-  {
-    get(target, key: string) {
-      return (...args: any[]) => {
-        const params = args.map((arg) => (typeof arg === 'function' ? arg.toString() : JSON.stringify(arg))).join(', ');
-        console.log(`${key}(${params})`);
-      };
-    },
-  },
-);
-
 // TODO: 待实现
 class Web extends DataTower {
   static instance = new Web();
+  private config: Config = DefaultConfig;
   constructor(config?: Config) {
     super();
     if (config) this.init(config);
   }
+  private logger(method: string, ...args: any[]) {
+    logger('<Web>', method, args);
+  }
+
   init(config: Config) {
-    config = Object.assign({}, DefaultConfig, config);
-    if (config.isDebug) return logger('Web', 'init', config);
-    CurrentPlatform.init(config);
+    this.config = Object.assign({}, DefaultConfig, config);
+    if (this.config.isDebug) return this.logger('init', this.config);
   }
   track(eventName: string, properties?: Record<string, any>): void {
-    CurrentPlatform.track(eventName, properties);
+    if (this.config.isDebug) return this.logger('track', eventName, properties);
   }
   enableTrack(): void {
-    CurrentPlatform.enableTrack();
+    if (this.config.isDebug) return this.logger('enableTrack');
   }
   userSet(properties: Record<string, any>): void {
-    CurrentPlatform.userSet(properties);
+    if (this.config.isDebug) return this.logger('userSet', properties);
   }
   userSetOnce(properties: Record<string, any>): void {
-    CurrentPlatform.userSetOnce(properties);
+    if (this.config.isDebug) return this.logger('userSetOnce', properties);
   }
   userAdd(properties: Record<string, any>): void {
-    CurrentPlatform.userAdd(properties);
+    if (this.config.isDebug) return this.logger('userAdd', properties);
   }
   userUnset(...properties: string[]): void {
-    CurrentPlatform.userUnset(...properties);
+    if (this.config.isDebug) return this.logger('userUnset', properties);
   }
   userDel(): void {
-    CurrentPlatform.userDel();
+    if (this.config.isDebug) return this.logger('userDel');
   }
   userAppend(...properties: string[]): void {
-    CurrentPlatform.userAppend(...properties);
+    if (this.config.isDebug) return this.logger('userAppend', properties);
   }
   userUniqAppend(...properties: string[]): void {
-    CurrentPlatform.userUniqAppend(...properties);
+    if (this.config.isDebug) return this.logger('userUniqAppend', properties);
   }
   getDataTowerId(callback: (id: string) => void): void;
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
-    CurrentPlatform.getDataTowerId(callback);
-    if (!callback) return Promise.resolve('data tower id');
-    callback('data tower id');
+    if (!callback) {
+      if (this.config.isDebug) return this.logger('getDataTowerId');
+      return new Promise((resolve) => this.getDataTowerId(resolve));
+    }
+    if (this.config.isDebug) return this.logger('getDataTowerId', callback);
   }
   setAccountId(id: string): void {
-    CurrentPlatform.setAccountId(id);
+    if (this.config.isDebug) return this.logger('setAccountId', id);
   }
   setDistinctId(id: string): void {
-    CurrentPlatform.setDistinctId(id);
+    if (this.config.isDebug) return this.logger('setDistinctId', id);
   }
   getDistinctId(): string | void | null {
-    return CurrentPlatform.getDistinctId();
+    if (this.config.isDebug) return this.logger('getDistinctId');
   }
   setFirebaseAppInstanceId(id: string): void {
-    CurrentPlatform.setFirebaseAppInstanceId(id);
+    if (this.config.isDebug) return this.logger('setFirebaseAppInstanceId', id);
   }
   setAppsFlyerId(id: string): void {
-    CurrentPlatform.setAppsFlyerId(id);
+    if (this.config.isDebug) return this.logger('setAppsFlyerId', id);
   }
   setKochavaId(id: string): void {
-    CurrentPlatform.setKochavaId(id);
+    if (this.config.isDebug) return this.logger('setKochavaId', id);
   }
   setAdjustId(id: string): void {
-    CurrentPlatform.setAdjustId(id);
+    if (this.config.isDebug) return this.logger('setAdjustId', id);
   }
   setCommonProperties(properties: Record<string, any>): void {
-    CurrentPlatform.setCommonProperties(properties);
+    if (this.config.isDebug) return this.logger('setCommonProperties', properties);
   }
   clearCommonProperties(): void {
-    CurrentPlatform.clearCommonProperties();
+    if (this.config.isDebug) return this.logger('clearCommonProperties');
   }
   setStaticCommonProperties(properties: Record<string, any>): void {
-    CurrentPlatform.setStaticCommonProperties(properties);
+    if (this.config.isDebug) return this.logger('setStaticCommonProperties', properties);
   }
   clearStaticCommonProperties(): void {
-    CurrentPlatform.clearStaticCommonProperties();
+    if (this.config.isDebug) return this.logger('clearStaticCommonProperties');
   }
 }
 

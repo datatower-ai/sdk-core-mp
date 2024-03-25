@@ -85,13 +85,13 @@ var DefaultConfig = {
   appId: "",
   serverUrl: "",
   channel: "",
-  isDebug: false,
+  isDebug: true,
   logLevel: 1,
   manualEnableUpload: false,
   commonProperties: {}
 };
-var AndroidClass = "ai/datatower/analytics/DT";
-var IOSClass = "DT";
+var AndroidClass = "com/ai/datatower/DTCocosCreatorProxyApi";
+var IOSClass = "DTCocosCreatorProxyApi";
 
 // src/utils.ts
 var typeMap = {
@@ -108,98 +108,113 @@ function format(obj) {
   return obj && JSON.stringify(obj);
 }
 function logger(...args) {
-  console.log("[DataTower SDK]:", ...args);
+  console.log("[DataTower SDK]", ...args);
 }
 
 // src/Web/index.ts
-var CurrentPlatform = new Proxy(
-  {},
-  {
-    get(target, key) {
-      return (...args) => {
-        const params = args.map((arg) => typeof arg === "function" ? arg.toString() : JSON.stringify(arg)).join(", ");
-        console.log(`${key}(${params})`);
-      };
-    }
-  }
-);
 var _Web = class _Web extends DataTower {
   constructor(config) {
     super();
+    this.config = DefaultConfig;
     if (config)
       this.init(config);
   }
+  logger(method, ...args) {
+    logger("<Web>", method, args);
+  }
   init(config) {
-    config = Object.assign({}, DefaultConfig, config);
-    if (config.isDebug)
-      return logger("Web", "init", config);
-    CurrentPlatform.init(config);
+    this.config = Object.assign({}, DefaultConfig, config);
+    if (this.config.isDebug)
+      return this.logger("init", this.config);
   }
   track(eventName, properties) {
-    CurrentPlatform.track(eventName, properties);
+    if (this.config.isDebug)
+      return this.logger("track", eventName, properties);
   }
   enableTrack() {
-    CurrentPlatform.enableTrack();
+    if (this.config.isDebug)
+      return this.logger("enableTrack");
   }
   userSet(properties) {
-    CurrentPlatform.userSet(properties);
+    if (this.config.isDebug)
+      return this.logger("userSet", properties);
   }
   userSetOnce(properties) {
-    CurrentPlatform.userSetOnce(properties);
+    if (this.config.isDebug)
+      return this.logger("userSetOnce", properties);
   }
   userAdd(properties) {
-    CurrentPlatform.userAdd(properties);
+    if (this.config.isDebug)
+      return this.logger("userAdd", properties);
   }
   userUnset(...properties) {
-    CurrentPlatform.userUnset(...properties);
+    if (this.config.isDebug)
+      return this.logger("userUnset", properties);
   }
   userDel() {
-    CurrentPlatform.userDel();
+    if (this.config.isDebug)
+      return this.logger("userDel");
   }
   userAppend(...properties) {
-    CurrentPlatform.userAppend(...properties);
+    if (this.config.isDebug)
+      return this.logger("userAppend", properties);
   }
   userUniqAppend(...properties) {
-    CurrentPlatform.userUniqAppend(...properties);
+    if (this.config.isDebug)
+      return this.logger("userUniqAppend", properties);
   }
   getDataTowerId(callback) {
-    CurrentPlatform.getDataTowerId(callback);
-    if (!callback)
-      return Promise.resolve("data tower id");
-    callback("data tower id");
+    if (!callback) {
+      if (this.config.isDebug)
+        return this.logger("getDataTowerId");
+      return new Promise((resolve) => this.getDataTowerId(resolve));
+    }
+    if (this.config.isDebug)
+      return this.logger("getDataTowerId", callback);
   }
   setAccountId(id) {
-    CurrentPlatform.setAccountId(id);
+    if (this.config.isDebug)
+      return this.logger("setAccountId", id);
   }
   setDistinctId(id) {
-    CurrentPlatform.setDistinctId(id);
+    if (this.config.isDebug)
+      return this.logger("setDistinctId", id);
   }
   getDistinctId() {
-    return CurrentPlatform.getDistinctId();
+    if (this.config.isDebug)
+      return this.logger("getDistinctId");
   }
   setFirebaseAppInstanceId(id) {
-    CurrentPlatform.setFirebaseAppInstanceId(id);
+    if (this.config.isDebug)
+      return this.logger("setFirebaseAppInstanceId", id);
   }
   setAppsFlyerId(id) {
-    CurrentPlatform.setAppsFlyerId(id);
+    if (this.config.isDebug)
+      return this.logger("setAppsFlyerId", id);
   }
   setKochavaId(id) {
-    CurrentPlatform.setKochavaId(id);
+    if (this.config.isDebug)
+      return this.logger("setKochavaId", id);
   }
   setAdjustId(id) {
-    CurrentPlatform.setAdjustId(id);
+    if (this.config.isDebug)
+      return this.logger("setAdjustId", id);
   }
   setCommonProperties(properties) {
-    CurrentPlatform.setCommonProperties(properties);
+    if (this.config.isDebug)
+      return this.logger("setCommonProperties", properties);
   }
   clearCommonProperties() {
-    CurrentPlatform.clearCommonProperties();
+    if (this.config.isDebug)
+      return this.logger("clearCommonProperties");
   }
   setStaticCommonProperties(properties) {
-    CurrentPlatform.setStaticCommonProperties(properties);
+    if (this.config.isDebug)
+      return this.logger("setStaticCommonProperties", properties);
   }
   clearStaticCommonProperties() {
-    CurrentPlatform.clearStaticCommonProperties();
+    if (this.config.isDebug)
+      return this.logger("clearStaticCommonProperties");
   }
 };
 _Web.instance = new _Web();
@@ -210,95 +225,82 @@ var Web_default = Web;
 var _Android = class _Android extends DataTower {
   constructor(config) {
     super();
+    this.config = DefaultConfig;
     if (config)
       this.init(config);
   }
+  callStaticMethod(method, signature, ...args) {
+    const params = signature ? [generateSignature(signature), ...args] : [];
+    return jsb.reflection.callStaticMethod(AndroidClass, method, ...params);
+  }
   init(config) {
-    config = Object.assign({}, DefaultConfig, config);
-    if (config.isDebug)
-      return logger("Android", "init", config);
-    jsb.reflection.callStaticMethod(AndroidClass, "initSDK", generateSignature(["map"]), format(config));
+    this.config = Object.assign({}, DefaultConfig, config);
+    this.callStaticMethod("initSDK", ["map"], format(this.config));
   }
   track(eventName, properties) {
-    jsb.reflection.callStaticMethod(
-      AndroidClass,
-      "track",
-      generateSignature(["string", "map"]),
-      eventName,
-      format(properties)
-    );
+    this.callStaticMethod("track", ["string", "map"], eventName, format(properties));
   }
   enableTrack() {
-    jsb.reflection.callStaticMethod(AndroidClass, "enableTrack");
+    this.callStaticMethod("enableTrack");
   }
   userSet(properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "userSet", generateSignature(["map"]), format(properties));
+    this.callStaticMethod("userSet", ["map"], format(properties));
   }
   userSetOnce(properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "userSetOnce", generateSignature(["map"]), format(properties));
+    this.callStaticMethod("userSetOnce", ["map"], format(properties));
   }
   userAdd(properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "userAdd", generateSignature(["map"]), format(properties));
+    this.callStaticMethod("userAdd", ["map"], format(properties));
   }
   userUnset(...properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "userUnset", generateSignature(["array"]), format(properties));
+    this.callStaticMethod("userUnset", ["array"], format(properties));
   }
   userDel() {
-    jsb.reflection.callStaticMethod(AndroidClass, "userDel");
+    this.callStaticMethod("userDel");
   }
   userAppend(...properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "userAppend", generateSignature(["array"]), format(properties));
+    this.callStaticMethod("userAppend", ["array"], format(properties));
   }
   userUniqAppend(...properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "userUniqAppend", generateSignature(["array"]), format(properties));
+    this.callStaticMethod("userUniqAppend", ["array"], format(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    jsb.reflection.callStaticMethod(AndroidClass, "getDataTowerId", generateSignature(["string"]), callback);
+    this.callStaticMethod("getDataTowerId", ["string"], callback);
   }
   setAccountId(id) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setAccountId", generateSignature(["string"]), id);
+    this.callStaticMethod("setAccountId", ["string"], id);
   }
   setDistinctId(id) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setDistinctId", generateSignature(["string"]), id);
+    this.callStaticMethod("setDistinctId", ["string"], id);
   }
   getDistinctId() {
-    jsb.reflection.callStaticMethod(AndroidClass, "getDistinctId");
+    this.callStaticMethod("getDistinctId");
   }
   setFirebaseAppInstanceId(id) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setFirebaseAppInstanceId", generateSignature(["string"]), id);
+    this.callStaticMethod("setFirebaseAppInstanceId", ["string"], id);
   }
   setAppsFlyerId(id) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setAppsFlyerId", generateSignature(["string"]), id);
+    this.callStaticMethod("setAppsFlyerId", ["string"], id);
   }
   setKochavaId(id) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setKochavaId", generateSignature(["string"]), id);
+    this.callStaticMethod("setKochavaId", ["string"], id);
   }
   setAdjustId(id) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setAdjustId", generateSignature(["string"]), id);
+    this.callStaticMethod("setAdjustId", ["string"], id);
   }
   setCommonProperties(properties) {
-    jsb.reflection.callStaticMethod(
-      AndroidClass,
-      "setCommonProperties",
-      generateSignature(["map"]),
-      format(properties)
-    );
+    this.callStaticMethod("setCommonProperties", ["map"], format(properties));
   }
   clearCommonProperties() {
-    jsb.reflection.callStaticMethod(AndroidClass, "clearCommonProperties");
+    this.callStaticMethod("clearCommonProperties");
   }
   setStaticCommonProperties(properties) {
-    jsb.reflection.callStaticMethod(
-      AndroidClass,
-      "setStaticCommonProperties",
-      generateSignature(["map"]),
-      format(properties)
-    );
+    this.callStaticMethod("setStaticCommonProperties", ["map"], format(properties));
   }
   clearStaticCommonProperties() {
-    jsb.reflection.callStaticMethod(AndroidClass, "clearStaticCommonProperties");
+    this.callStaticMethod("clearStaticCommonProperties");
   }
 };
 _Android.instance = new _Android();
@@ -309,79 +311,81 @@ var Android_default = Android;
 var _IOS = class _IOS extends DataTower {
   constructor(config) {
     super();
+    this.config = DefaultConfig;
     if (config)
       this.init(config);
   }
+  callStaticMethod(method, ...args) {
+    return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
+  }
   init(config) {
-    config = Object.assign({}, DefaultConfig, config);
-    if (config.isDebug)
-      return logger("IOS", "init", config);
-    jsb.reflection.callStaticMethod(IOSClass, "initSDK:", config);
+    this.config = Object.assign({}, DefaultConfig, config);
+    this.callStaticMethod("initSDK:", format(this.config));
   }
   track(eventName, properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "track:properties:", eventName, format(properties));
+    this.callStaticMethod("track:properties:", eventName, format(properties));
   }
   enableTrack() {
-    jsb.reflection.callStaticMethod(IOSClass, "enableTrack");
+    this.callStaticMethod("enableTrack");
   }
   userSet(properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "userSet:", format(properties));
+    this.callStaticMethod("userSet:", format(properties));
   }
   userSetOnce(properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "userSetOnce:", format(properties));
+    this.callStaticMethod("userSetOnce:", format(properties));
   }
   userAdd(properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "userAdd:", format(properties));
+    this.callStaticMethod("userAdd:", format(properties));
   }
   userUnset(...properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "userUnset:", format(properties));
+    this.callStaticMethod("userUnset:", format(properties));
   }
   userDel() {
-    jsb.reflection.callStaticMethod(IOSClass, "userDel");
+    this.callStaticMethod("userDel");
   }
   userAppend(...properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "userAppend:", format(properties));
+    this.callStaticMethod("userAppend:", format(properties));
   }
   userUniqAppend(...properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "userUniqAppend:", format(properties));
+    this.callStaticMethod("userUniqAppend:", format(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    jsb.reflection.callStaticMethod(IOSClass, "getDataTowerId:", callback);
+    this.callStaticMethod("getDataTowerId:", callback);
   }
   setAccountId(id) {
-    jsb.reflection.callStaticMethod(IOSClass, "setAccountId:", id);
+    this.callStaticMethod("setAccountId:", id);
   }
   setDistinctId(id) {
-    jsb.reflection.callStaticMethod(IOSClass, "setDistinctId:", id);
+    this.callStaticMethod("setDistinctId:", id);
   }
   getDistinctId() {
-    jsb.reflection.callStaticMethod(IOSClass, "getDistinctId");
+    this.callStaticMethod("getDistinctId");
   }
   setFirebaseAppInstanceId(id) {
-    jsb.reflection.callStaticMethod(IOSClass, "setFirebaseAppInstanceId:", id);
+    this.callStaticMethod("setFirebaseAppInstanceId:", id);
   }
   setAppsFlyerId(id) {
-    jsb.reflection.callStaticMethod(IOSClass, "setAppsFlyerId:", id);
+    this.callStaticMethod("setAppsFlyerId:", id);
   }
   setKochavaId(id) {
-    jsb.reflection.callStaticMethod(IOSClass, "setKochavaId:", id);
+    this.callStaticMethod("setKochavaId:", id);
   }
   setAdjustId(id) {
-    jsb.reflection.callStaticMethod(IOSClass, "setAdjustId:", id);
+    this.callStaticMethod("setAdjustId:", id);
   }
   setCommonProperties(properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "setCommonProperties:", format(properties));
+    this.callStaticMethod("setCommonProperties:", format(properties));
   }
   clearCommonProperties() {
-    jsb.reflection.callStaticMethod(IOSClass, "clearCommonProperties");
+    this.callStaticMethod("clearCommonProperties");
   }
   setStaticCommonProperties(properties) {
-    jsb.reflection.callStaticMethod(IOSClass, "setStaticCommonProperties:", format(properties));
+    this.callStaticMethod("setStaticCommonProperties:", format(properties));
   }
   clearStaticCommonProperties() {
-    jsb.reflection.callStaticMethod(IOSClass, "clearStaticCommonProperties");
+    this.callStaticMethod("clearStaticCommonProperties");
   }
 };
 _IOS.instance = new _IOS();

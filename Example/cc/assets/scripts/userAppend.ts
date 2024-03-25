@@ -11,7 +11,7 @@ export class init extends Component {
 
     const submit = () => {
       const data = JSON.parse(editBox.string);
-      DataTower.init(data);
+      DataTower.userAppend(...data);
     };
     const button = this.node.getComponentInChildren(Button);
     button.node.on("click", submit, this);

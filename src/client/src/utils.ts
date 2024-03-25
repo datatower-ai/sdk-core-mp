@@ -7,15 +7,15 @@ const typeMap = {
 };
 
 // 生成Android签名
-export function generateSignature(types: (keyof typeof typeMap)[]): string {
+export function generateSignature(types: (keyof typeof typeMap)[]): string | void {
   return `(${types.map((type) => typeMap[type]).join('')})V`;
 }
 
 // 序列号
-export function format(obj?: Record<string, any>) {
+export function format(obj?: Record<string, any> | Function) {
   return obj && JSON.stringify(obj);
 }
 
 export function logger(...args: any[]) {
-  console.log('[DataTower SDK]:', ...args);
+  console.log('[DataTower SDK]', ...args);
 }
