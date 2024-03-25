@@ -1,11 +1,10 @@
 import { build, type Options } from 'tsup';
 
 const DefaultConfig: Options = {
-  // clean: true,
+  clean: false,
   // dts: true,
   treeshake: true,
   watch: true,
-  legacyOutput: false,
   outExtension: ({ format }) => {
     return {
       cjs: { js: `.cjs`, dts: `.d.cts` },

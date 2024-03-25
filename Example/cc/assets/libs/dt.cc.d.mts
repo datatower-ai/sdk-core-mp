@@ -45,98 +45,14 @@ declare class DataTower {
     static setStaticCommonProperties(properties: Record<string, any>): void;
     static clearStaticCommonProperties(): void;
 }
-
-declare class Web extends DataTower {
-    constructor(config?: Config);
-    init(config: Config): void;
-    track(eventName: string, properties?: Record<string, any>): void;
-    enableTrack(): void;
-    userSet(properties: Record<string, any>): void;
-    userSetOnce(properties: Record<string, any>): void;
-    userAdd(properties: Record<string, any>): void;
-    userUnset(...properties: string[]): void;
-    userDel(): void;
-    userAppend(...properties: string[]): void;
-    userUniqAppend(...properties: string[]): void;
-    getDataTowerId(callback: (id: string) => void): void;
-    getDataTowerId(): Promise<string>;
-    setAccountId(id: string): void;
-    setDistinctId(id: string): void;
-    getDistinctId(): string | void | null;
-    setFirebaseAppInstanceId(id: string): void;
-    setAppsFlyerId(id: string): void;
-    setKochavaId(id: string): void;
-    setAdjustId(id: string): void;
-    setCommonProperties(properties: Record<string, any>): void;
-    clearCommonProperties(): void;
-    setStaticCommonProperties(properties: Record<string, any>): void;
-    clearStaticCommonProperties(): void;
-}
-
-/**
- * cocos creator Android bridge
- */
-declare class Android extends DataTower {
-    constructor(config?: Config);
-    init(config: Config): void;
-    track(eventName: string, properties?: Record<string, any>): void;
-    enableTrack(): void;
-    userSet(properties: Record<string, any>): void;
-    userSetOnce(properties: Record<string, any>): void;
-    userAdd(properties: Record<string, any>): void;
-    userUnset(...properties: string[]): void;
-    userDel(): void;
-    userAppend(...properties: string[]): void;
-    userUniqAppend(...properties: string[]): void;
-    getDataTowerId(callback: (id: string) => void): void;
-    getDataTowerId(): Promise<string>;
-    setAccountId(id: string): void;
-    setDistinctId(id: string): void;
-    getDistinctId(): string | void | null;
-    setFirebaseAppInstanceId(id: string): void;
-    setAppsFlyerId(id: string): void;
-    setKochavaId(id: string): void;
-    setAdjustId(id: string): void;
-    setCommonProperties(properties: Record<string, any>): void;
-    clearCommonProperties(): void;
-    setStaticCommonProperties(properties: Record<string, any>): void;
-    clearStaticCommonProperties(): void;
-}
-
-/**
- * cocos creator IOS bridge
- */
-declare class IOS extends DataTower {
-    constructor(config?: Config);
-    init(config: Config): void;
-    track(eventName: string, properties?: Record<string, any>): void;
-    enableTrack(): void;
-    userSet(properties: Record<string, any>): void;
-    userSetOnce(properties: Record<string, any>): void;
-    userAdd(properties: Record<string, any>): void;
-    userUnset(...properties: string[]): void;
-    userDel(): void;
-    userAppend(...properties: string[]): void;
-    userUniqAppend(...properties: string[]): void;
-    getDataTowerId(callback: (id: string) => void): void;
-    getDataTowerId(): Promise<string>;
-    setAccountId(id: string): void;
-    setDistinctId(id: string): void;
-    getDistinctId(): string | void | null;
-    setFirebaseAppInstanceId(id: string): void;
-    setAppsFlyerId(id: string): void;
-    setKochavaId(id: string): void;
-    setAdjustId(id: string): void;
-    setCommonProperties(properties: Record<string, any>): void;
-    clearCommonProperties(): void;
-    setStaticCommonProperties(properties: Record<string, any>): void;
-    clearStaticCommonProperties(): void;
-}
+type DT = typeof DataTower & {
+    new (): Omit<typeof DataTower, 'instance' | 'prototype'>;
+};
 
 /**
  * cocos creator platform API
  * includes android/ios, quick app and mini game/program
  */
-declare const CocosCreator: typeof Android | typeof IOS | typeof Web;
+declare const CocosCreator: DT;
 
 export { type Config, type Context, CocosCreator as DataTower, LogLevel, CocosCreator as default };

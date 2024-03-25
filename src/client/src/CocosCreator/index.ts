@@ -1,5 +1,5 @@
 export * from '../type';
-import { DataTower } from '../DataTower';
+import type { DT } from '../DataTower';
 // TODO: 在编译期区分平台
 // #if NATIVE_ANDROID
 // export * from './Android.js';
@@ -16,13 +16,12 @@ import IOS from './IOS';
  * cocos creator platform API
  * includes android/ios, quick app and mini game/program
  */
-const CocosCreator = (<const>[
+const CocosCreator: DT = (<const>[
   [cc.sys.platform == cc.sys.Platform.ANDROID, Android],
   [cc.sys.platform == cc.sys.Platform.IOS, IOS],
   [true, Web],
 ]).find((item) => item[0])![1];
 
-DataTower.instance = new CocosCreator();
 export { CocosCreator as DataTower };
 export default CocosCreator;
 // #endif

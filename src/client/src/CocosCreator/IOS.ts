@@ -7,6 +7,7 @@ import { format, logger } from '../utils';
  * cocos creator IOS bridge
  */
 class IOS extends DataTower {
+  static instance = new IOS();
   constructor(config?: Config) {
     super();
     if (config) this.init(config);
@@ -84,6 +85,5 @@ class IOS extends DataTower {
   }
 }
 
-DataTower.instance = new IOS();
 export { IOS as DataTower };
 export default IOS;

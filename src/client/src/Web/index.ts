@@ -18,6 +18,7 @@ const CurrentPlatform: any = new Proxy(
 
 // TODO: 待实现
 class Web extends DataTower {
+  static instance = new Web();
   constructor(config?: Config) {
     super();
     if (config) this.init(config);
@@ -96,6 +97,5 @@ class Web extends DataTower {
   }
 }
 
-DataTower.instance = new Web();
 export { Web as DataTower };
 export default Web;

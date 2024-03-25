@@ -7,6 +7,7 @@ import { format, generateSignature, logger } from '../utils';
  * cocos creator Android bridge
  */
 class Android extends DataTower {
+  static instance = new Android();
   constructor(config?: Config) {
     super();
     if (config) this.init(config);
@@ -78,19 +79,28 @@ class Android extends DataTower {
     jsb.reflection.callStaticMethod(AndroidClass, 'setAdjustId', generateSignature(['string']), id);
   }
   setCommonProperties(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(AndroidClass, 'setCommonProperties', generateSignature(['map']), format(properties));
+    jsb.reflection.callStaticMethod(
+      AndroidClass,
+      'setCommonProperties',
+      generateSignature(['map']),
+      format(properties),
+    );
   }
   clearCommonProperties(): void {
     jsb.reflection.callStaticMethod(AndroidClass, 'clearCommonProperties');
   }
   setStaticCommonProperties(properties: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(AndroidClass, 'setStaticCommonProperties', generateSignature(['map']), format(properties));
+    jsb.reflection.callStaticMethod(
+      AndroidClass,
+      'setStaticCommonProperties',
+      generateSignature(['map']),
+      format(properties),
+    );
   }
   clearStaticCommonProperties(): void {
     jsb.reflection.callStaticMethod(AndroidClass, 'clearStaticCommonProperties');
   }
 }
 
-DataTower.instance = new Android();
 export { Android as DataTower };
 export default Android;

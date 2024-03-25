@@ -5,7 +5,7 @@
     "target": "ESNext",
     "module": "NodeNext",
     "lib": ["ESNext", "DOM"],
-    "outDir": "./dist",
+    "outDir": "./dist/scripts",
     "rootDir": "./scripts",
     "strict": true,
     "noImplicitThis": true,

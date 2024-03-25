@@ -5,23 +5,24 @@ interface CC {
     isNativeIOS: boolean;
     isNativeAndroid: boolean;
     platform: number;
-    Platform: {
-      ANDROID: 1;
-      IOS: 2;
-      WEB: 3;
-      WECHAT_GAME: 4;
-      BAIDU_GAME: 5;
-      OPPO_GAME: 6;
-      VIVO_GAME: 7;
-      QQ_PLAY: 8;
-      FB_PLAYABLE_ADS: 9;
-      TT_GAME: 10;
-      XIAOMI_GAME: 11;
-      HUAWEI_GAME: 12;
-      ALIPAY_GAME: 13;
-    };
+    Platform: Record<CCPlatform, number>;
   };
 }
+
+type CCPlatform =
+  | 'ANDROID'
+  | 'IOS'
+  | 'WEB'
+  | 'WECHAT_GAME'
+  | 'BAIDU_GAME'
+  | 'OPPO_GAME'
+  | 'VIVO_GAME'
+  | 'QQ_PLAY'
+  | 'FB_PLAYABLE_ADS'
+  | 'TT_GAME'
+  | 'XIAOMI_GAME'
+  | 'HUAWEI_GAME'
+  | 'ALIPAY_GAME';
 
 interface JSB {
   reflection: {

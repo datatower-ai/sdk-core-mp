@@ -10,72 +10,72 @@ var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
 })(LogLevel || {});
 
 // src/DataTower.ts
-var DataTower = class _DataTower {
+var DataTower = class {
   static init(config) {
-    return _DataTower.instance.init(config);
+    return this.instance.init(config);
   }
   static enableTrack() {
-    return _DataTower.instance.enableTrack();
+    return this.instance.enableTrack();
   }
   static track(eventName, properties) {
-    return _DataTower.instance.track(eventName, properties);
+    return this.instance.track(eventName, properties);
   }
   static userSet(properties) {
-    return _DataTower.instance.userSet(properties);
+    return this.instance.userSet(properties);
   }
   static userSetOnce(properties) {
-    return _DataTower.instance.userSetOnce(properties);
+    return this.instance.userSetOnce(properties);
   }
   static userAdd(properties) {
-    return _DataTower.instance.userAdd(properties);
+    return this.instance.userAdd(properties);
   }
   static userUnset(...properties) {
-    return _DataTower.instance.userUnset(...properties);
+    return this.instance.userUnset(...properties);
   }
   static userDel() {
-    return _DataTower.instance.userDel();
+    return this.instance.userDel();
   }
   static userAppend(...properties) {
-    return _DataTower.instance.userAppend(...properties);
+    return this.instance.userAppend(...properties);
   }
   static userUniqAppend(...properties) {
-    return _DataTower.instance.userUniqAppend(...properties);
+    return this.instance.userUniqAppend(...properties);
   }
   static getDataTowerId(callback) {
-    return _DataTower.instance.getDataTowerId(callback);
+    return this.instance.getDataTowerId(callback);
   }
   static setAccountId(id) {
-    return _DataTower.instance.setAccountId(id);
+    return this.instance.setAccountId(id);
   }
   static setDistinctId(id) {
-    return _DataTower.instance.setDistinctId(id);
+    return this.instance.setDistinctId(id);
   }
   static getDistinctId() {
-    return _DataTower.instance.getDistinctId();
+    return this.instance.getDistinctId();
   }
   static setFirebaseAppInstanceId(id) {
-    return _DataTower.instance.setFirebaseAppInstanceId(id);
+    return this.instance.setFirebaseAppInstanceId(id);
   }
   static setAppsFlyerId(id) {
-    return _DataTower.instance.setAppsFlyerId(id);
+    return this.instance.setAppsFlyerId(id);
   }
   static setKochavaId(id) {
-    return _DataTower.instance.setKochavaId(id);
+    return this.instance.setKochavaId(id);
   }
   static setAdjustId(id) {
-    return _DataTower.instance.setAdjustId(id);
+    return this.instance.setAdjustId(id);
   }
   static setCommonProperties(properties) {
-    return _DataTower.instance.setCommonProperties(properties);
+    return this.instance.setCommonProperties(properties);
   }
   static clearCommonProperties() {
-    return _DataTower.instance.clearCommonProperties();
+    return this.instance.clearCommonProperties();
   }
   static setStaticCommonProperties(properties) {
-    return _DataTower.instance.setStaticCommonProperties(properties);
+    return this.instance.setStaticCommonProperties(properties);
   }
   static clearStaticCommonProperties() {
-    return _DataTower.instance.clearStaticCommonProperties();
+    return this.instance.clearStaticCommonProperties();
   }
 };
 
@@ -123,7 +123,7 @@ var CurrentPlatform = new Proxy(
     }
   }
 );
-var Web = class extends DataTower {
+var _Web = class _Web extends DataTower {
   constructor(config) {
     super();
     if (config)
@@ -202,11 +202,12 @@ var Web = class extends DataTower {
     CurrentPlatform.clearStaticCommonProperties();
   }
 };
-DataTower.instance = new Web();
+_Web.instance = new _Web();
+var Web = _Web;
 var Web_default = Web;
 
 // src/CocosCreator/Android.ts
-var Android = class extends DataTower {
+var _Android = class _Android extends DataTower {
   constructor(config) {
     super();
     if (config)
@@ -278,23 +279,34 @@ var Android = class extends DataTower {
     jsb.reflection.callStaticMethod(AndroidClass, "setAdjustId", generateSignature(["string"]), id);
   }
   setCommonProperties(properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setCommonProperties", generateSignature(["map"]), format(properties));
+    jsb.reflection.callStaticMethod(
+      AndroidClass,
+      "setCommonProperties",
+      generateSignature(["map"]),
+      format(properties)
+    );
   }
   clearCommonProperties() {
     jsb.reflection.callStaticMethod(AndroidClass, "clearCommonProperties");
   }
   setStaticCommonProperties(properties) {
-    jsb.reflection.callStaticMethod(AndroidClass, "setStaticCommonProperties", generateSignature(["map"]), format(properties));
+    jsb.reflection.callStaticMethod(
+      AndroidClass,
+      "setStaticCommonProperties",
+      generateSignature(["map"]),
+      format(properties)
+    );
   }
   clearStaticCommonProperties() {
     jsb.reflection.callStaticMethod(AndroidClass, "clearStaticCommonProperties");
   }
 };
-DataTower.instance = new Android();
+_Android.instance = new _Android();
+var Android = _Android;
 var Android_default = Android;
 
 // src/CocosCreator/IOS.ts
-var IOS = class extends DataTower {
+var _IOS = class _IOS extends DataTower {
   constructor(config) {
     super();
     if (config)
@@ -372,7 +384,8 @@ var IOS = class extends DataTower {
     jsb.reflection.callStaticMethod(IOSClass, "clearStaticCommonProperties");
   }
 };
-DataTower.instance = new IOS();
+_IOS.instance = new _IOS();
+var IOS = _IOS;
 var IOS_default = IOS;
 
 // src/CocosCreator/index.ts
@@ -381,7 +394,6 @@ var CocosCreator = [
   [cc.sys.platform == cc.sys.Platform.IOS, IOS_default],
   [true, Web_default]
 ].find((item) => item[0])[1];
-DataTower.instance = new CocosCreator();
 var CocosCreator_default = CocosCreator;
 
 export { CocosCreator as DataTower, LogLevel, CocosCreator_default as default };
