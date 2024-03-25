@@ -15,14 +15,14 @@ class Android extends DataTower {
 
   init(config: Config) {
     config = Object.assign({}, DefaultConfig, config);
-    if (config.isDebug) return logger('Android', 'init', config);
-    jsb.reflection.callStaticMethod(AndroidClass, 'initSDK', generateSignature(['map']), format(config));
+    console.log("lilinli config is " + format(config));
+    jsb.reflection.callStaticMethod(AndroidClass, 'initSDK', generateSignature(['string']), format(config));
   }
   track(eventName: string, properties?: Record<string, any>): void {
     jsb.reflection.callStaticMethod(
       AndroidClass,
       'track',
-      generateSignature(['string', 'map']),
+      generateSignature(['string', 'string']),
       eventName,
       format(properties),
     );

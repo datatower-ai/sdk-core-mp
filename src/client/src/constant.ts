@@ -11,5 +11,5 @@ export const DefaultConfig: Config = {
   commonProperties: {},
 };
 
-export const AndroidClass = 'ai/datatower/analytics/DT';
+export const AndroidClass = 'com/ai/datatower/DTCocosCreatorProxyApi';
 export const IOSClass = 'DTCocosCreatorProxyApi';
