@@ -9,13 +9,14 @@
 #import <DataTowerAICore/DTAnalytics.h>
 #import <DataTowerAICore/DT.h>
 #import <DataTowerAICore/DTAnalyticsUtils.h>
+#include "platform/apple/JsbBridge.h"
 
-//#if __has_include("cocos/bindings/jswrapper/SeApi.h")
-//#include "cocos/bindings/jswrapper/SeApi.h"
-//#endif
-//#if __has_include("cocos/scripting/js-bindings/jswrapper/SeApi.h")
-//#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
-//#endif
+#if __has_include("cocos/bindings/jswrapper/SeApi.h")
+#include "cocos/bindings/jswrapper/SeApi.h"
+#endif
+#if __has_include("cocos/scripting/js-bindings/jswrapper/SeApi.h")
+#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
+#endif
 using namespace std;
 
 #define IsNullOrEmpty(s) (s == nil || s.length == 0) ? YES : NO
@@ -80,14 +81,11 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 @implementation DTCocosCreatorProxyApi
 
 + (void)initSDK:(NSString *)config {
-    
-    return;
-    
     NSDictionary *configDict = [config jsonDictionary];
-    NSString *appId = [configDict[@"appId"] stringValue];
-    NSString *serverUrl = [configDict[@"serverUrl"] stringValue];
+    NSString *appId = configDict[@"appId"];
+    NSString *serverUrl = configDict[@"serverUrl"];
     int logLevel = [configDict[@"logLevel"] intValue];
-    NSString *jsonStr = [configDict[@"commonProperties"] stringValue];
+    NSString *jsonStr = configDict[@"commonProperties"];
     BOOL isDebug = [configDict[@"isDebug"] boolValue];
 
     DTLoggingLevel iOSLogLevel = convertUnityLogLevel((enum MPLogLevel)logLevel);
@@ -100,14 +98,19 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     }
 }
 
-+ (NSString *)getDataTowerId {
++ (void)getDataTowerId {
     NSString *result = [DTAnalytics getDataTowerId];
-    return result;
+    [DTCocosCreatorProxyApi callJSMethod:@"onDatatowerId" arg1:result];
 }
 
 + (void)trackEvent:(NSString *)eventName properties:(NSString *)jsonStr {
     NSDictionary *dictParam = [jsonStr jsonDictionary];
     [DTAnalytics trackEventName:eventName properties:dictParam];
+}
+
++ (void)callJSMethod:(NSString *)selector arg1:(NSString *)arg1 {
+    JsbBridge* m = [JsbBridge sharedInstance];
+    [m sendToScript:selector arg1:arg1];
 }
 
 @end

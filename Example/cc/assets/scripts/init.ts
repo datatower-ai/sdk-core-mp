@@ -1,5 +1,6 @@
 import { Component, EditBox, _decorator } from "cc";
-import { DataTower } from "../libs/dt.cc.mjs";
+import { Config, DataTower, LogLevel } from "../libs/dt.cc.mjs";
+import { native } from 'cc'
 
 const { ccclass, property } = _decorator;
 
@@ -19,14 +20,35 @@ export class init extends Component {
       editBox.node.on(
         "editing-did-ended",
         (event) => {
-          const data = JSON.parse(event._string);
-          DataTower.init(data);
+          // const data = JSON.parse(event._string);
+
+          var config: Config = {
+            appId: "dt_beb231f90a5a20ba",
+            serverUrl: "https://test.roiquery.com",
+            isDebug: true,
+            logLevel: LogLevel.DEBUG,
+            context: {},
+            channel: "",
+            manualEnableUpload: true,
+            commonProperties: undefined
+          }
+
+          console.log("lilinli invoke DataTower.init(config)");
+          DataTower.init(config);
+
           console.log("submit init：", event._string);
         },
         this
       );
+
+      native.bridge.onNative = (arg0: string, arg1: string): void => {
+        console.log("lilinli on native call method is " + arg0 + " arg1 is " + arg1);
+        editBox.placeholderLabel.string = "onCall";
+        editBox.placeholderLabel.string = arg1;
+        return;
+      }
     }
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) { }
 }

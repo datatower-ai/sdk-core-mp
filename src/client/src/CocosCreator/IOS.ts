@@ -14,11 +14,11 @@ class IOS extends DataTower {
   }
   init(config: Config) {
     config = Object.assign({}, DefaultConfig, config);
-    if (config.isDebug) return logger('IOS', 'init', config);
-    jsb.reflection.callStaticMethod(IOSClass, 'initSDK:', config);
+    console.log("lilinli invoke iOS init, config is " + format(config));
+    jsb.reflection.callStaticMethod(IOSClass, 'initSDK:', format(config));
   }
   track(eventName: string, properties?: Record<string, any>): void {
-    jsb.reflection.callStaticMethod(IOSClass, 'track:properties:', eventName, format(properties));
+    jsb.reflection.callStaticMethod(IOSClass, 'trackEvent:properties:', eventName, format(properties));
   }
   enableTrack(): void {
     jsb.reflection.callStaticMethod(IOSClass, 'enableTrack');
@@ -48,7 +48,8 @@ class IOS extends DataTower {
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
-    jsb.reflection.callStaticMethod(IOSClass, 'getDataTowerId:', callback);
+    console.log('lilinli invoke getDataTowerId');
+    jsb.reflection.callStaticMethod(IOSClass, 'getDataTowerId');
   }
   setAccountId(id: string): void {
     jsb.reflection.callStaticMethod(IOSClass, 'setAccountId:', id);

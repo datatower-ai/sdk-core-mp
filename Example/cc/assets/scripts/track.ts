@@ -19,8 +19,10 @@ export class track extends Component {
       editBox.node.on(
         "editing-did-ended",
         (event) => {
-          const { eventName, properties } = JSON.parse(event._string);
-          DataTower.track(eventName, properties);
+          // const { eventName, properties } = JSON.parse(event._string);
+          // DataTower.track(eventName, properties);
+          var json = { "name": "myName" };
+          DataTower.track("simple_event", json);
           console.log("submit track：", event._string);
         },
         this
@@ -28,5 +30,5 @@ export class track extends Component {
     }
   }
 
-  update(deltaTime: number) {}
+  update(deltaTime: number) { }
 }

@@ -12,4 +12,4 @@ export const DefaultConfig: Config = {
 };
 
 export const AndroidClass = 'ai/datatower/analytics/DT';
-export const IOSClass = 'DT';
+export const IOSClass = 'DTCocosCreatorProxyApi';
