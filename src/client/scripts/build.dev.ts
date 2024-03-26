@@ -23,7 +23,6 @@ const ConfigMap: Record<Platform, Options> = {
     entry: { 'dt.cc': 'src/CocosCreator/index.ts' },
     outDir: `${exampleDir}/cc/assets/libs`,
     format: ['esm'],
-    globalName: 'DataTower',
   },
 };
 

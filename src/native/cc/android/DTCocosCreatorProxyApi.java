@@ -1,4 +1,4 @@
-package com.ai.datatower;
+package ai.datatower.bridge;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,8 +20,8 @@ import android.os.Looper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.roiquery.analytics.DT;
-import com.roiquery.analytics.DTAnalytics;
+import ai.datatower.analytics.DT;
+import ai.datatower.analytics.DTAnalytics;
 
 public class DTCocosCreatorProxyApi {
 

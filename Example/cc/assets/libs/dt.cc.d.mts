@@ -1,5 +1,3 @@
-interface Context {
-}
 declare enum LogLevel {
     VERBOSE = 1,
     ASSERT = 2,
@@ -9,14 +7,37 @@ declare enum LogLevel {
     ERROR = 6
 }
 interface Config {
-    context: Context;
+    /**
+     * 项目唯一标识，创建项目后 DT 后台自动分配，请在【项目设置-项目详情】中获取
+     */
     appId: string;
+    /**
+     * 数据上报地址，创建项目后 DT 后台自动分配，请在【项目设置-项目详情】中获取
+     */
     serverUrl: string;
-    channel: string;
-    isDebug: boolean;
-    logLevel: LogLevel;
-    manualEnableUpload: boolean;
-    commonProperties: Record<string, any>;
+    /**
+     * 渠道，打多渠道包时需要用到，可使用 SDK 内部提供的实现， 默认为“”
+     */
+    channel?: string;
+    /**
+     * 是否打开调试，调试模式下将打印 log， 默认为 false，log 标签为 DataTower
+     */
+    isDebug?: boolean;
+    /**
+     * log 的级别，默认为 VERBOSE，仅在 isDebug = true 有效
+     */
+    logLevel?: LogLevel;
+    /**
+     * 是否由接入方手动启动上报
+     */
+    manualEnableUpload?: boolean;
+    /**
+     * 公共属性，需要传对应的 SDK type 和 version name
+     */
+    commonProperties?: {
+        '#sdk_type': string;
+        '#sdk_version_name': string;
+    };
 }
 
 declare class DataTower {
@@ -35,7 +56,8 @@ declare class DataTower {
     static getDataTowerId(): Promise<string>;
     static setAccountId(id: string): void;
     static setDistinctId(id: string): void;
-    static getDistinctId(): string | null | void;
+    static getDistinctId(callback: (id: string) => void): void;
+    static getDistinctId(): Promise<string>;
     static setFirebaseAppInstanceId(id: string): void;
     static setAppsFlyerId(id: string): void;
     static setKochavaId(id: string): void;
@@ -55,4 +77,4 @@ type DT = typeof DataTower & {
  */
 declare const CocosCreator: DT;
 
-export { type Config, type Context, CocosCreator as DataTower, LogLevel, CocosCreator as default };
+export { type Config, CocosCreator as DataTower, LogLevel, CocosCreator as default };

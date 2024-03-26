@@ -81,16 +81,15 @@ var DataTower = class {
 
 // src/constant.ts
 var DefaultConfig = {
-  context: {},
   appId: "",
   serverUrl: "",
   channel: "",
-  isDebug: true,
-  logLevel: 1,
+  isDebug: false,
+  logLevel: 1 /* VERBOSE */,
   manualEnableUpload: false,
-  commonProperties: {}
+  commonProperties: void 0
 };
-var AndroidClass = "com/ai/datatower/DTCocosCreatorProxyApi";
+var AndroidClass = "ai/datatower/bridge/DTCocosCreatorProxyApi";
 var IOSClass = "DTCocosCreatorProxyApi";
 
 // src/utils.ts

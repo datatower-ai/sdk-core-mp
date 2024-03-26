@@ -1,15 +1,14 @@
-import type { Config } from './type';
+import { LogLevel, type Config } from './type';
 
 export const DefaultConfig: Config = {
-  context: {},
   appId: '',
   serverUrl: '',
   channel: '',
-  isDebug: true,
-  logLevel: 1,
+  isDebug: false,
+  logLevel: LogLevel.VERBOSE,
   manualEnableUpload: false,
-  commonProperties: {},
+  commonProperties: void 0,
 };
 
-export const AndroidClass = 'com/ai/datatower/DTCocosCreatorProxyApi';
+export const AndroidClass = 'ai/datatower/bridge/DTCocosCreatorProxyApi';
 export const IOSClass = 'DTCocosCreatorProxyApi';
