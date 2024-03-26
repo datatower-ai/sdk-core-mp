@@ -1,5 +1,6 @@
 import type { Config } from './type';
 
+// TODO: multiple instance support
 export class DataTower {
   static instance: Omit<typeof DataTower, 'instance' | 'prototype'>;
 
@@ -44,8 +45,10 @@ export class DataTower {
   static setDistinctId(id: string): void {
     return this.instance.setDistinctId(id);
   }
-  static getDistinctId(): string | null | void {
-    return this.instance.getDistinctId();
+  static getDistinctId(callback: (id: string) => void): void;
+  static getDistinctId(): Promise<string>;
+  static getDistinctId(callback?: (id: string) => void): void | Promise<string> {
+    return this.instance.getDistinctId(callback!);
   }
   static setFirebaseAppInstanceId(id: string): void {
     return this.instance.setFirebaseAppInstanceId(id);

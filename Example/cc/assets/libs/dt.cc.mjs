@@ -50,8 +50,8 @@ var DataTower = class {
   static setDistinctId(id) {
     return this.instance.setDistinctId(id);
   }
-  static getDistinctId() {
-    return this.instance.getDistinctId();
+  static getDistinctId(callback) {
+    return this.instance.getDistinctId(callback);
   }
   static setFirebaseAppInstanceId(id) {
     return this.instance.setFirebaseAppInstanceId(id);
@@ -95,14 +95,14 @@ var IOSClass = "DTCocosCreatorProxyApi";
 
 // src/utils.ts
 var typeMap = {
-  string: "Ljava/lang/String;",
-  number: "Ljava/lang/Double;",
-  boolean: "Ljava/lang/Boolean;",
-  map: "Ljava/util/Map;",
-  array: "Ljava/util/List;"
+  void: "V",
+  int: "I",
+  float: "F",
+  boolean: "Z",
+  String: "Ljava/lang/String;"
 };
-function generateSignature(types) {
-  return `(${types.map((type) => typeMap[type]).join("")})V`;
+function generateSignature([params, ret]) {
+  return `(${params.map((param) => typeMap[param]).join("")})${typeMap[ret]}`;
 }
 function format(obj) {
   return obj && JSON.stringify(obj);
@@ -164,11 +164,8 @@ var _Web = class _Web extends DataTower {
       return this.logger("userUniqAppend", properties);
   }
   getDataTowerId(callback) {
-    if (!callback) {
-      if (this.config.isDebug)
-        return this.logger("getDataTowerId");
+    if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    }
     if (this.config.isDebug)
       return this.logger("getDataTowerId", callback);
   }
@@ -180,7 +177,9 @@ var _Web = class _Web extends DataTower {
     if (this.config.isDebug)
       return this.logger("setDistinctId", id);
   }
-  getDistinctId() {
+  getDistinctId(callback) {
+    if (!callback)
+      return new Promise((resolve) => this.getDistinctId(resolve));
     if (this.config.isDebug)
       return this.logger("getDistinctId");
   }
@@ -230,77 +229,78 @@ var _Android = class _Android extends DataTower {
       this.init(config);
   }
   callStaticMethod(method, signature, ...args) {
-    const params = signature ? [generateSignature(signature), ...args] : [];
-    return jsb.reflection.callStaticMethod(AndroidClass, method, ...params);
+    return jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
   }
   init(config) {
     this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod("initSDK", ["map"], format(this.config));
+    this.callStaticMethod("initSDK", [["String"], "void"], format(this.config));
   }
   track(eventName, properties) {
-    this.callStaticMethod("track", ["string", "map"], eventName, format(properties));
+    this.callStaticMethod("track", [["String", "String"], "void"], eventName, format(properties));
   }
   enableTrack() {
-    this.callStaticMethod("enableTrack");
+    this.callStaticMethod("enableTrack", [[], "void"]);
   }
   userSet(properties) {
-    this.callStaticMethod("userSet", ["map"], format(properties));
+    this.callStaticMethod("userSet", [["String"], "void"], format(properties));
   }
   userSetOnce(properties) {
-    this.callStaticMethod("userSetOnce", ["map"], format(properties));
+    this.callStaticMethod("userSetOnce", [["String"], "void"], format(properties));
   }
   userAdd(properties) {
-    this.callStaticMethod("userAdd", ["map"], format(properties));
+    this.callStaticMethod("userAdd", [["String"], "void"], format(properties));
   }
   userUnset(...properties) {
-    this.callStaticMethod("userUnset", ["array"], format(properties));
+    this.callStaticMethod("userUnset", [["String"], "void"], format(properties));
   }
   userDel() {
-    this.callStaticMethod("userDel");
+    this.callStaticMethod("userDel", [[], "void"]);
   }
   userAppend(...properties) {
-    this.callStaticMethod("userAppend", ["array"], format(properties));
+    this.callStaticMethod("userAppend", [["String"], "void"], format(properties));
   }
   userUniqAppend(...properties) {
-    this.callStaticMethod("userUniqAppend", ["array"], format(properties));
+    this.callStaticMethod("userUniqAppend", [["String"], "void"], format(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    this.callStaticMethod("getDataTowerId", ["string"], callback);
+    this.callStaticMethod("getDataTowerId", [[], "void"], callback);
   }
   setAccountId(id) {
-    this.callStaticMethod("setAccountId", ["string"], id);
+    this.callStaticMethod("setAccountId", [["String"], "void"], id);
   }
   setDistinctId(id) {
-    this.callStaticMethod("setDistinctId", ["string"], id);
+    this.callStaticMethod("setDistinctId", [["String"], "void"], id);
   }
-  getDistinctId() {
-    this.callStaticMethod("getDistinctId");
+  getDistinctId(callback) {
+    if (!callback)
+      return new Promise((resolve) => this.getDistinctId(resolve));
+    this.callStaticMethod("getDistinctId", [[], "void"], callback);
   }
   setFirebaseAppInstanceId(id) {
-    this.callStaticMethod("setFirebaseAppInstanceId", ["string"], id);
+    this.callStaticMethod("setFirebaseAppInstanceId", [["String"], "void"], id);
   }
   setAppsFlyerId(id) {
-    this.callStaticMethod("setAppsFlyerId", ["string"], id);
+    this.callStaticMethod("setAppsFlyerId", [["String"], "void"], id);
   }
   setKochavaId(id) {
-    this.callStaticMethod("setKochavaId", ["string"], id);
+    this.callStaticMethod("setKochavaId", [["String"], "void"], id);
   }
   setAdjustId(id) {
-    this.callStaticMethod("setAdjustId", ["string"], id);
+    this.callStaticMethod("setAdjustId", [["String"], "void"], id);
   }
   setCommonProperties(properties) {
-    this.callStaticMethod("setCommonProperties", ["map"], format(properties));
+    this.callStaticMethod("setCommonProperties", [["String"], "void"], format(properties));
   }
   clearCommonProperties() {
-    this.callStaticMethod("clearCommonProperties");
+    this.callStaticMethod("clearCommonProperties", [[], "void"]);
   }
   setStaticCommonProperties(properties) {
-    this.callStaticMethod("setStaticCommonProperties", ["map"], format(properties));
+    this.callStaticMethod("setStaticCommonProperties", [["String"], "void"], format(properties));
   }
   clearStaticCommonProperties() {
-    this.callStaticMethod("clearStaticCommonProperties");
+    this.callStaticMethod("clearStaticCommonProperties", [[], "void"]);
   }
 };
 _Android.instance = new _Android();
@@ -360,8 +360,10 @@ var _IOS = class _IOS extends DataTower {
   setDistinctId(id) {
     this.callStaticMethod("setDistinctId:", id);
   }
-  getDistinctId() {
-    this.callStaticMethod("getDistinctId");
+  getDistinctId(callback) {
+    if (!callback)
+      return new Promise((resolve) => this.getDistinctId(resolve));
+    this.callStaticMethod("getDistinctId:", callback);
   }
   setFirebaseAppInstanceId(id) {
     this.callStaticMethod("setFirebaseAppInstanceId:", id);

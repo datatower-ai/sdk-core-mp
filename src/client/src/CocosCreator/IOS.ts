@@ -22,7 +22,7 @@ class IOS extends DataTower {
     this.config = Object.assign({}, DefaultConfig, config);
     this.callStaticMethod('initSDK:', format(this.config));
   }
-  track(eventName: string, properties?: Record<string, any>): void {
+  track(eventName: string, properties: Record<string, any>): void {
     this.callStaticMethod('track:properties:', eventName, format(properties));
   }
   enableTrack(): void {
@@ -61,8 +61,11 @@ class IOS extends DataTower {
   setDistinctId(id: string): void {
     this.callStaticMethod('setDistinctId:', id);
   }
-  getDistinctId(): string | void | null {
-    this.callStaticMethod('getDistinctId');
+  getDistinctId(callback: (id: string) => void): void;
+  getDistinctId(): Promise<string>;
+  getDistinctId(callback?: (id: string) => void): void | Promise<string> {
+    if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
+    this.callStaticMethod('getDistinctId:', callback);
   }
   setFirebaseAppInstanceId(id: string): void {
     this.callStaticMethod('setFirebaseAppInstanceId:', id);

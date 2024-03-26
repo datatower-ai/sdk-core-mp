@@ -1,18 +1,19 @@
 const typeMap = {
-  string: 'Ljava/lang/String;',
-  number: 'Ljava/lang/Double;',
-  boolean: 'Ljava/lang/Boolean;',
-  map: 'Ljava/util/Map;',
-  array: 'Ljava/util/List;',
+  void: 'V',
+  int: 'I',
+  float: 'F',
+  boolean: 'Z',
+  String: 'Ljava/lang/String;',
 };
 
 // 生成Android签名
-export function generateSignature(types: (keyof typeof typeMap)[]): string | void {
-  return `(${types.map((type) => typeMap[type]).join('')})V`;
+export type GenerateSignatureParams = [params: (keyof typeof typeMap)[], ret: keyof typeof typeMap];
+export function generateSignature([params, ret]: GenerateSignatureParams): string | void {
+  return `(${params.map((param) => typeMap[param]).join('')})${typeMap[ret]}`;
 }
 
-// 序列号
-export function format(obj?: Record<string, any> | Function) {
+// 序列化
+export function format(obj: Record<string, any>) {
   return obj && JSON.stringify(obj);
 }
 

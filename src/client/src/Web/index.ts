@@ -50,10 +50,7 @@ class Web extends DataTower {
   getDataTowerId(callback: (id: string) => void): void;
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
-    if (!callback) {
-      if (this.config.isDebug) return this.logger('getDataTowerId');
-      return new Promise((resolve) => this.getDataTowerId(resolve));
-    }
+    if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
     if (this.config.isDebug) return this.logger('getDataTowerId', callback);
   }
   setAccountId(id: string): void {
@@ -62,7 +59,11 @@ class Web extends DataTower {
   setDistinctId(id: string): void {
     if (this.config.isDebug) return this.logger('setDistinctId', id);
   }
-  getDistinctId(): string | void | null {
+
+  getDistinctId(callback: (id: string) => void): void;
+  getDistinctId(): Promise<string>;
+  getDistinctId(callback?: (id: string) => void): void | Promise<string> {
+    if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
     if (this.config.isDebug) return this.logger('getDistinctId');
   }
   setFirebaseAppInstanceId(id: string): void {
