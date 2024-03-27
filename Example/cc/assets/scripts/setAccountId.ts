@@ -3,15 +3,13 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("init")
-export class init extends Component {
+@ccclass("setAccountId")
+export class setAccountId extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
 
-    const submit = () => {
-      DataTower.setAccountId(editBox.string);
-    };
+    const submit = () => DataTower.setAccountId(editBox.string);
     const button = this.node.getComponentInChildren(Button);
     button.node.on("click", submit, this);
   }

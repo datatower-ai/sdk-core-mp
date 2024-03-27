@@ -3,8 +3,8 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("init")
-export class init extends Component {
+@ccclass("setStaticCommonProperties")
+export class setStaticCommonProperties extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;

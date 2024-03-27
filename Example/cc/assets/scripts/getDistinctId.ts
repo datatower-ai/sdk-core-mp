@@ -3,19 +3,17 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("getDataTowerId")
-export class getDataTowerId extends Component {
+@ccclass("getDistinctId")
+export class getDistinctId extends Component {
   start() {
     const button = this.node.getComponent(Button);
-    if (button) {
-      button.node.on(
-        "click",
-        () => {
-          const id = DataTower.getDistinctId();
-          console.log("getDistinctId response：", id);
-        },
-        this
-      );
-    }
+    button.node.on(
+      "click",
+      async () => {
+        const id = await DataTower.getDistinctId();
+        console.log("getDistinctId response：", id);
+      },
+      this
+    );
   }
 }

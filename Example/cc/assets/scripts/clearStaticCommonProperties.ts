@@ -3,16 +3,11 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("getDataTowerId")
-export class getDataTowerId extends Component {
+@ccclass("clearStaticCommonProperties")
+export class clearStaticCommonProperties extends Component {
   start() {
     const button = this.node.getComponent(Button);
-    if (button) {
-      button.node.on(
-        "click",
-        () => DataTower.clearStaticCommonProperties(),
-        this
-      );
-    }
+    const submit = () => DataTower.clearStaticCommonProperties();
+    button.node.on("click", submit, this);
   }
 }

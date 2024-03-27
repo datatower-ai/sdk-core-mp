@@ -37,7 +37,6 @@ class Android extends DataTower {
   userAdd(properties: Record<string, any>): void {
     this.callStaticMethod('userAdd', [['String'], 'void'], fmt(properties));
   }
-  // TODO:
   userUnset(properties: string[]): void {
     this.callStaticMethod('userUnset', [['String'], 'void'], fmt(properties));
   }
@@ -50,7 +49,6 @@ class Android extends DataTower {
   userUniqAppend(properties: Record<string, any>): void {
     this.callStaticMethod('userUniqAppend', [['String'], 'void'], fmt(properties));
   }
-  // TODO:
   getDataTowerId(callback: (id: string) => void): void;
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
@@ -63,7 +61,6 @@ class Android extends DataTower {
   setDistinctId(id: string): void {
     this.callStaticMethod('setDistinctId', [['String'], 'void'], id);
   }
-  // TODO:
   getDistinctId(callback: (id: string) => void): void;
   getDistinctId(): Promise<string>;
   getDistinctId(callback?: (id: string) => void): void | Promise<string> {

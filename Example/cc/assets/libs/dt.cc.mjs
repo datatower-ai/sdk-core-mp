@@ -257,7 +257,6 @@ var _Android = class _Android extends DataTower {
   userAdd(properties) {
     this.callStaticMethod("userAdd", [["String"], "void"], fmt(properties));
   }
-  // TODO:
   userUnset(properties) {
     this.callStaticMethod("userUnset", [["String"], "void"], fmt(properties));
   }
@@ -360,7 +359,7 @@ var _IOS = class _IOS extends DataTower {
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    this.callStaticMethod("getDataTowerId:", callback);
+    globalNativeCallback((cb) => this.callStaticMethod("getDataTowerId:", cb), callback);
   }
   setAccountId(id) {
     this.callStaticMethod("setAccountId:", id);
@@ -371,7 +370,7 @@ var _IOS = class _IOS extends DataTower {
   getDistinctId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDistinctId(resolve));
-    this.callStaticMethod("getDistinctId:", callback);
+    globalNativeCallback((cb) => this.callStaticMethod("getDistinctId:", cb), callback);
   }
   setFirebaseAppInstanceId(id) {
     this.callStaticMethod("setFirebaseAppInstanceId:", id);

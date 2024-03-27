@@ -3,8 +3,8 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("getDataTowerId")
-export class getDataTowerId extends Component {
+@ccclass("userDelete")
+export class userDelete extends Component {
   start() {
     const button = this.node.getComponent(Button);
     if (button) {

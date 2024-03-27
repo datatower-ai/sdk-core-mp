@@ -1,7 +1,7 @@
 import { DataTower } from '../DataTower';
 import { DefaultConfig, IOSClass } from '../constant';
 import type { Config } from '../type';
-import { fmt } from '../utils';
+import { fmt, globalNativeCallback } from '../utils';
 
 /**
  * cocos creator IOS bridge
@@ -53,7 +53,7 @@ class IOS extends DataTower {
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
-    this.callStaticMethod('getDataTowerId:', callback);
+    globalNativeCallback((cb) => this.callStaticMethod('getDataTowerId:', cb), callback);
   }
   setAccountId(id: string): void {
     this.callStaticMethod('setAccountId:', id);
@@ -65,7 +65,7 @@ class IOS extends DataTower {
   getDistinctId(): Promise<string>;
   getDistinctId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
-    this.callStaticMethod('getDistinctId:', callback);
+    globalNativeCallback((cb) => this.callStaticMethod('getDistinctId:', cb), callback);
   }
   setFirebaseAppInstanceId(id: string): void {
     this.callStaticMethod('setFirebaseAppInstanceId:', id);

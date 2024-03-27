@@ -32,12 +32,17 @@ interface Config {
      */
     manualEnableUpload?: boolean;
     /**
-     * 公共属性，需要传对应的 SDK type 和 version name
+     * 需要传对应的 SDK type 和 version name
      */
-    commonProperties?: {
+    properties?: {
         '#sdk_type': string;
         '#sdk_version_name': string;
     };
+}
+declare global {
+    interface Window {
+        [key: `__${number}__`]: (arg: any) => void;
+    }
 }
 
 declare class DataTower {

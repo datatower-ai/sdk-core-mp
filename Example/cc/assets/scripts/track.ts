@@ -3,8 +3,8 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("init")
-export class init extends Component {
+@ccclass("track")
+export class track extends Component {
   start() {
     const _eventName = this.node
       .getChildByName("eventName")
