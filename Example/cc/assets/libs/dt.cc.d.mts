@@ -43,15 +43,15 @@ interface Config {
 declare class DataTower {
     static instance: Omit<typeof DataTower, 'instance' | 'prototype'>;
     static init(config: Config): void;
-    static enableTrack(): void;
+    static enableUpload(): void;
     static track(eventName: string, properties?: Record<string, any>): void;
     static userSet(properties: Record<string, any>): void;
     static userSetOnce(properties: Record<string, any>): void;
     static userAdd(properties: Record<string, any>): void;
-    static userUnset(...properties: string[]): void;
-    static userDel(): void;
-    static userAppend(...properties: string[]): void;
-    static userUniqAppend(...properties: string[]): void;
+    static userUnset(properties: string[]): void;
+    static userDelete(): void;
+    static userAppend(properties: Record<string, any>): void;
+    static userUniqAppend(properties: Record<string, any>): void;
     static getDataTowerId(callback: (id: string) => void): void;
     static getDataTowerId(): Promise<string>;
     static setAccountId(id: string): void;

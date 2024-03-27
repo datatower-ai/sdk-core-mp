@@ -3193,7 +3193,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "enableTrack",
+    "_name": "enableUpload",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -3339,7 +3339,7 @@
       "b": 0,
       "a": 255
     },
-    "_string": "enableTrack",
+    "_string": "enableUpload",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -6301,7 +6301,7 @@
       "b": 187,
       "a": 255
     },
-    "_string": "userUnset",
+    "_string": "userUnset 多个值之间用`,`分隔",
     "_horizontalAlign": 0,
     "_verticalAlign": 0,
     "_actualFontSize": 40,
@@ -6784,7 +6784,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "userDel",
+    "_name": "userDelete",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -6930,7 +6930,7 @@
       "b": 0,
       "a": 255
     },
-    "_string": "userDel",
+    "_string": "userDelete",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -7923,7 +7923,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_id": "ebfYj78KJGhIHJOSOeotRH"
+    "_id": "a0ApWcdJpP3Zn0haRtxpgK"
   },
   {
     "__type__": "cc.Node",

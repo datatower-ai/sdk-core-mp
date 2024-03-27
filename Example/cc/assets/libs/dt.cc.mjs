@@ -14,8 +14,8 @@ var DataTower = class {
   static init(config) {
     return this.instance.init(config);
   }
-  static enableTrack() {
-    return this.instance.enableTrack();
+  static enableUpload() {
+    return this.instance.enableUpload();
   }
   static track(eventName, properties) {
     return this.instance.track(eventName, properties);
@@ -29,17 +29,17 @@ var DataTower = class {
   static userAdd(properties) {
     return this.instance.userAdd(properties);
   }
-  static userUnset(...properties) {
-    return this.instance.userUnset(...properties);
+  static userUnset(properties) {
+    return this.instance.userUnset(properties);
   }
-  static userDel() {
-    return this.instance.userDel();
+  static userDelete() {
+    return this.instance.userDelete();
   }
-  static userAppend(...properties) {
-    return this.instance.userAppend(...properties);
+  static userAppend(properties) {
+    return this.instance.userAppend(properties);
   }
-  static userUniqAppend(...properties) {
-    return this.instance.userUniqAppend(...properties);
+  static userUniqAppend(properties) {
+    return this.instance.userUniqAppend(properties);
   }
   static getDataTowerId(callback) {
     return this.instance.getDataTowerId(callback);
@@ -100,14 +100,22 @@ var typeMap = {
   boolean: "Z",
   String: "Ljava/lang/String;"
 };
-function generateSignature([params, ret]) {
-  return `(${params.map((param) => typeMap[param]).join("")})${typeMap[ret]}`;
+function generateSignature([args, ret]) {
+  return `(${args.map((arg) => typeMap[arg]).join("")})${typeMap[ret]}`;
 }
-function format(obj) {
-  return obj && JSON.stringify(obj);
+function fmt(obj) {
+  return JSON.stringify(obj);
 }
 function logger(...args) {
   console.log("[DataTower SDK]", ...args);
+}
+function globalNativeCallback(callNative, callback) {
+  const callbackName = `__${Date.now()}__`;
+  window[callbackName] = (arg) => {
+    callback(arg);
+    delete window[callbackName];
+  };
+  callNative(callbackName);
 }
 
 // src/Web/index.ts
@@ -130,9 +138,9 @@ var _Web = class _Web extends DataTower {
     if (this.config.isDebug)
       return this.logger("track", eventName, properties);
   }
-  enableTrack() {
+  enableUpload() {
     if (this.config.isDebug)
-      return this.logger("enableTrack");
+      return this.logger("enableUpload");
   }
   userSet(properties) {
     if (this.config.isDebug)
@@ -146,19 +154,19 @@ var _Web = class _Web extends DataTower {
     if (this.config.isDebug)
       return this.logger("userAdd", properties);
   }
-  userUnset(...properties) {
+  userUnset(properties) {
     if (this.config.isDebug)
       return this.logger("userUnset", properties);
   }
-  userDel() {
+  userDelete() {
     if (this.config.isDebug)
-      return this.logger("userDel");
+      return this.logger("userDelete");
   }
-  userAppend(...properties) {
+  userAppend(properties) {
     if (this.config.isDebug)
       return this.logger("userAppend", properties);
   }
-  userUniqAppend(...properties) {
+  userUniqAppend(properties) {
     if (this.config.isDebug)
       return this.logger("userUniqAppend", properties);
   }
@@ -232,39 +240,40 @@ var _Android = class _Android extends DataTower {
   }
   init(config) {
     this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod("initSDK", [["String"], "void"], format(this.config));
+    this.callStaticMethod("initSDK", [["String"], "void"], fmt(this.config));
   }
   track(eventName, properties) {
-    this.callStaticMethod("track", [["String", "String"], "void"], eventName, format(properties));
+    this.callStaticMethod("track", [["String", "String"], "void"], eventName, fmt(properties));
   }
-  enableTrack() {
-    this.callStaticMethod("enableTrack", [[], "void"]);
+  enableUpload() {
+    this.callStaticMethod("enableUpload", [[], "void"]);
   }
   userSet(properties) {
-    this.callStaticMethod("userSet", [["String"], "void"], format(properties));
+    this.callStaticMethod("userSet", [["String"], "void"], fmt(properties));
   }
   userSetOnce(properties) {
-    this.callStaticMethod("userSetOnce", [["String"], "void"], format(properties));
+    this.callStaticMethod("userSetOnce", [["String"], "void"], fmt(properties));
   }
   userAdd(properties) {
-    this.callStaticMethod("userAdd", [["String"], "void"], format(properties));
+    this.callStaticMethod("userAdd", [["String"], "void"], fmt(properties));
   }
-  userUnset(...properties) {
-    this.callStaticMethod("userUnset", [["String"], "void"], format(properties));
+  // TODO:
+  userUnset(properties) {
+    this.callStaticMethod("userUnset", [["String"], "void"], fmt(properties));
   }
-  userDel() {
-    this.callStaticMethod("userDel", [[], "void"]);
+  userDelete() {
+    this.callStaticMethod("userDelete", [[], "void"]);
   }
-  userAppend(...properties) {
-    this.callStaticMethod("userAppend", [["String"], "void"], format(properties));
+  userAppend(properties) {
+    this.callStaticMethod("userAppend", [["String"], "void"], fmt(properties));
   }
-  userUniqAppend(...properties) {
-    this.callStaticMethod("userUniqAppend", [["String"], "void"], format(properties));
+  userUniqAppend(properties) {
+    this.callStaticMethod("userUniqAppend", [["String"], "void"], fmt(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    this.callStaticMethod("getDataTowerId", [[], "void"], callback);
+    globalNativeCallback((cb) => this.callStaticMethod("getDataTowerId", [["String"], "void"], cb), callback);
   }
   setAccountId(id) {
     this.callStaticMethod("setAccountId", [["String"], "void"], id);
@@ -275,7 +284,7 @@ var _Android = class _Android extends DataTower {
   getDistinctId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDistinctId(resolve));
-    this.callStaticMethod("getDistinctId", [[], "void"], callback);
+    globalNativeCallback((cb) => this.callStaticMethod("getDistinctId", [["String"], "void"], cb), callback);
   }
   setFirebaseAppInstanceId(id) {
     this.callStaticMethod("setFirebaseAppInstanceId", [["String"], "void"], id);
@@ -290,13 +299,13 @@ var _Android = class _Android extends DataTower {
     this.callStaticMethod("setAdjustId", [["String"], "void"], id);
   }
   setCommonProperties(properties) {
-    this.callStaticMethod("setCommonProperties", [["String"], "void"], format(properties));
+    this.callStaticMethod("setCommonProperties", [["String"], "void"], fmt(properties));
   }
   clearCommonProperties() {
     this.callStaticMethod("clearCommonProperties", [[], "void"]);
   }
   setStaticCommonProperties(properties) {
-    this.callStaticMethod("setStaticCommonProperties", [["String"], "void"], format(properties));
+    this.callStaticMethod("setStaticCommonProperties", [["String"], "void"], fmt(properties));
   }
   clearStaticCommonProperties() {
     this.callStaticMethod("clearStaticCommonProperties", [[], "void"]);
@@ -319,34 +328,34 @@ var _IOS = class _IOS extends DataTower {
   }
   init(config) {
     this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod("initSDK:", format(this.config));
+    this.callStaticMethod("initSDK:", fmt(this.config));
   }
   track(eventName, properties) {
-    this.callStaticMethod("track:properties:", eventName, format(properties));
+    this.callStaticMethod("track:properties:", eventName, fmt(properties));
   }
-  enableTrack() {
-    this.callStaticMethod("enableTrack");
+  enableUpload() {
+    this.callStaticMethod("enableUpload");
   }
   userSet(properties) {
-    this.callStaticMethod("userSet:", format(properties));
+    this.callStaticMethod("userSet:", fmt(properties));
   }
   userSetOnce(properties) {
-    this.callStaticMethod("userSetOnce:", format(properties));
+    this.callStaticMethod("userSetOnce:", fmt(properties));
   }
   userAdd(properties) {
-    this.callStaticMethod("userAdd:", format(properties));
+    this.callStaticMethod("userAdd:", fmt(properties));
   }
-  userUnset(...properties) {
-    this.callStaticMethod("userUnset:", format(properties));
+  userUnset(properties) {
+    this.callStaticMethod("userUnset:", fmt(properties));
   }
-  userDel() {
-    this.callStaticMethod("userDel");
+  userDelete() {
+    this.callStaticMethod("userDelete");
   }
-  userAppend(...properties) {
-    this.callStaticMethod("userAppend:", format(properties));
+  userAppend(properties) {
+    this.callStaticMethod("userAppend:", fmt(properties));
   }
-  userUniqAppend(...properties) {
-    this.callStaticMethod("userUniqAppend:", format(properties));
+  userUniqAppend(properties) {
+    this.callStaticMethod("userUniqAppend:", fmt(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
@@ -377,13 +386,13 @@ var _IOS = class _IOS extends DataTower {
     this.callStaticMethod("setAdjustId:", id);
   }
   setCommonProperties(properties) {
-    this.callStaticMethod("setCommonProperties:", format(properties));
+    this.callStaticMethod("setCommonProperties:", fmt(properties));
   }
   clearCommonProperties() {
     this.callStaticMethod("clearCommonProperties");
   }
   setStaticCommonProperties(properties) {
-    this.callStaticMethod("setStaticCommonProperties:", format(properties));
+    this.callStaticMethod("setStaticCommonProperties:", fmt(properties));
   }
   clearStaticCommonProperties() {
     this.callStaticMethod("clearStaticCommonProperties");

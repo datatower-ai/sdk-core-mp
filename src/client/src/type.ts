@@ -41,10 +41,13 @@ export interface Config {
   };
 }
 
+export type GlobalCallbackName = `__${number}__`;
+
 // TODO: iife
-// declare global {
-//   interface Window {
-//     DataTower: DataTower;
-//   }
-// }
-// declare var DataTower: DataTower;
+declare global {
+  interface Window {
+    [key: GlobalCallbackName]: (arg: any) => void;
+    // DataTower: DT;
+  }
+}
+// declare var DataTower: DT;

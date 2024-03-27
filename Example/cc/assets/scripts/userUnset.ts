@@ -10,8 +10,8 @@ export class init extends Component {
     editBox.maxLength = -1;
 
     const submit = () => {
-      const data = JSON.parse(editBox.string);
-      DataTower.userUnset(...data);
+      const data = editBox.string.split(",").map((item) => item.trim());
+      DataTower.userUnset(data);
     };
     const button = this.node.getComponentInChildren(Button);
     button.node.on("click", submit, this);

@@ -1,7 +1,7 @@
 import { DataTower } from '../DataTower';
 import { DefaultConfig, IOSClass } from '../constant';
 import type { Config } from '../type';
-import { format } from '../utils';
+import { fmt } from '../utils';
 
 /**
  * cocos creator IOS bridge
@@ -20,34 +20,34 @@ class IOS extends DataTower {
 
   init(config: Config) {
     this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod('initSDK:', format(this.config));
+    this.callStaticMethod('initSDK:', fmt(this.config));
   }
   track(eventName: string, properties: Record<string, any>): void {
-    this.callStaticMethod('track:properties:', eventName, format(properties));
+    this.callStaticMethod('track:properties:', eventName, fmt(properties));
   }
-  enableTrack(): void {
-    this.callStaticMethod('enableTrack');
+  enableUpload(): void {
+    this.callStaticMethod('enableUpload');
   }
   userSet(properties: Record<string, any>): void {
-    this.callStaticMethod('userSet:', format(properties));
+    this.callStaticMethod('userSet:', fmt(properties));
   }
   userSetOnce(properties: Record<string, any>): void {
-    this.callStaticMethod('userSetOnce:', format(properties));
+    this.callStaticMethod('userSetOnce:', fmt(properties));
   }
   userAdd(properties: Record<string, any>): void {
-    this.callStaticMethod('userAdd:', format(properties));
+    this.callStaticMethod('userAdd:', fmt(properties));
   }
-  userUnset(...properties: string[]): void {
-    this.callStaticMethod('userUnset:', format(properties));
+  userUnset(properties: string[]): void {
+    this.callStaticMethod('userUnset:', fmt(properties));
   }
-  userDel(): void {
-    this.callStaticMethod('userDel');
+  userDelete(): void {
+    this.callStaticMethod('userDelete');
   }
-  userAppend(...properties: string[]): void {
-    this.callStaticMethod('userAppend:', format(properties));
+  userAppend(properties: Record<string, any>): void {
+    this.callStaticMethod('userAppend:', fmt(properties));
   }
-  userUniqAppend(...properties: string[]): void {
-    this.callStaticMethod('userUniqAppend:', format(properties));
+  userUniqAppend(properties: Record<string, any>): void {
+    this.callStaticMethod('userUniqAppend:', fmt(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;
   getDataTowerId(): Promise<string>;
@@ -80,13 +80,13 @@ class IOS extends DataTower {
     this.callStaticMethod('setAdjustId:', id);
   }
   setCommonProperties(properties: Record<string, any>): void {
-    this.callStaticMethod('setCommonProperties:', format(properties));
+    this.callStaticMethod('setCommonProperties:', fmt(properties));
   }
   clearCommonProperties(): void {
     this.callStaticMethod('clearCommonProperties');
   }
   setStaticCommonProperties(properties: Record<string, any>): void {
-    this.callStaticMethod('setStaticCommonProperties:', format(properties));
+    this.callStaticMethod('setStaticCommonProperties:', fmt(properties));
   }
   clearStaticCommonProperties(): void {
     this.callStaticMethod('clearStaticCommonProperties');

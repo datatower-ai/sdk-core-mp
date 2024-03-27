@@ -23,8 +23,8 @@ class Web extends DataTower {
   track(eventName: string, properties?: Record<string, any>): void {
     if (this.config.isDebug) return this.logger('track', eventName, properties);
   }
-  enableTrack(): void {
-    if (this.config.isDebug) return this.logger('enableTrack');
+  enableUpload(): void {
+    if (this.config.isDebug) return this.logger('enableUpload');
   }
   userSet(properties: Record<string, any>): void {
     if (this.config.isDebug) return this.logger('userSet', properties);
@@ -35,16 +35,16 @@ class Web extends DataTower {
   userAdd(properties: Record<string, any>): void {
     if (this.config.isDebug) return this.logger('userAdd', properties);
   }
-  userUnset(...properties: string[]): void {
+  userUnset(properties: string[]): void {
     if (this.config.isDebug) return this.logger('userUnset', properties);
   }
-  userDel(): void {
-    if (this.config.isDebug) return this.logger('userDel');
+  userDelete(): void {
+    if (this.config.isDebug) return this.logger('userDelete');
   }
-  userAppend(...properties: string[]): void {
+  userAppend(properties: Record<string, any>): void {
     if (this.config.isDebug) return this.logger('userAppend', properties);
   }
-  userUniqAppend(...properties: string[]): void {
+  userUniqAppend(properties: Record<string, any>): void {
     if (this.config.isDebug) return this.logger('userUniqAppend', properties);
   }
   getDataTowerId(callback: (id: string) => void): void;

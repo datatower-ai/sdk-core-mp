@@ -7,8 +7,8 @@ export class DataTower {
   static init(config: Config): void {
     return this.instance.init(config);
   }
-  static enableTrack(): void {
-    return this.instance.enableTrack();
+  static enableUpload(): void {
+    return this.instance.enableUpload();
   }
   static track(eventName: string, properties?: Record<string, any>): void {
     return this.instance.track(eventName, properties);
@@ -22,17 +22,17 @@ export class DataTower {
   static userAdd(properties: Record<string, any>): void {
     return this.instance.userAdd(properties);
   }
-  static userUnset(...properties: string[]): void {
-    return this.instance.userUnset(...properties);
+  static userUnset(properties: string[]): void {
+    return this.instance.userUnset(properties);
   }
-  static userDel(): void {
-    return this.instance.userDel();
+  static userDelete(): void {
+    return this.instance.userDelete();
   }
-  static userAppend(...properties: string[]): void {
-    return this.instance.userAppend(...properties);
+  static userAppend(properties: Record<string, any>): void {
+    return this.instance.userAppend(properties);
   }
-  static userUniqAppend(...properties: string[]): void {
-    return this.instance.userUniqAppend(...properties);
+  static userUniqAppend(properties: Record<string, any>): void {
+    return this.instance.userUniqAppend(properties);
   }
   static getDataTowerId(callback: (id: string) => void): void;
   static getDataTowerId(): Promise<string>;

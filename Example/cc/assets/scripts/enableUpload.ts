@@ -8,7 +8,7 @@ export class getDataTowerId extends Component {
   start() {
     const button = this.node.getComponent(Button);
     if (button) {
-      button.node.on("click", () => DataTower.userDel(), this);
+      button.node.on("click", () => DataTower.enableUpload(), this);
     }
   }
 }
