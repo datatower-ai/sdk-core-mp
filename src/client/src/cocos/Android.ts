@@ -11,7 +11,7 @@ class Android extends DataTower {
   private config: Required<Config> = DefaultConfig;
   private dynamicPropertiesCallback: null | (() => Record<string, any>) = null;
   private callStaticMethod(method: string, signature: GenerateSignatureParams, ...args: any[]): any {
-    return jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
+    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
   }
 
   init(config: Config): void {

@@ -11,7 +11,7 @@ class IOS extends DataTower {
   private config: Required<Config> = DefaultConfig;
   private dynamicPropertiesCallback: null | (() => Record<string, any>) = null;
   private callStaticMethod(method: string, ...args: any[]): any {
-    return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
+    return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
 
   init(config: Config) {

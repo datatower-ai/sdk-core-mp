@@ -1,11 +1,11 @@
 import { rename, watchFile } from 'fs';
-import { build, type Options } from 'tsup';
+import tsup, { type Options } from 'tsup';
 
 const DefaultConfig: Options = {
-  clean: false,
+  watch: true,
+  clean: true,
   dts: true,
   treeshake: true,
-  watch: true,
   outExtension: ({ format }) => {
     return {
       cjs: { js: `.cjs`, dts: `.d.cts` },
@@ -27,14 +27,14 @@ const ConfigMap: Record<Platform, Options> = {
   },
 };
 
-export async function bundle(platform: Platform, defaultConfig: Options = DefaultConfig) {
+export async function build(platform: Platform, defaultConfig: Options = DefaultConfig) {
   const config = ConfigMap[platform];
   Object.keys(config.entry as object).forEach((entry) => {
     const filename = `${config.outDir}/${entry}`;
     const [source, target] = [`${filename}.d.ts`, `${filename}.d.mts`];
     watchFile(source, (curr) => curr && rename(source, target, () => {}));
   });
-  await build({ ...defaultConfig, ...config });
+  await tsup.build({ ...defaultConfig, ...config });
 }
 
-bundle('cocos');
+build('cocos');

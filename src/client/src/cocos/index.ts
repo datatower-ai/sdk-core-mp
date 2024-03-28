@@ -18,9 +18,9 @@ import IOS from './IOS';
  */
 const Cocos: typeof DataTower =
   {
-    [cc.sys.Platform.ANDROID]: Android,
-    [cc.sys.Platform.IOS]: IOS,
-  }[cc.sys.platform] || Web;
+    [globalThis.cc.sys.Platform.ANDROID]: Android,
+    [globalThis.cc.sys.Platform.IOS]: IOS,
+  }[globalThis.cc.sys.platform] || Web;
 
 export { Cocos as DataTower };
 export default Cocos;

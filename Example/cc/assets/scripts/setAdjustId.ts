@@ -8,6 +8,7 @@ export class setAdjustId extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
+    editBox.string = `adjustId`;
 
     const submit = () => DataTower.setAdjustId(editBox.string);
     const button = this.node.getComponentInChildren(Button);

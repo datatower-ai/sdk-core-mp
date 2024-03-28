@@ -10,12 +10,13 @@ export class track extends Component {
       .getChildByName("eventName")
       .getComponent(EditBox);
     _eventName.maxLength = -1;
+    _eventName.string = "eventName";
 
     const _properties = this.node
       .getChildByName("properties")
       .getComponent(EditBox);
     _properties.maxLength = -1;
-    _properties.string = "{\"key\":\"123\"}";
+    _properties.string = `{"key":"boolean,string,number"}`;
 
     const submit = () => {
       console.log(_properties.string);

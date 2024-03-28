@@ -8,6 +8,7 @@ export class setStaticCommonProperties extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
+    editBox.string = `{"key":"boolean,string,number"}`;
 
     const submit = () => {
       const data = JSON.parse(editBox.string);

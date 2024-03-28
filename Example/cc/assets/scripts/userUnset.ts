@@ -8,6 +8,7 @@ export class userUnset extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
+    editBox.string = `abc, xyz`;
 
     const submit = () => {
       const data = editBox.string.split(",").map((item) => item.trim());

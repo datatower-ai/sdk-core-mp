@@ -8,6 +8,7 @@ export class setFirebaseAppInstanceId extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
+    editBox.string = `firebaseAppInstanceId`;
 
     const submit = () => DataTower.setFirebaseAppInstanceId(editBox.string);
     const button = this.node.getComponentInChildren(Button);

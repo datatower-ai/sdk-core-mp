@@ -1,8 +1,7 @@
 import { rename } from 'fs';
-import { build, type Options } from 'tsup';
+import tsup, { type Options } from 'tsup';
 
 const DefaultConfig: Options = {
-  sourcemap: true,
   minify: true,
   clean: true,
   dts: true,
@@ -26,13 +25,15 @@ const ConfigMap: Record<Platform, Options> = {
   },
 };
 
-export async function bundle(platform: Platform, defaultConfig: Options = DefaultConfig) {
+export async function build(platform: Platform, defaultConfig: Options = DefaultConfig) {
   const config = ConfigMap[platform];
-  await build({ ...defaultConfig, ...config });
-  Object.keys(config.entry as object).forEach((entry) => {
-    const filename = `${config.outDir}/${entry}`;
-    rename(`${filename}.d.ts`, `${filename}.d.mts`, () => {});
-  });
+  await tsup.build({ ...defaultConfig, ...config });
+  await Promise.all(
+    Object.keys(config.entry as object).map((entry) => {
+      const filename = `${config.outDir}/${entry}`;
+      return new Promise((resolve) => rename(`${filename}.d.ts`, `${filename}.d.mts`, resolve));
+    }),
+  );
 }
 
-bundle('cocos');
+build('cocos');

@@ -8,6 +8,7 @@ export class setDistinctId extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
+    editBox.string = `distinctId`;
 
     const submit = () => DataTower.setDistinctId(editBox.string);
     const button = this.node.getComponentInChildren(Button);

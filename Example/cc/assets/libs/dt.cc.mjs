@@ -387,7 +387,7 @@ var _Android = class _Android extends DataTower {
     this.dynamicPropertiesCallback = null;
   }
   callStaticMethod(method, signature, ...args) {
-    return jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
+    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
   }
   init(config) {
     this.config = Object.assign({}, DefaultConfig, config);
@@ -475,7 +475,7 @@ var _IOS = class _IOS extends DataTower {
     this.dynamicPropertiesCallback = null;
   }
   callStaticMethod(method, ...args) {
-    return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
+    return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
   init(config) {
     this.config = Object.assign({}, DefaultConfig, config);
@@ -557,9 +557,9 @@ var IOS_default = IOS;
 
 // src/cocos/index.ts
 var Cocos = {
-  [cc.sys.Platform.ANDROID]: Android_default,
-  [cc.sys.Platform.IOS]: IOS_default
-}[cc.sys.platform] || Web;
+  [globalThis.cc.sys.Platform.ANDROID]: Android_default,
+  [globalThis.cc.sys.Platform.IOS]: IOS_default
+}[globalThis.cc.sys.platform] || Web;
 var cocos_default = Cocos;
 
 export { Cocos as DataTower, LogLevel, cocos_default as default };
