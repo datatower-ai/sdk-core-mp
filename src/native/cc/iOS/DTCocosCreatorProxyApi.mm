@@ -107,7 +107,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     [DTCocosCreatorProxyApi callJSMethod:methodName arg1:result];
 }
 
-+ (void)trackEvent:(NSString *)eventName properties:(NSString *)jsonStr {
++ (void)track:(NSString *)eventName properties:(NSString *)jsonStr {
     NSDictionary *dictParam = [jsonStr jsonDictionary];
     [DTAnalytics trackEventName:eventName properties:dictParam];
 }
