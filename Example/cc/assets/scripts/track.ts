@@ -15,8 +15,10 @@ export class track extends Component {
       .getChildByName("properties")
       .getComponent(EditBox);
     _properties.maxLength = -1;
+    _properties.string = "{\"key\":\"123\"}";
 
     const submit = () => {
+      console.log(_properties.string);
       const eventName = _eventName.string;
       const properties = JSON.parse(_properties.string);
       DataTower.track(eventName, properties);
