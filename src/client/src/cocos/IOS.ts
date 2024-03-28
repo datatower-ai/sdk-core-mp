@@ -35,7 +35,8 @@ class IOS extends DataTower {
     this.callStaticMethod('userAdd:', fmt(properties));
   }
   userUnset(properties: string[]): void {
-    this.callStaticMethod('userUnset:', fmt(properties));
+    // iOS接受字符串
+    properties.forEach(prop => this.callStaticMethod('userUnset:', prop));
   }
   userDelete(): void {
     this.callStaticMethod('userDelete');

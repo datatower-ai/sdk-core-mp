@@ -499,7 +499,7 @@ var _IOS = class _IOS extends DataTower {
     this.callStaticMethod("userAdd:", fmt(properties));
   }
   userUnset(properties) {
-    this.callStaticMethod("userUnset:", fmt(properties));
+    properties.forEach((prop) => this.callStaticMethod("userUnset:", prop));
   }
   userDelete() {
     this.callStaticMethod("userDelete");
