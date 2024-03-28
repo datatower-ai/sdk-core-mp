@@ -9,20 +9,7 @@ interface CC {
   };
 }
 
-type CCPlatform =
-  | 'ANDROID'
-  | 'IOS'
-  | 'WEB'
-  | 'WECHAT_GAME'
-  | 'BAIDU_GAME'
-  | 'OPPO_GAME'
-  | 'VIVO_GAME'
-  | 'QQ_PLAY'
-  | 'FB_PLAYABLE_ADS'
-  | 'TT_GAME'
-  | 'XIAOMI_GAME'
-  | 'HUAWEI_GAME'
-  | 'ALIPAY_GAME';
+type CCPlatform = 'ANDROID' | 'IOS' | 'WEB';
 
 interface JSB {
   reflection: {
@@ -33,3 +20,15 @@ interface JSB {
 
 declare var cc: CC;
 declare var jsb: JSB;
+
+declare var wx: any;
+declare var qq: any;
+declare var swan: any;
+declare var tt: any;
+declare var my: any;
+declare var qh: any;
+declare var dd: any;
+declare var bilibili: any;
+declare var ks: any;
+declare var jd: any;
+declare var bl: any;

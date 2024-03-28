@@ -1,12 +1,16 @@
 import type { Config } from './type';
 
 // TODO: multiple instance support
+// TODO: document
 export class DataTower {
-  static instance: Omit<typeof DataTower, 'instance' | 'prototype'>;
+  protected static instance: Omit<typeof DataTower, 'prototype'>;
 
   static init(config: Config): void {
     return this.instance.init(config);
   }
+  /**
+   * 手动启动上报(如果 initSDK 时的 manualEnableUpload 为 true)
+   */
   static enableUpload(): void {
     return this.instance.enableUpload();
   }
@@ -39,16 +43,16 @@ export class DataTower {
   static getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     return this.instance.getDataTowerId(callback!);
   }
+  static getDistinctId(callback: (id: string) => void): void;
+  static getDistinctId(): Promise<string>;
+  static getDistinctId(callback?: (id: string) => void): void | Promise<string> {
+    return this.instance.getDistinctId(callback!);
+  }
   static setAccountId(id: string): void {
     return this.instance.setAccountId(id);
   }
   static setDistinctId(id: string): void {
     return this.instance.setDistinctId(id);
-  }
-  static getDistinctId(callback: (id: string) => void): void;
-  static getDistinctId(): Promise<string>;
-  static getDistinctId(callback?: (id: string) => void): void | Promise<string> {
-    return this.instance.getDistinctId(callback!);
   }
   static setFirebaseAppInstanceId(id: string): void {
     return this.instance.setFirebaseAppInstanceId(id);
@@ -62,20 +66,16 @@ export class DataTower {
   static setAdjustId(id: string): void {
     return this.instance.setAdjustId(id);
   }
-  static setCommonProperties(properties: Record<string, any>): void {
-    return this.instance.setCommonProperties(properties);
-  }
-  static clearCommonProperties(): void {
-    return this.instance.clearCommonProperties();
-  }
   static setStaticCommonProperties(properties: Record<string, any>): void {
     return this.instance.setStaticCommonProperties(properties);
   }
   static clearStaticCommonProperties(): void {
     return this.instance.clearStaticCommonProperties();
   }
+  static setCommonProperties(callback: () => Record<string, any>): void {
+    return this.instance.setCommonProperties(callback);
+  }
+  static clearCommonProperties(): void {
+    return this.instance.clearCommonProperties();
+  }
 }
-
-export type DT = typeof DataTower & {
-  new (): Omit<typeof DataTower, 'instance' | 'prototype'>;
-};

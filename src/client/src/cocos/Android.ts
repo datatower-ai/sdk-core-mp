@@ -4,16 +4,12 @@ import type { Config } from '../type';
 import { fmt, generateSignature, globalNativeCallback, type GenerateSignatureParams } from '../utils';
 
 /**
- * cocos creator Android bridge
+ * cocos Android bridge
  */
 class Android extends DataTower {
-  static instance = new Android();
-  private config: Config = DefaultConfig;
-  constructor(config?: Config) {
-    super();
-    if (config) this.init(config);
-  }
-
+  protected static instance = new Android();
+  private config: Required<Config> = DefaultConfig;
+  private dynamicPropertiesCallback: null | (() => Record<string, any>) = null;
   private callStaticMethod(method: string, signature: GenerateSignatureParams, ...args: any[]): any {
     return jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
   }
@@ -23,6 +19,7 @@ class Android extends DataTower {
     this.callStaticMethod('initSDK', [['String'], 'void'], fmt(this.config));
   }
   track(eventName: string, properties: Record<string, any>): void {
+    properties = { ...properties, ...this.dynamicPropertiesCallback?.() };
     this.callStaticMethod('track', [['String', 'String'], 'void'], eventName, fmt(properties));
   }
   enableUpload(): void {
@@ -55,17 +52,17 @@ class Android extends DataTower {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
     globalNativeCallback((cb) => this.callStaticMethod('getDataTowerId', [['String'], 'void'], cb), callback);
   }
-  setAccountId(id: string): void {
-    this.callStaticMethod('setAccountId', [['String'], 'void'], id);
-  }
-  setDistinctId(id: string): void {
-    this.callStaticMethod('setDistinctId', [['String'], 'void'], id);
-  }
   getDistinctId(callback: (id: string) => void): void;
   getDistinctId(): Promise<string>;
   getDistinctId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
     globalNativeCallback((cb) => this.callStaticMethod('getDistinctId', [['String'], 'void'], cb), callback);
+  }
+  setAccountId(id: string): void {
+    this.callStaticMethod('setAccountId', [['String'], 'void'], id);
+  }
+  setDistinctId(id: string): void {
+    this.callStaticMethod('setDistinctId', [['String'], 'void'], id);
   }
   setFirebaseAppInstanceId(id: string): void {
     this.callStaticMethod('setFirebaseAppInstanceId', [['String'], 'void'], id);
@@ -79,17 +76,17 @@ class Android extends DataTower {
   setAdjustId(id: string): void {
     this.callStaticMethod('setAdjustId', [['String'], 'void'], id);
   }
-  setCommonProperties(properties: Record<string, any>): void {
-    this.callStaticMethod('setCommonProperties', [['String'], 'void'], fmt(properties));
-  }
-  clearCommonProperties(): void {
-    this.callStaticMethod('clearCommonProperties', [[], 'void']);
-  }
   setStaticCommonProperties(properties: Record<string, any>): void {
     this.callStaticMethod('setStaticCommonProperties', [['String'], 'void'], fmt(properties));
   }
   clearStaticCommonProperties(): void {
     this.callStaticMethod('clearStaticCommonProperties', [[], 'void']);
+  }
+  setCommonProperties(callback: () => Record<string, any>): void {
+    this.dynamicPropertiesCallback = callback;
+  }
+  clearCommonProperties(): void {
+    this.dynamicPropertiesCallback = null;
   }
 }
 

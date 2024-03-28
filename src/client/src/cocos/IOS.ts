@@ -4,16 +4,12 @@ import type { Config } from '../type';
 import { fmt, globalNativeCallback } from '../utils';
 
 /**
- * cocos creator IOS bridge
+ * cocos IOS bridge
  */
 class IOS extends DataTower {
-  static instance = new IOS();
-  private config: Config = DefaultConfig;
-  constructor(config?: Config) {
-    super();
-    if (config) this.init(config);
-  }
-
+  protected static instance = new IOS();
+  private config: Required<Config> = DefaultConfig;
+  private dynamicPropertiesCallback: null | (() => Record<string, any>) = null;
   private callStaticMethod(method: string, ...args: any[]): any {
     return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
@@ -23,6 +19,7 @@ class IOS extends DataTower {
     this.callStaticMethod('initSDK:', fmt(this.config));
   }
   track(eventName: string, properties: Record<string, any>): void {
+    properties = { ...properties, ...this.dynamicPropertiesCallback?.() };
     this.callStaticMethod('track:properties:', eventName, fmt(properties));
   }
   enableUpload(): void {
@@ -55,17 +52,17 @@ class IOS extends DataTower {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
     globalNativeCallback((cb) => this.callStaticMethod('getDataTowerId:', cb), callback);
   }
-  setAccountId(id: string): void {
-    this.callStaticMethod('setAccountId:', id);
-  }
-  setDistinctId(id: string): void {
-    this.callStaticMethod('setDistinctId:', id);
-  }
   getDistinctId(callback: (id: string) => void): void;
   getDistinctId(): Promise<string>;
   getDistinctId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
     globalNativeCallback((cb) => this.callStaticMethod('getDistinctId:', cb), callback);
+  }
+  setAccountId(id: string): void {
+    this.callStaticMethod('setAccountId:', id);
+  }
+  setDistinctId(id: string): void {
+    this.callStaticMethod('setDistinctId:', id);
   }
   setFirebaseAppInstanceId(id: string): void {
     this.callStaticMethod('setFirebaseAppInstanceId:', id);
@@ -79,17 +76,17 @@ class IOS extends DataTower {
   setAdjustId(id: string): void {
     this.callStaticMethod('setAdjustId:', id);
   }
-  setCommonProperties(properties: Record<string, any>): void {
-    this.callStaticMethod('setCommonProperties:', fmt(properties));
-  }
-  clearCommonProperties(): void {
-    this.callStaticMethod('clearCommonProperties');
-  }
   setStaticCommonProperties(properties: Record<string, any>): void {
     this.callStaticMethod('setStaticCommonProperties:', fmt(properties));
   }
   clearStaticCommonProperties(): void {
     this.callStaticMethod('clearStaticCommonProperties');
+  }
+  setCommonProperties(callback: () => Record<string, any>): void {
+    this.dynamicPropertiesCallback = callback;
+  }
+  clearCommonProperties(): void {
+    this.dynamicPropertiesCallback = null;
   }
 }
 

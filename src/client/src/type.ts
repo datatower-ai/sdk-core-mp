@@ -44,7 +44,5 @@ export interface Config {
 declare global {
   interface Window {
     [key: `__${number}__`]: (arg: any) => void;
-    // DataTower: DT;
   }
 }
-// declare var DataTower: DT;

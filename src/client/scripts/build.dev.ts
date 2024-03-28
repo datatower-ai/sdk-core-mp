@@ -1,8 +1,9 @@
+import { rename, watchFile } from 'fs';
 import { build, type Options } from 'tsup';
 
 const DefaultConfig: Options = {
   clean: false,
-  // dts: true,
+  dts: true,
   treeshake: true,
   watch: true,
   outExtension: ({ format }) => {
@@ -14,13 +15,13 @@ const DefaultConfig: Options = {
   },
 };
 
-type Platform = 'CocosCreator';
+type Platform = 'cocos';
 
 const exampleDir = '../../Example';
 
 const ConfigMap: Record<Platform, Options> = {
-  CocosCreator: {
-    entry: { 'dt.cc': 'src/CocosCreator/index.ts' },
+  cocos: {
+    entry: { 'dt.cc': 'src/cocos/index.ts' },
     outDir: `${exampleDir}/cc/assets/libs`,
     format: ['esm'],
   },
@@ -28,10 +29,12 @@ const ConfigMap: Record<Platform, Options> = {
 
 export async function bundle(platform: Platform, defaultConfig: Options = DefaultConfig) {
   const config = ConfigMap[platform];
-  await build({
-    ...defaultConfig,
-    ...config,
+  Object.keys(config.entry as object).forEach((entry) => {
+    const filename = `${config.outDir}/${entry}`;
+    const [source, target] = [`${filename}.d.ts`, `${filename}.d.mts`];
+    watchFile(source, (curr) => curr && rename(source, target, () => {}));
   });
+  await build({ ...defaultConfig, ...config });
 }
 
-bundle('CocosCreator');
+bundle('cocos');

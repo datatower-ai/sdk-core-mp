@@ -1,3 +1,4 @@
+import { rename } from 'fs';
 import { build, type Options } from 'tsup';
 
 const DefaultConfig: Options = {
@@ -15,22 +16,23 @@ const DefaultConfig: Options = {
   },
 };
 
-type Platform = 'CocosCreator';
+type Platform = 'cocos';
 
 const ConfigMap: Record<Platform, Options> = {
-  CocosCreator: {
-    entry: { 'dt.cc': 'src/CocosCreator/index.ts' },
-    outDir: 'dist/CocosCreator',
+  cocos: {
+    entry: { 'dt.cc': 'src/cocos/index.ts' },
+    outDir: 'dist/cocos',
     format: ['esm', 'cjs'],
   },
 };
 
 export async function bundle(platform: Platform, defaultConfig: Options = DefaultConfig) {
   const config = ConfigMap[platform];
-  await build({
-    ...defaultConfig,
-    ...config,
+  await build({ ...defaultConfig, ...config });
+  Object.keys(config.entry as object).forEach((entry) => {
+    const filename = `${config.outDir}/${entry}`;
+    rename(`${filename}.d.ts`, `${filename}.d.mts`, () => {});
   });
 }
 
-bundle('CocosCreator');
+bundle('cocos');

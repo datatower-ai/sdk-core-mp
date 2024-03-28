@@ -46,8 +46,11 @@ declare global {
 }
 
 declare class DataTower {
-    static instance: Omit<typeof DataTower, 'instance' | 'prototype'>;
+    protected static instance: Omit<typeof DataTower, 'prototype'>;
     static init(config: Config): void;
+    /**
+     * 手动启动上报(如果 initSDK 时的 manualEnableUpload 为 true)
+     */
     static enableUpload(): void;
     static track(eventName: string, properties?: Record<string, any>): void;
     static userSet(properties: Record<string, any>): void;
@@ -59,27 +62,24 @@ declare class DataTower {
     static userUniqAppend(properties: Record<string, any>): void;
     static getDataTowerId(callback: (id: string) => void): void;
     static getDataTowerId(): Promise<string>;
-    static setAccountId(id: string): void;
-    static setDistinctId(id: string): void;
     static getDistinctId(callback: (id: string) => void): void;
     static getDistinctId(): Promise<string>;
+    static setAccountId(id: string): void;
+    static setDistinctId(id: string): void;
     static setFirebaseAppInstanceId(id: string): void;
     static setAppsFlyerId(id: string): void;
     static setKochavaId(id: string): void;
     static setAdjustId(id: string): void;
-    static setCommonProperties(properties: Record<string, any>): void;
-    static clearCommonProperties(): void;
     static setStaticCommonProperties(properties: Record<string, any>): void;
     static clearStaticCommonProperties(): void;
+    static setCommonProperties(callback: () => Record<string, any>): void;
+    static clearCommonProperties(): void;
 }
-type DT = typeof DataTower & {
-    new (): Omit<typeof DataTower, 'instance' | 'prototype'>;
-};
 
 /**
- * cocos creator platform API
+ * cocos platform API
  * includes android/ios, quick app and mini game/program
  */
-declare const CocosCreator: DT;
+declare const Cocos: DataTower;
 
-export { type Config, CocosCreator as DataTower, LogLevel, CocosCreator as default };
+export { type Config, Cocos as DataTower, LogLevel, Cocos as default };
