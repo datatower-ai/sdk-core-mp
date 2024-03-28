@@ -70,3 +70,6 @@ if ! command -v pnpm &> /dev/null; then
 else
     echo "pnpm 已安装。"
 fi
+
+cd ../src/client
+pnpm install
