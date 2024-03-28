@@ -9,7 +9,10 @@
 #import <DataTowerAICore/DTAnalytics.h>
 #import <DataTowerAICore/DT.h>
 #import <DataTowerAICore/DTAnalyticsUtils.h>
-#include "platform/apple/JsbBridge.h"
+//#include "platform/apple/JsbBridge.h"
+//#include "bindings/sebind/sebind.h"
+//#include "platform/apple/JsbBridgeWrapper.h"
+#include "application/ApplicationManager.h"
 
 #if __has_include("cocos/bindings/jswrapper/SeApi.h")
 #include "cocos/bindings/jswrapper/SeApi.h"
@@ -87,20 +90,21 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     int logLevel = [configDict[@"logLevel"] intValue];
     NSString *jsonStr = configDict[@"commonProperties"];
     BOOL isDebug = [configDict[@"isDebug"] boolValue];
+    BOOL manualEnableUpload =  [configDict[@"manualEnableUpload"] boolValue];
 
     DTLoggingLevel iOSLogLevel = convertUnityLogLevel((enum MPLogLevel)logLevel);
     
     if (jsonStr != NULL) {
         NSDictionary *props = [jsonStr jsonDictionary];
-        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel commonProperties:props];
+        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel commonProperties:props enableTrack:manualEnableUpload];
     } else {
-        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel];
+        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel enableTrack:manualEnableUpload];
     }
 }
 
-+ (void)getDataTowerId {
++ (void)getDataTowerId:(NSString *)methodName {
     NSString *result = [DTAnalytics getDataTowerId];
-    [DTCocosCreatorProxyApi callJSMethod:@"onDatatowerId" arg1:result];
+    [DTCocosCreatorProxyApi callJSMethod:methodName arg1:result];
 }
 
 + (void)trackEvent:(NSString *)eventName properties:(NSString *)jsonStr {
@@ -108,9 +112,90 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     [DTAnalytics trackEventName:eventName properties:dictParam];
 }
 
++ (void)enableUpload {
+    [DTAnalytics setEnableTracking:YES];
+}
+
++ (void)userSet:(NSString *)jsonStr {
+    NSDictionary *dict = [jsonStr jsonDictionary];
+    [DTAnalytics userSet:dict];
+}
+
++ (void)userSetOnce:(NSString *)jsonStr {
+    NSDictionary *dict = [jsonStr jsonDictionary];
+    [DTAnalytics userSetOnce:dict];
+}
+
++ (void)userAdd:(NSString *)jsonStr {
+    NSDictionary *dict = [jsonStr jsonDictionary];
+    [DTAnalytics userAdd:dict];
+}
+
++ (void)userUnset:(NSString *)str {
+    [DTAnalytics userUnset:str];
+}
+
++ (void)userDelete {
+    [DTAnalytics userDelete];
+}
+
++ (void)userAppend:(NSString *)jsonStr {
+    NSDictionary *dict = [jsonStr jsonDictionary];
+    [DTAnalytics userAppend:dict];
+}
+
++ (void)userUniqAppend:(NSString *)jsonStr {
+    NSDictionary *dict = [jsonStr jsonDictionary];
+    [DTAnalytics userUniqAppend:dict];
+}
+
++ (void)setAccountId:(NSString *)acctId {
+    [DTAnalytics setAdjustId:acctId];
+}
+
++ (void)setDistinctId:(NSString *)acctId {
+    [DTAnalytics setDistinctId:acctId];
+}
+
++ (void)getDistinctId:(NSString *)cb {
+    NSString *result = [DTAnalytics getDistinctId];
+    [DTCocosCreatorProxyApi callJSMethod:cb arg1:result];
+}
+
++ (void)setFirebaseAppInstanceId:(NSString *)fireId {
+    [DTAnalytics setFirebaseAppInstanceId:fireId];
+}
+
++ (void)setAppsFlyerId:(NSString *)fireId {
+    [DTAnalytics setAppsFlyerId:fireId];
+}
+
++ (void)setKochavaId:(NSString *)fireId {
+    [DTAnalytics setKochavaId:fireId];
+}
+
++ (void)setAdjustId:(NSString *)fireId {
+    [DTAnalytics setAdjustId:fireId];
+}
+
++ (void)setStaticCommonProperties:(NSString *)jsonStr {
+    [DTAnalytics setSuperProperties:[jsonStr jsonDictionary]];
+}
+
++ (void)clearStaticCommonProperties {
+    [DTAnalytics setSuperProperties:nil];
+}
+
 + (void)callJSMethod:(NSString *)selector arg1:(NSString *)arg1 {
-    JsbBridge* m = [JsbBridge sharedInstance];
-    [m sendToScript:selector arg1:arg1];
+//    JsbBridge* m = [JsbBridge sharedInstance];
+//    [m sendToScript:selector arg1:arg1];
+    
+    NSString *script = [NSString stringWithFormat:@"%@(\"%@\")", selector, arg1];
+    std::string *string = new std::string([script UTF8String]);
+    CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([=](){
+        se::ScriptEngine::getInstance()->evalString(string->c_str());
+        delete string;
+    });
 }
 
 @end

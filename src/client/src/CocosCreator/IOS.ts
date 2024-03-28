@@ -80,10 +80,8 @@ class IOS extends DataTower {
     this.callStaticMethod('setAdjustId:', id);
   }
   setCommonProperties(properties: Record<string, any>): void {
-    this.callStaticMethod('setCommonProperties:', fmt(properties));
   }
   clearCommonProperties(): void {
-    this.callStaticMethod('clearCommonProperties');
   }
   setStaticCommonProperties(properties: Record<string, any>): void {
     this.callStaticMethod('setStaticCommonProperties:', fmt(properties));
