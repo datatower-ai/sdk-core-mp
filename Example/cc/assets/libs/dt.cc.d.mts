@@ -80,6 +80,6 @@ declare class DataTower {
  * cocos platform API
  * includes android/ios, quick app and mini game/program
  */
-declare const Cocos: DataTower;
+declare const Cocos: typeof DataTower;
 
 export { type Config, Cocos as DataTower, LogLevel, Cocos as default };

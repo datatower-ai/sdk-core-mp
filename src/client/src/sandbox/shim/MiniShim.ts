@@ -32,40 +32,40 @@ export class MiniShim {
     switch (platform) {
       case MiniProgramPlatform.WECHAT:
       case MiniGamePlatform.WECHAT:
-        this.api = wx;
+        this.api = globalThis.wx;
         break;
       case MiniProgramPlatform.QQ:
       case MiniGamePlatform.QQ:
-        this.api = qq;
+        this.api = globalThis.qq;
         break;
       case MiniProgramPlatform.BAIDU:
       case MiniGamePlatform.BAIDU:
-        this.api = swan;
+        this.api = globalThis.swan;
         break;
       case MiniProgramPlatform.TOUTIAO:
       case MiniGamePlatform.TOUTIAO:
-        this.api = tt;
+        this.api = globalThis.tt;
         break;
       case MiniProgramPlatform.ALIPAY:
       case MiniGamePlatform.ALIPAY:
       case MiniProgramPlatform.TAOBAO:
-        this.api = my;
+        this.api = globalThis.my;
         break;
       case MiniProgramPlatform.DINGDING:
-        this.api = dd;
+        this.api = globalThis.dd;
         break;
       case MiniProgramPlatform.KUAISHOU:
-        this.api = ks;
+        this.api = globalThis.ks;
         break;
       case MiniProgramPlatform.QIHOO:
       case MiniGamePlatform.QIHOO:
-        this.api = qh;
+        this.api = globalThis.qh;
         break;
       case MiniProgramPlatform.JINGDONG:
-        this.api = jd;
+        this.api = globalThis.jd;
         break;
       case MiniGamePlatform.BILIBILI:
-        this.api = bl;
+        this.api = globalThis.bl;
       default:
         throw new Error('Unsupported platform');
     }

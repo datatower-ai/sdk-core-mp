@@ -252,40 +252,40 @@ var MiniShim = class {
     switch (platform) {
       case 100 /* WECHAT */:
       case 200 /* WECHAT */:
-        this.api = wx;
+        this.api = globalThis.wx;
         break;
       case 101 /* QQ */:
       case 201 /* QQ */:
-        this.api = qq;
+        this.api = globalThis.qq;
         break;
       case 102 /* BAIDU */:
       case 202 /* BAIDU */:
-        this.api = swan;
+        this.api = globalThis.swan;
         break;
       case 103 /* TOUTIAO */:
       case 203 /* TOUTIAO */:
-        this.api = tt;
+        this.api = globalThis.tt;
         break;
       case 104 /* ALIPAY */:
       case 204 /* ALIPAY */:
       case 108 /* TAOBAO */:
-        this.api = my;
+        this.api = globalThis.my;
         break;
       case 105 /* DINGDING */:
-        this.api = dd;
+        this.api = globalThis.dd;
         break;
       case 106 /* KUAISHOU */:
-        this.api = ks;
+        this.api = globalThis.ks;
         break;
       case 107 /* QIHOO */:
       case 206 /* QIHOO */:
-        this.api = qh;
+        this.api = globalThis.qh;
         break;
       case 109 /* JINGDONG */:
-        this.api = jd;
+        this.api = globalThis.jd;
         break;
       case 205 /* BILIBILI */:
-        this.api = bl;
+        this.api = globalThis.bl;
       default:
         throw new Error("Unsupported platform");
     }

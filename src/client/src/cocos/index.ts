@@ -16,7 +16,7 @@ import IOS from './IOS';
  * cocos platform API
  * includes android/ios, quick app and mini game/program
  */
-const Cocos: DataTower =
+const Cocos: typeof DataTower =
   {
     [cc.sys.Platform.ANDROID]: Android,
     [cc.sys.Platform.IOS]: IOS,

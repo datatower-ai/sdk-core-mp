@@ -28,7 +28,6 @@ declare var tt: any;
 declare var my: any;
 declare var qh: any;
 declare var dd: any;
-declare var bilibili: any;
+declare var bl: any;
 declare var ks: any;
 declare var jd: any;
-declare var bl: any;
