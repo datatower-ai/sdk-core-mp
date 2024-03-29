@@ -1,25 +1,6 @@
-const typeMap = {
-  void: 'V',
-  int: 'I',
-  float: 'F',
-  boolean: 'Z',
-  String: 'Ljava/lang/String;',
-};
-
-export type JavaType = keyof typeof typeMap;
-export type GenerateSignatureParams = [args: JavaType[], ret: JavaType];
-// 生成Android签名
-export function generateSignature([args, ret]: GenerateSignatureParams): string | void {
-  return `(${args.map((arg) => typeMap[arg]).join('')})${typeMap[ret]}`;
-}
-
 // 序列化
 export function fmt(obj: Record<string, any>) {
   return JSON.stringify(obj);
-}
-
-export function logger(...args: any[]) {
-  console.log('[DataTower SDK]', ...args);
 }
 
 /**
@@ -36,4 +17,15 @@ export function globalNativeCallback<T>(callNative: (callbackName: string) => vo
     delete window[callbackName];
   };
   callNative(callbackName);
+}
+
+export function debounce<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+  let timer: number | null = null;
+  return function (this: any, ...args: any[]) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback.apply(this, args);
+      timer = null;
+    }, delay);
+  } as T;
 }

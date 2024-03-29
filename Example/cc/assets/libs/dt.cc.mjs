@@ -1,6 +1,4 @@
 var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __propIsEnum = Object.prototype.propertyIsEnumerable;
@@ -16,7 +14,26 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
-var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
 
 // src/type.ts
 var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
@@ -29,13 +46,13 @@ var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
   return LogLevel2;
 })(LogLevel || {});
 
-// src/DataTower.ts
-var DataTower = class {
+// src/StaticDataTower.ts
+var StaticDataTower = class {
   static init(config) {
     return this.instance.init(config);
   }
   /**
-   * 手动启动上报(如果 initSDK 时的 manualEnableUpload 为 true)
+   * manually start the report (if the manualEnableUpload is true)
    */
   static enableUpload() {
     return this.instance.enableUpload();
@@ -102,35 +119,24 @@ var DataTower = class {
   }
 };
 
+// package.json
+var version = "1.0.0";
+
 // src/constant.ts
-var DefaultConfig = {
+var DEFAULT_INITIAL_CONFIG = {
   appId: "",
   serverUrl: "",
   channel: "",
   isDebug: false,
   logLevel: 1 /* VERBOSE */,
-  manualEnableUpload: false,
-  properties: { "#sdk_type": "", "#sdk_version_name": "" }
+  manualEnableUpload: false
 };
 var AndroidClass = "ai/datatower/bridge/DTCocosCreatorProxyApi";
 var IOSClass = "DTCocosCreatorProxyApi";
 
 // src/utils.ts
-var typeMap = {
-  void: "V",
-  int: "I",
-  float: "F",
-  boolean: "Z",
-  String: "Ljava/lang/String;"
-};
-function generateSignature([args, ret]) {
-  return `(${args.map((arg) => typeMap[arg]).join("")})${typeMap[ret]}`;
-}
 function fmt(obj) {
   return JSON.stringify(obj);
-}
-function logger(...args) {
-  console.log("[DataTower SDK]", ...args);
 }
 function globalNativeCallback(callNative, callback) {
   const callbackName = `__${Date.now()}__`;
@@ -140,321 +146,443 @@ function globalNativeCallback(callNative, callback) {
   };
   callNative(callbackName);
 }
+function debounce(callback, delay) {
+  let timer = null;
+  return function(...args) {
+    if (timer)
+      clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback.apply(this, args);
+      timer = null;
+    }, delay);
+  };
+}
+
+// src/sandbox/Logger.ts
+var Logger = class {
+  static verbose(...args) {
+    if (this.level > 1 /* VERBOSE */)
+      return;
+    console.log("[VERBOSE]", ...args);
+  }
+  static assert(condition, ...args) {
+    if (this.level > 2 /* ASSERT */)
+      return;
+    console.assert(condition, "[ASSERT]", ...args);
+  }
+  static debug(...args) {
+    if (this.level > 3 /* DEBUG */)
+      return;
+    console.debug("[DEBUG]", ...args);
+  }
+  static info(...args) {
+    if (this.level > 4 /* INFO */)
+      return;
+    console.info("[INFO]", ...args);
+  }
+  static warn(...args) {
+    if (this.level > 5 /* WARN */)
+      return;
+    console.warn("[WARN]", ...args);
+  }
+  static error(...args) {
+    if (this.level > 6 /* ERROR */)
+      return;
+    console.error("[ERROR]", ...args);
+  }
+};
+Logger.level = 1 /* VERBOSE */;
+
+// src/sandbox/TaskQueue.ts
+var _TaskQueue = class _TaskQueue {
+  constructor(maxSize = _TaskQueue.MAX_TASK_QUEUE_SIZE) {
+    this.maxSize = maxSize;
+    this.processing = false;
+    this.queue = [];
+  }
+  get size() {
+    return this.queue.length;
+  }
+  setMaxSize(size) {
+    this.maxSize = size;
+  }
+  enqueue(task, ...tasks) {
+    [task, ...tasks].forEach((task2) => {
+      var _a, _b;
+      this.queue.push(task2);
+      (_a = this.onEnqueueCallback) == null ? void 0 : _a.call(this, task2);
+      if (this.queue.length >= this.maxSize) {
+        (_b = this.onMaxSizeCallback) == null ? void 0 : _b.call(this);
+      }
+    });
+  }
+  dequeue() {
+    var _a;
+    const task = this.queue.shift();
+    if (!task)
+      return;
+    (_a = this.onDequeueCallback) == null ? void 0 : _a.call(this, task);
+    return task;
+  }
+  onMaxSize(callback) {
+    this.onMaxSizeCallback = callback;
+  }
+  onEnqueue(callback) {
+    this.onEnqueueCallback = callback;
+  }
+  onDequeue(callback) {
+    this.onDequeueCallback = callback;
+  }
+  onError(callback) {
+    this.onErrorCallback = callback;
+  }
+  /**
+   * execute all tasks at the same time, and clear the queue
+   * don't call onDequeueCallback
+   */
+  flush() {
+    let isAllSync = true;
+    const tasks = this.queue.map((task) => {
+      var _a;
+      if (task instanceof Promise) {
+        isAllSync = false;
+        return task.catch((error) => {
+          var _a2;
+          return (_a2 = this.onErrorCallback) == null ? void 0 : _a2.call(this, task, error);
+        });
+      }
+      try {
+        return task();
+      } catch (error) {
+        (_a = this.onErrorCallback) == null ? void 0 : _a.call(this, task, error);
+      }
+    });
+    this.queue = [];
+    return isAllSync ? tasks : Promise.all(tasks);
+  }
+  /**
+   * execute all tasks in order, and clear the queue
+   * don't call onDequeueCallback
+   */
+  start() {
+    return __async(this, null, function* () {
+      if (this.processing)
+        return;
+      this.processing = true;
+      yield this.startExecuteNext();
+      this.processing = false;
+    });
+  }
+  startExecuteNext() {
+    return __async(this, null, function* () {
+      var _a;
+      if (this.queue.length === 0)
+        return;
+      const task = this.queue.shift();
+      try {
+        yield task();
+      } catch (error) {
+        (_a = this.onErrorCallback) == null ? void 0 : _a.call(this, task, error);
+      }
+      yield this.startExecuteNext();
+    });
+  }
+  static tryExecute(tasks) {
+    if (tasks.length === 0)
+      return;
+    try {
+      const task = tasks[0]();
+      if (task instanceof Promise) {
+        return task.catch(() => {
+          if (tasks.length === 1)
+            return Promise.reject();
+          return _TaskQueue.tryExecute(tasks.slice(1));
+        });
+      }
+      return task;
+    } catch (e) {
+      if (tasks.length === 1)
+        return;
+      return _TaskQueue.tryExecute(tasks.slice(1));
+    }
+  }
+  tryExecute() {
+    return _TaskQueue.tryExecute(this.queue);
+  }
+};
+_TaskQueue.MAX_TASK_QUEUE_SIZE = 10;
+var TaskQueue = _TaskQueue;
 
 // src/sandbox/Sandbox.ts
 var Sandbox = class {
   constructor(shim) {
     this.shim = shim;
-    this.config = DefaultConfig;
-  }
-  logger(method, ...args) {
-    logger("<Sandbox>", method, args);
+    this.config = DEFAULT_INITIAL_CONFIG;
+    this.properties = { "#sdk_type": "js", "#sdk_version_name": version };
+    this.dynamicPropertiesCallback = null;
+    this.taskQueue = new TaskQueue();
   }
   init(config) {
-    this.config = Object.assign({}, DefaultConfig, config);
-    if (this.config.isDebug)
-      return this.logger("init", this.config);
+    this.config = __spreadValues(__spreadValues({}, DEFAULT_INITIAL_CONFIG), config);
+    Logger.level = this.config.logLevel;
+    this.taskQueue.onMaxSize(() => this.enableUpload());
+    if (this.config.manualEnableUpload)
+      this.taskQueue.setMaxSize(Infinity);
+    else
+      this.taskQueue.onEnqueue(debounce(() => this.enableUpload(), 1e4));
+    Logger.info("<call init>", config);
   }
   track(eventName, properties) {
-    if (this.config.isDebug)
-      return this.logger("track", eventName, properties);
+    Logger.info("<call track>", eventName, properties);
+    this.taskQueue.enqueue(() => {
+      var _a;
+      return __spreadValues(__spreadValues(__spreadValues({}, properties), this.properties), (_a = this.dynamicPropertiesCallback) == null ? void 0 : _a.call(this));
+    });
   }
   enableUpload() {
-    if (this.config.isDebug)
-      return this.logger("enableUpload");
+    Logger.info("<call enableUpload>");
+    this.shim.request({ url: this.config.serverUrl, data: this.taskQueue.flush() });
   }
   userSet(properties) {
-    if (this.config.isDebug)
-      return this.logger("userSet", properties);
+    Logger.info("<call userSet>", properties);
   }
   userSetOnce(properties) {
-    if (this.config.isDebug)
-      return this.logger("userSetOnce", properties);
+    Logger.info("<call userSetOnce>", properties);
   }
   userAdd(properties) {
-    if (this.config.isDebug)
-      return this.logger("userAdd", properties);
+    Logger.info("<call userAdd>", properties);
   }
   userUnset(properties) {
-    if (this.config.isDebug)
-      return this.logger("userUnset", properties);
+    Logger.info("<call userUnset>", properties);
   }
   userDelete() {
-    if (this.config.isDebug)
-      return this.logger("userDelete");
+    Logger.info("<call userDelete>");
   }
   userAppend(properties) {
-    if (this.config.isDebug)
-      return this.logger("userAppend", properties);
+    Logger.info("<call userAppend>", properties);
   }
   userUniqAppend(properties) {
-    if (this.config.isDebug)
-      return this.logger("userUniqAppend", properties);
+    Logger.info("<call userUniqAppend>", properties);
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    if (this.config.isDebug)
-      return this.logger("getDataTowerId", callback);
+    Logger.info("<call getDataTowerId>", callback);
   }
   getDistinctId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDistinctId(resolve));
-    if (this.config.isDebug)
-      return this.logger("getDistinctId");
+    Logger.info("<call getDistinctId>");
   }
   setAccountId(id) {
-    if (this.config.isDebug)
-      return this.logger("setAccountId", id);
+    Logger.info("<call setAccountId>", id);
   }
   setDistinctId(id) {
-    if (this.config.isDebug)
-      return this.logger("setDistinctId", id);
+    Logger.info("<call setDistinctId>", id);
   }
   setFirebaseAppInstanceId(id) {
-    if (this.config.isDebug)
-      return this.logger("setFirebaseAppInstanceId", id);
+    Logger.info("<call setFirebaseAppInstanceId>", id);
   }
   setAppsFlyerId(id) {
-    if (this.config.isDebug)
-      return this.logger("setAppsFlyerId", id);
+    Logger.info("<call setAppsFlyerId>", id);
   }
   setKochavaId(id) {
-    if (this.config.isDebug)
-      return this.logger("setKochavaId", id);
+    Logger.info("<call setKochavaId>", id);
   }
   setAdjustId(id) {
-    if (this.config.isDebug)
-      return this.logger("setAdjustId", id);
+    Logger.info("<call setAdjustId>", id);
   }
   setStaticCommonProperties(properties) {
-    if (this.config.isDebug)
-      return this.logger("setStaticCommonProperties", properties);
+    Logger.info("<call setStaticCommonProperties>", properties);
   }
   clearStaticCommonProperties() {
-    if (this.config.isDebug)
-      return this.logger("clearStaticCommonProperties");
+    Logger.info("<call clearStaticCommonProperties>");
   }
   setCommonProperties(callback) {
-    if (this.config.isDebug)
-      return this.logger("setCommonProperties", callback);
+    Logger.info("<call setCommonProperties>", callback);
+    this.dynamicPropertiesCallback = callback;
   }
   clearCommonProperties() {
-    if (this.config.isDebug)
-      return this.logger("clearCommonProperties");
-  }
-};
-
-// src/sandbox/shim/MiniShim.ts
-var MiniShim = class {
-  constructor(platform) {
-    this.platform = platform;
-    switch (platform) {
-      case 100 /* WECHAT */:
-      case 200 /* WECHAT */:
-        this.api = globalThis.wx;
-        break;
-      case 101 /* QQ */:
-      case 201 /* QQ */:
-        this.api = globalThis.qq;
-        break;
-      case 102 /* BAIDU */:
-      case 202 /* BAIDU */:
-        this.api = globalThis.swan;
-        break;
-      case 103 /* TOUTIAO */:
-      case 203 /* TOUTIAO */:
-        this.api = globalThis.tt;
-        break;
-      case 104 /* ALIPAY */:
-      case 204 /* ALIPAY */:
-      case 108 /* TAOBAO */:
-        this.api = globalThis.my;
-        break;
-      case 105 /* DINGDING */:
-        this.api = globalThis.dd;
-        break;
-      case 106 /* KUAISHOU */:
-        this.api = globalThis.ks;
-        break;
-      case 107 /* QIHOO */:
-      case 206 /* QIHOO */:
-        this.api = globalThis.qh;
-        break;
-      case 109 /* JINGDONG */:
-        this.api = globalThis.jd;
-        break;
-      case 205 /* BILIBILI */:
-        this.api = globalThis.bl;
-      default:
-        throw new Error("Unsupported platform");
-    }
-  }
-  getStorage(key) {
-    return new Promise((success, fail) => {
-      this.api.getStorage({ key, success, fail }).then((data) => JSON.parse(data || "null"));
-    });
-  }
-  setStorage(key, value) {
-    const data = JSON.stringify(value);
-    return new Promise((success, fail) => {
-      this.api.setStorage({ key, data, success, fail });
-    });
-  }
-  removeStorage(name) {
-    return new Promise((success, fail) => {
-      this.api.removeStorage({ key: name, success, fail });
-    });
-  }
-  request(options) {
-    return new Promise((success, fail) => {
-      const { header, params, data, method, timeout } = options;
-      const query = params ? "?" + new URLSearchParams(params).toString() : "";
-      const url = options.url + query;
-      const opts = { url, data, method, timeout, success, fail };
-      switch (this.platform) {
-        case 108 /* TAOBAO */:
-          const res = this.api.tb.request({
-            url,
-            method,
-            options: JSON.stringify({ timeout }),
-            headers: JSON.stringify(header),
-            body: JSON.stringify(data)
-          });
-          success(res);
-          break;
-        case 204 /* ALIPAY */:
-        case 104 /* ALIPAY */:
-          this.api.httpRequest(__spreadProps(__spreadValues({}, opts), { headers: header }));
-          break;
-        case 105 /* DINGDING */:
-          this.api.httpRequest(__spreadProps(__spreadValues({}, opts), { headers: header }));
-          break;
-        default:
-          this.api.request(__spreadProps(__spreadValues({}, opts), { header }));
-          break;
-      }
-    });
-  }
-  getNetworkStatus() {
-  }
-  onNetworkStatusChange(callback) {
-  }
-  getSystemInfo() {
-  }
-  getAppOptions() {
-  }
-  showToast(msg) {
-  }
-};
-
-// src/sandbox/shim/QuickAppShim.ts
-var QuickAppShim = class {
-  constructor() {
-  }
-};
-
-// src/sandbox/shim/QuickGameShim.ts
-var QuickGameShim = class {
-  constructor(platform) {
-    this.platform = platform;
+    Logger.info("<call clearCommonProperties>");
+    this.dynamicPropertiesCallback = null;
   }
 };
 
 // src/sandbox/shim/WebShim.ts
 var WebShim = class {
+  getStorage(key) {
+    return __async(this, null, function* () {
+      const data = localStorage.getItem(key);
+      return JSON.parse(data || "null");
+    });
+  }
+  setStorage(key, value) {
+    return __async(this, null, function* () {
+      const data = JSON.stringify(value);
+      localStorage.setItem(key, data);
+    });
+  }
+  removeStorage(name) {
+    return __async(this, null, function* () {
+      localStorage.removeItem(name);
+    });
+  }
+  request(options) {
+    return __async(this, null, function* () {
+      return TaskQueue.tryExecute([
+        () => this.requestByBeacon(options),
+        () => this.requestByXHR(options),
+        () => this.requestByImage(options)
+      ]);
+    });
+  }
+  requestByBeacon(_0) {
+    return __async(this, arguments, function* ({ url, data }) {
+      var _a;
+      if (!(typeof ((_a = globalThis.navigator) == null ? void 0 : _a.sendBeacon) === "function")) {
+        return Promise.reject(new Error("sendBeacon is not supported"));
+      }
+      const response = navigator.sendBeacon(url, JSON.stringify(data));
+      return response ? Promise.resolve() : Promise.reject(new Error("Request failed"));
+    });
+  }
+  useXHR() {
+    if (globalThis.XMLHttpRequest) {
+      return new globalThis.XMLHttpRequest();
+    } else if (globalThis.XDomainRequest) {
+      const xhr = new globalThis.XDomainRequest();
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      return xhr;
+    } else if (globalThis.ActiveXObject) {
+      return TaskQueue.tryExecute([
+        () => new globalThis.ActiveXObject("Msxml2.XMLHTTP"),
+        () => new globalThis.ActiveXObject("Microsoft.XMLHTTP")
+      ]);
+    }
+  }
+  requestByXHR(options) {
+    return __async(this, null, function* () {
+      const xhr = this.useXHR();
+      if (!xhr)
+        return Promise.reject(new Error("XHR is not supported"));
+      const { url, data } = options;
+      return new Promise((resolve, reject) => {
+        xhr.open("POST", url, true);
+        xhr.onload = () => {
+          const allowOrigin = xhr.getResponseHeader("Access-Control-Allow-Origin");
+          if (!(allowOrigin === "*" || (allowOrigin == null ? void 0 : allowOrigin.includes(window.location.href)))) {
+            return reject(new Error("Request failed with invalid allow origin"));
+          }
+          if (!(xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            return reject(new Error(`Request failed with status ${xhr.status}`));
+          }
+          return resolve();
+        };
+        xhr.onerror = () => reject(new Error("Request failed"));
+        xhr.setRequestHeader("Content-type", "text/plain;charset=UTF-8");
+        xhr.send(JSON.stringify(JSON.stringify(data)));
+      });
+    });
+  }
+  requestByImage(options) {
+    return __async(this, null, function* () {
+      const { url, data } = options;
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const urlWithParams = new URL(url);
+        Object.entries(data).forEach(([key, value]) => urlWithParams.searchParams.append(key, JSON.stringify(value)));
+        img.src = urlWithParams.toString();
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("Request failed"));
+      });
+    });
+  }
 };
 
 // src/sandbox/index.ts
-var Web = class extends DataTower {
+var Web = class extends StaticDataTower {
 };
 Web.instance = new Sandbox(new WebShim());
-var QuickApp = class extends DataTower {
-};
-QuickApp.instance = new Sandbox(new QuickAppShim());
-var HuaweiQuickGame = class extends DataTower {
-};
-HuaweiQuickGame.instance = new Sandbox(new QuickGameShim(302 /* HUAWEI */));
-var WechatMimiGame = class extends DataTower {
-};
-WechatMimiGame.instance = new Sandbox(new MiniShim(200 /* WECHAT */));
 
 // src/cocos/Android.ts
-var _Android = class _Android extends DataTower {
+var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
   constructor() {
     super(...arguments);
-    this.config = DefaultConfig;
+    this.properties = { "#sdk_type": "js", "#sdk_version_name": version };
     this.dynamicPropertiesCallback = null;
   }
-  callStaticMethod(method, signature, ...args) {
-    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, generateSignature(signature), ...args);
+  static generateSignature([args, ret]) {
+    return `(${args.map((arg) => this.typeMap[arg]).join("")})${this.typeMap[ret]}`;
+  }
+  static callStaticMethod(method, signature, ...args) {
+    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, this.generateSignature(signature), ...args);
   }
   init(config) {
-    this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod("initSDK", [["String"], "void"], fmt(this.config));
+    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, this.properties);
+    _CocosAndroid.callStaticMethod("initSDK", [["String"], "void"], fmt(config));
   }
   track(eventName, properties) {
     var _a;
     properties = __spreadValues(__spreadValues({}, properties), (_a = this.dynamicPropertiesCallback) == null ? void 0 : _a.call(this));
-    this.callStaticMethod("track", [["String", "String"], "void"], eventName, fmt(properties));
+    _CocosAndroid.callStaticMethod("track", [["String", "String"], "void"], eventName, fmt(properties));
   }
   enableUpload() {
-    this.callStaticMethod("enableUpload", [[], "void"]);
+    _CocosAndroid.callStaticMethod("enableUpload", [[], "void"]);
   }
   userSet(properties) {
-    this.callStaticMethod("userSet", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userSet", [["String"], "void"], fmt(properties));
   }
   userSetOnce(properties) {
-    this.callStaticMethod("userSetOnce", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userSetOnce", [["String"], "void"], fmt(properties));
   }
   userAdd(properties) {
-    this.callStaticMethod("userAdd", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userAdd", [["String"], "void"], fmt(properties));
   }
   userUnset(properties) {
-    this.callStaticMethod("userUnset", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userUnset", [["String"], "void"], fmt(properties));
   }
   userDelete() {
-    this.callStaticMethod("userDelete", [[], "void"]);
+    _CocosAndroid.callStaticMethod("userDelete", [[], "void"]);
   }
   userAppend(properties) {
-    this.callStaticMethod("userAppend", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userAppend", [["String"], "void"], fmt(properties));
   }
   userUniqAppend(properties) {
-    this.callStaticMethod("userUniqAppend", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userUniqAppend", [["String"], "void"], fmt(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    globalNativeCallback((cb) => this.callStaticMethod("getDataTowerId", [["String"], "void"], cb), callback);
+    globalNativeCallback((cb) => _CocosAndroid.callStaticMethod("getDataTowerId", [["String"], "void"], cb), callback);
   }
   getDistinctId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDistinctId(resolve));
-    globalNativeCallback((cb) => this.callStaticMethod("getDistinctId", [["String"], "void"], cb), callback);
+    globalNativeCallback((cb) => _CocosAndroid.callStaticMethod("getDistinctId", [["String"], "void"], cb), callback);
   }
   setAccountId(id) {
-    this.callStaticMethod("setAccountId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setAccountId", [["String"], "void"], id);
   }
   setDistinctId(id) {
-    this.callStaticMethod("setDistinctId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setDistinctId", [["String"], "void"], id);
   }
   setFirebaseAppInstanceId(id) {
-    this.callStaticMethod("setFirebaseAppInstanceId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setFirebaseAppInstanceId", [["String"], "void"], id);
   }
   setAppsFlyerId(id) {
-    this.callStaticMethod("setAppsFlyerId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setAppsFlyerId", [["String"], "void"], id);
   }
   setKochavaId(id) {
-    this.callStaticMethod("setKochavaId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setKochavaId", [["String"], "void"], id);
   }
   setAdjustId(id) {
-    this.callStaticMethod("setAdjustId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setAdjustId", [["String"], "void"], id);
   }
   setStaticCommonProperties(properties) {
-    this.callStaticMethod("setStaticCommonProperties", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("setStaticCommonProperties", [["String"], "void"], fmt(properties));
   }
   clearStaticCommonProperties() {
-    this.callStaticMethod("clearStaticCommonProperties", [[], "void"]);
+    _CocosAndroid.callStaticMethod("clearStaticCommonProperties", [[], "void"]);
   }
   setCommonProperties(callback) {
     this.dynamicPropertiesCallback = callback;
@@ -463,86 +591,92 @@ var _Android = class _Android extends DataTower {
     this.dynamicPropertiesCallback = null;
   }
 };
-_Android.instance = new _Android();
-var Android = _Android;
-var Android_default = Android;
+_CocosAndroid.instance = new _CocosAndroid();
+_CocosAndroid.typeMap = {
+  void: "V",
+  int: "I",
+  float: "F",
+  boolean: "Z",
+  String: "Ljava/lang/String;"
+};
+var CocosAndroid = _CocosAndroid;
 
 // src/cocos/IOS.ts
-var _IOS = class _IOS extends DataTower {
+var _CocosIOS = class _CocosIOS extends StaticDataTower {
   constructor() {
     super(...arguments);
-    this.config = DefaultConfig;
+    this.properties = { "#sdk_type": "js", "#sdk_version_name": version };
     this.dynamicPropertiesCallback = null;
   }
-  callStaticMethod(method, ...args) {
+  static callStaticMethod(method, ...args) {
     return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
   init(config) {
-    this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod("initSDK:", fmt(this.config));
+    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, this.properties);
+    _CocosIOS.callStaticMethod("initSDK:", fmt(config));
   }
   track(eventName, properties) {
     var _a;
     properties = __spreadValues(__spreadValues({}, properties), (_a = this.dynamicPropertiesCallback) == null ? void 0 : _a.call(this));
-    this.callStaticMethod("track:properties:", eventName, fmt(properties));
+    _CocosIOS.callStaticMethod("track:properties:", eventName, fmt(properties));
   }
   enableUpload() {
-    this.callStaticMethod("enableUpload");
+    _CocosIOS.callStaticMethod("enableUpload");
   }
   userSet(properties) {
-    this.callStaticMethod("userSet:", fmt(properties));
+    _CocosIOS.callStaticMethod("userSet:", fmt(properties));
   }
   userSetOnce(properties) {
-    this.callStaticMethod("userSetOnce:", fmt(properties));
+    _CocosIOS.callStaticMethod("userSetOnce:", fmt(properties));
   }
   userAdd(properties) {
-    this.callStaticMethod("userAdd:", fmt(properties));
+    _CocosIOS.callStaticMethod("userAdd:", fmt(properties));
   }
   userUnset(properties) {
-    properties.forEach((prop) => this.callStaticMethod("userUnset:", prop));
+    properties.forEach((prop) => _CocosIOS.callStaticMethod("userUnset:", prop));
   }
   userDelete() {
-    this.callStaticMethod("userDelete");
+    _CocosIOS.callStaticMethod("userDelete");
   }
   userAppend(properties) {
-    this.callStaticMethod("userAppend:", fmt(properties));
+    _CocosIOS.callStaticMethod("userAppend:", fmt(properties));
   }
   userUniqAppend(properties) {
-    this.callStaticMethod("userUniqAppend:", fmt(properties));
+    _CocosIOS.callStaticMethod("userUniqAppend:", fmt(properties));
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    globalNativeCallback((cb) => this.callStaticMethod("getDataTowerId:", cb), callback);
+    globalNativeCallback((cb) => _CocosIOS.callStaticMethod("getDataTowerId:", cb), callback);
   }
   getDistinctId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDistinctId(resolve));
-    globalNativeCallback((cb) => this.callStaticMethod("getDistinctId:", cb), callback);
+    globalNativeCallback((cb) => _CocosIOS.callStaticMethod("getDistinctId:", cb), callback);
   }
   setAccountId(id) {
-    this.callStaticMethod("setAccountId:", id);
+    _CocosIOS.callStaticMethod("setAccountId:", id);
   }
   setDistinctId(id) {
-    this.callStaticMethod("setDistinctId:", id);
+    _CocosIOS.callStaticMethod("setDistinctId:", id);
   }
   setFirebaseAppInstanceId(id) {
-    this.callStaticMethod("setFirebaseAppInstanceId:", id);
+    _CocosIOS.callStaticMethod("setFirebaseAppInstanceId:", id);
   }
   setAppsFlyerId(id) {
-    this.callStaticMethod("setAppsFlyerId:", id);
+    _CocosIOS.callStaticMethod("setAppsFlyerId:", id);
   }
   setKochavaId(id) {
-    this.callStaticMethod("setKochavaId:", id);
+    _CocosIOS.callStaticMethod("setKochavaId:", id);
   }
   setAdjustId(id) {
-    this.callStaticMethod("setAdjustId:", id);
+    _CocosIOS.callStaticMethod("setAdjustId:", id);
   }
   setStaticCommonProperties(properties) {
-    this.callStaticMethod("setStaticCommonProperties:", fmt(properties));
+    _CocosIOS.callStaticMethod("setStaticCommonProperties:", fmt(properties));
   }
   clearStaticCommonProperties() {
-    this.callStaticMethod("clearStaticCommonProperties");
+    _CocosIOS.callStaticMethod("clearStaticCommonProperties");
   }
   setCommonProperties(callback) {
     this.dynamicPropertiesCallback = callback;
@@ -551,14 +685,13 @@ var _IOS = class _IOS extends DataTower {
     this.dynamicPropertiesCallback = null;
   }
 };
-_IOS.instance = new _IOS();
-var IOS = _IOS;
-var IOS_default = IOS;
+_CocosIOS.instance = new _CocosIOS();
+var CocosIOS = _CocosIOS;
 
 // src/cocos/index.ts
 var Cocos = {
-  [globalThis.cc.sys.Platform.ANDROID]: Android_default,
-  [globalThis.cc.sys.Platform.IOS]: IOS_default
+  [globalThis.cc.sys.Platform.ANDROID]: CocosAndroid,
+  [globalThis.cc.sys.Platform.IOS]: CocosIOS
 }[globalThis.cc.sys.platform] || Web;
 var cocos_default = Cocos;
 

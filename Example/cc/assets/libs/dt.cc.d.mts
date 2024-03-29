@@ -1,3 +1,11 @@
+/**
+ * @file type.ts
+ * 该文件下的类型是需要导出给用户使用的类型
+ * 内部使用的类型不应写在该文件下
+ */
+/**
+ * 日志级别
+ */
 declare enum LogLevel {
     VERBOSE = 1,
     ASSERT = 2,
@@ -6,13 +14,16 @@ declare enum LogLevel {
     WARN = 5,
     ERROR = 6
 }
-interface Config {
+/**
+ * 传给 native 的初始化配置
+ */
+interface InitialNativeConfig {
     /**
-     * 项目唯一标识，创建项目后 DT 后台自动分配，请在【项目设置-项目详情】中获取
+     * 项目唯一标识，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取
      */
     appId: string;
     /**
-     * 数据上报地址，创建项目后 DT 后台自动分配，请在【项目设置-项目详情】中获取
+     * 数据上报地址，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取
      */
     serverUrl: string;
     /**
@@ -20,7 +31,7 @@ interface Config {
      */
     channel?: string;
     /**
-     * 是否打开调试，调试模式下将打印 log， 默认为 false，log 标签为 DataTower
+     * 是否打开调试，调试模式下将打印 log， 默认为 false，log 标签为 StaticDataTower
      */
     isDebug?: boolean;
     /**
@@ -39,27 +50,36 @@ interface Config {
         '#sdk_version_name': string;
     };
 }
+interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
+}
+/**
+ * 请求参数
+ */
+interface RequestOptions {
+    url: string;
+    data: Record<string, any>;
+}
 declare global {
     interface Window {
         [key: `__${number}__`]: (arg: any) => void;
     }
 }
 
-declare class DataTower {
-    protected static instance: Omit<typeof DataTower, 'prototype'>;
-    static init(config: Config): void;
+declare class StaticDataTower {
+    protected static instance: DataTower;
+    static init(config: InitialNativeConfig): void;
     /**
-     * 手动启动上报(如果 initSDK 时的 manualEnableUpload 为 true)
+     * manually start the report (if the manualEnableUpload is true)
      */
     static enableUpload(): void;
-    static track(eventName: string, properties?: Record<string, any>): void;
-    static userSet(properties: Record<string, any>): void;
-    static userSetOnce(properties: Record<string, any>): void;
-    static userAdd(properties: Record<string, any>): void;
+    static track(eventName: string, properties: Record<string, string | boolean | number>): void;
+    static userSet(properties: Record<string, string | boolean | number>): void;
+    static userSetOnce(properties: Record<string, string | boolean | number>): void;
+    static userAdd(properties: Record<string, number>): void;
     static userUnset(properties: string[]): void;
     static userDelete(): void;
-    static userAppend(properties: Record<string, any>): void;
-    static userUniqAppend(properties: Record<string, any>): void;
+    static userAppend(properties: Record<string, string | boolean | number>): void;
+    static userUniqAppend(properties: Record<string, any[]>): void;
     static getDataTowerId(callback: (id: string) => void): void;
     static getDataTowerId(): Promise<string>;
     static getDistinctId(callback: (id: string) => void): void;
@@ -70,16 +90,17 @@ declare class DataTower {
     static setAppsFlyerId(id: string): void;
     static setKochavaId(id: string): void;
     static setAdjustId(id: string): void;
-    static setStaticCommonProperties(properties: Record<string, any>): void;
+    static setStaticCommonProperties(properties: Record<string, string | boolean | number>): void;
     static clearStaticCommonProperties(): void;
-    static setCommonProperties(callback: () => Record<string, any>): void;
+    static setCommonProperties(callback: () => Record<string, string | boolean | number>): void;
     static clearCommonProperties(): void;
 }
+type DataTower = Omit<typeof StaticDataTower, 'prototype'>;
 
 /**
  * cocos platform API
- * includes android/ios, quick app and mini game/program
+ * includes: android, ios, quick app, mini game, mini program
  */
-declare const Cocos: typeof DataTower;
+declare const Cocos: DataTower;
 
-export { type Config, Cocos as DataTower, LogLevel, Cocos as default };
+export { type Config, Cocos as DataTower, type InitialNativeConfig, LogLevel, type RequestOptions, Cocos as default };

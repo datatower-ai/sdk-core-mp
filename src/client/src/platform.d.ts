@@ -1,3 +1,7 @@
+/**
+ * @file platform.d.ts
+ * 各个平台的全局变量声明
+ */
 interface CC {
   sys: {
     os: 'iOS' | 'Android';
@@ -31,3 +35,12 @@ declare var dd: any;
 declare var bl: any;
 declare var ks: any;
 declare var jd: any;
+
+declare interface XDomainRequest extends XMLHttpRequest {
+  new (): XDomainRequest;
+}
+declare interface ActiveXObject extends XMLHttpRequest {
+  new (type: string): ActiveXObject;
+}
+declare var XDomainRequest: XDomainRequest?;
+declare var ActiveXObject: ActiveXObject?;

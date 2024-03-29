@@ -3,13 +3,13 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
+    "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "outDir": "./dist/scripts",
     "rootDir": "./scripts",
     "strict": true,
     "noImplicitThis": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true

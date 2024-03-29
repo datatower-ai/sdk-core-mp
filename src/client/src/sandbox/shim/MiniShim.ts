@@ -1,24 +1,26 @@
+import type { RequestOptions } from '@/type';
+
 export enum MiniProgramPlatform {
-  WECHAT = 100,
-  QQ,
-  BAIDU,
-  TOUTIAO,
-  ALIPAY,
-  DINGDING,
-  KUAISHOU,
-  QIHOO,
-  TAOBAO,
-  JINGDONG,
+  WECHAT = 'WECHAT_APP',
+  QQ = 'QQ_APP',
+  BAIDU = 'BAIDU_APP',
+  TOUTIAO = 'TOUTIAO_APP',
+  ALIPAY = 'ALIPAY_APP',
+  DINGDING = 'DINGDING_APP',
+  KUAISHOU = 'KUAISHOU_APP',
+  QIHOO = 'QIHOO_APP',
+  TAOBAO = 'TAOBAO_APP',
+  JINGDONG = 'JINGDONG_APP',
 }
 
 export enum MiniGamePlatform {
-  WECHAT = 200,
-  QQ,
-  BAIDU,
-  TOUTIAO,
-  ALIPAY,
-  BILIBILI,
-  QIHOO,
+  WECHAT = 'WECHAT_GAME',
+  QQ = 'QQ_GAME',
+  BAIDU = 'BAIDU_GAME',
+  TOUTIAO = 'TOUTIAO_GAME',
+  ALIPAY = 'ALIPAY_GAME',
+  BILIBILI = 'BILIBILI_GAME',
+  QIHOO = 'QIHOO_GAME',
 }
 
 /**
@@ -71,59 +73,35 @@ export class MiniShim {
     }
   }
 
-  getStorage(key: string) {
+  getStorage<T = unknown>(key: string): Promise<T | null> {
     return new Promise((success, fail) => {
       this.api.getStorage({ key, success, fail }).then((data: string) => JSON.parse(data || 'null'));
     });
   }
 
-  setStorage(key: string, value: any) {
+  setStorage<T>(key: string, value: T): Promise<void> {
     const data = JSON.stringify(value);
     return new Promise<any>((success, fail) => {
       this.api.setStorage({ key, data, success, fail });
     });
   }
 
-  removeStorage(name: string) {
+  removeStorage(name: string): Promise<void> {
     return new Promise((success, fail) => {
       this.api.removeStorage({ key: name, success, fail });
     });
   }
 
-  request<T extends any = any>(options: {
-    url: string;
-    header?: Record<string, string>;
-    params?: Record<string, any>;
-    data?: Record<string, any>;
-    method?: string;
-    timeout?: number;
-  }) {
-    return new Promise<T>((success, fail) => {
-      const { header, params, data, method, timeout } = options;
-      const query = params ? '?' + new URLSearchParams(params).toString() : '';
-      const url = options.url + query;
-      const opts = { url, data, method, timeout, success, fail };
+  request(options: RequestOptions): Promise<void> {
+    return new Promise<void>((success, fail) => {
+      const { url, data } = options;
 
       switch (this.platform) {
         case MiniProgramPlatform.TAOBAO:
-          const res = this.api.tb.request({
-            url,
-            method,
-            options: JSON.stringify({ timeout }),
-            headers: JSON.stringify(header),
-            body: JSON.stringify(data),
-          });
-          success(res);
-          break;
-        case MiniGamePlatform.ALIPAY:
-        case MiniProgramPlatform.ALIPAY:
-          this.api.httpRequest({ ...opts, headers: header });
-          break;
-        case MiniProgramPlatform.DINGDING:
-          this.api.httpRequest({ ...opts, headers: header });
+          this.api.tb.request({ url, method: 'POST', body: JSON.stringify(JSON.stringify(data)), success, fail });
           break;
         default:
-          this.api.request({ ...opts, header });
+          this.api.request({ url, data: JSON.stringify(data), success, fail });
           break;
       }
     });
@@ -136,6 +114,4 @@ export class MiniShim {
   getSystemInfo() {}
 
   getAppOptions() {}
-
-  showToast(msg: string) {}
 }

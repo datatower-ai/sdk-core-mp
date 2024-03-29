@@ -1,7 +1,7 @@
 import { rename } from 'fs';
 import tsup, { type Options } from 'tsup';
 
-const DefaultConfig: Options = {
+const DEFAULT_INITIAL_CONFIG: Options = {
   minify: true,
   clean: true,
   dts: true,
@@ -25,7 +25,7 @@ const ConfigMap: Record<Platform, Options> = {
   },
 };
 
-export async function build(platform: Platform, defaultConfig: Options = DefaultConfig) {
+export async function build(platform: Platform, defaultConfig: Options = DEFAULT_INITIAL_CONFIG) {
   const config = ConfigMap[platform];
   await tsup.build({ ...defaultConfig, ...config });
   await Promise.all(

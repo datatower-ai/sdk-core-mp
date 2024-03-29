@@ -1,9 +1,8 @@
 import { rename, watchFile } from 'fs';
 import tsup, { type Options } from 'tsup';
 
-const DefaultConfig: Options = {
+const DEFAULT_INITIAL_CONFIG: Options = {
   watch: true,
-  clean: true,
   dts: true,
   treeshake: true,
   outExtension: ({ format }) => {
@@ -27,7 +26,7 @@ const ConfigMap: Record<Platform, Options> = {
   },
 };
 
-export async function build(platform: Platform, defaultConfig: Options = DefaultConfig) {
+export async function build(platform: Platform, defaultConfig: Options = DEFAULT_INITIAL_CONFIG) {
   const config = ConfigMap[platform];
   Object.keys(config.entry as object).forEach((entry) => {
     const filename = `${config.outDir}/${entry}`;

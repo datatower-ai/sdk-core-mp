@@ -1,89 +1,91 @@
-import { DataTower } from '../DataTower';
-import { DefaultConfig, IOSClass } from '../constant';
-import type { Config } from '../type';
-import { fmt, globalNativeCallback } from '../utils';
+import { version } from '$/package.json';
+import { StaticDataTower } from '@/StaticDataTower';
+import { IOSClass, DEFAULT_INITIAL_CONFIG } from '@/constant';
+import type { Config } from '@/type';
+import { fmt, globalNativeCallback } from '@/utils';
 
 /**
- * cocos IOS bridge
+ * cocos CocosIOS bridge
  */
-class IOS extends DataTower {
-  protected static instance = new IOS();
-  private config: Required<Config> = DefaultConfig;
-  private dynamicPropertiesCallback: null | (() => Record<string, any>) = null;
-  private callStaticMethod(method: string, ...args: any[]): any {
+export class CocosIOS extends StaticDataTower {
+  protected static instance = new CocosIOS();
+  private properties: Record<string, string | boolean | number> = { '#sdk_type': 'js', '#sdk_version_name': version };
+  private dynamicPropertiesCallback: null | (() => Record<string, string | boolean | number>) = null;
+
+  private static callStaticMethod(method: string, ...args: any[]): any {
     return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
 
   init(config: Config) {
-    this.config = Object.assign({}, DefaultConfig, config);
-    this.callStaticMethod('initSDK:', fmt(this.config));
+    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, this.properties);
+    CocosIOS.callStaticMethod('initSDK:', fmt(config));
   }
-  track(eventName: string, properties: Record<string, any>): void {
+  track(eventName: string, properties: Record<string, string | boolean | number>): void {
     properties = { ...properties, ...this.dynamicPropertiesCallback?.() };
-    this.callStaticMethod('track:properties:', eventName, fmt(properties));
+    CocosIOS.callStaticMethod('track:properties:', eventName, fmt(properties));
   }
   enableUpload(): void {
-    this.callStaticMethod('enableUpload');
+    CocosIOS.callStaticMethod('enableUpload');
   }
-  userSet(properties: Record<string, any>): void {
-    this.callStaticMethod('userSet:', fmt(properties));
+  userSet(properties: Record<string, string | boolean | number>): void {
+    CocosIOS.callStaticMethod('userSet:', fmt(properties));
   }
-  userSetOnce(properties: Record<string, any>): void {
-    this.callStaticMethod('userSetOnce:', fmt(properties));
+  userSetOnce(properties: Record<string, string | boolean | number>): void {
+    CocosIOS.callStaticMethod('userSetOnce:', fmt(properties));
   }
-  userAdd(properties: Record<string, any>): void {
-    this.callStaticMethod('userAdd:', fmt(properties));
+  userAdd(properties: Record<string, number>): void {
+    CocosIOS.callStaticMethod('userAdd:', fmt(properties));
   }
   userUnset(properties: string[]): void {
     // iOS接受字符串
-    properties.forEach(prop => this.callStaticMethod('userUnset:', prop));
+    properties.forEach((prop) => CocosIOS.callStaticMethod('userUnset:', prop));
   }
   userDelete(): void {
-    this.callStaticMethod('userDelete');
+    CocosIOS.callStaticMethod('userDelete');
   }
-  userAppend(properties: Record<string, any>): void {
-    this.callStaticMethod('userAppend:', fmt(properties));
+  userAppend(properties: Record<string, string | boolean | number>): void {
+    CocosIOS.callStaticMethod('userAppend:', fmt(properties));
   }
-  userUniqAppend(properties: Record<string, any>): void {
-    this.callStaticMethod('userUniqAppend:', fmt(properties));
+  userUniqAppend(properties: Record<string, any[]>): void {
+    CocosIOS.callStaticMethod('userUniqAppend:', fmt(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;
   getDataTowerId(): Promise<string>;
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
-    globalNativeCallback((cb) => this.callStaticMethod('getDataTowerId:', cb), callback);
+    globalNativeCallback((cb) => CocosIOS.callStaticMethod('getDataTowerId:', cb), callback);
   }
   getDistinctId(callback: (id: string) => void): void;
   getDistinctId(): Promise<string>;
   getDistinctId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
-    globalNativeCallback((cb) => this.callStaticMethod('getDistinctId:', cb), callback);
+    globalNativeCallback((cb) => CocosIOS.callStaticMethod('getDistinctId:', cb), callback);
   }
   setAccountId(id: string): void {
-    this.callStaticMethod('setAccountId:', id);
+    CocosIOS.callStaticMethod('setAccountId:', id);
   }
   setDistinctId(id: string): void {
-    this.callStaticMethod('setDistinctId:', id);
+    CocosIOS.callStaticMethod('setDistinctId:', id);
   }
   setFirebaseAppInstanceId(id: string): void {
-    this.callStaticMethod('setFirebaseAppInstanceId:', id);
+    CocosIOS.callStaticMethod('setFirebaseAppInstanceId:', id);
   }
   setAppsFlyerId(id: string): void {
-    this.callStaticMethod('setAppsFlyerId:', id);
+    CocosIOS.callStaticMethod('setAppsFlyerId:', id);
   }
   setKochavaId(id: string): void {
-    this.callStaticMethod('setKochavaId:', id);
+    CocosIOS.callStaticMethod('setKochavaId:', id);
   }
   setAdjustId(id: string): void {
-    this.callStaticMethod('setAdjustId:', id);
+    CocosIOS.callStaticMethod('setAdjustId:', id);
   }
-  setStaticCommonProperties(properties: Record<string, any>): void {
-    this.callStaticMethod('setStaticCommonProperties:', fmt(properties));
+  setStaticCommonProperties(properties: Record<string, string | boolean | number>): void {
+    CocosIOS.callStaticMethod('setStaticCommonProperties:', fmt(properties));
   }
   clearStaticCommonProperties(): void {
-    this.callStaticMethod('clearStaticCommonProperties');
+    CocosIOS.callStaticMethod('clearStaticCommonProperties');
   }
-  setCommonProperties(callback: () => Record<string, any>): void {
+  setCommonProperties(callback: () => Record<string, string | boolean | number>): void {
     this.dynamicPropertiesCallback = callback;
   }
   clearCommonProperties(): void {
@@ -91,5 +93,5 @@ class IOS extends DataTower {
   }
 }
 
-export { IOS as DataTower };
-export default IOS;
+export { CocosIOS as DataTower };
+export default CocosIOS;

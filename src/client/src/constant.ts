@@ -1,13 +1,12 @@
-import { LogLevel, type Config } from './type';
+import { LogLevel, type InitialNativeConfig } from '@/type';
 
-export const DefaultConfig: Required<Config> = {
+export const DEFAULT_INITIAL_CONFIG: Required<Omit<InitialNativeConfig, 'properties'>> = {
   appId: '',
   serverUrl: '',
   channel: '',
   isDebug: false,
   logLevel: LogLevel.VERBOSE,
   manualEnableUpload: false,
-  properties: { '#sdk_type': '', '#sdk_version_name': '' },
 };
 
 export const AndroidClass = 'ai/datatower/bridge/DTCocosCreatorProxyApi';
