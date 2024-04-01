@@ -5,9 +5,9 @@ const PORT = 3000;
 // 创建 HTTP 服务器
 const server = http.createServer((req, res) => {
   // 设置允许跨域请求的头部信息
-  // res.setHeader("Access-Control-Allow-Origin", "*");
-  // res.setHeader("Access-Control-Allow-Methods", "POST");
-  // res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   const parsedUrl = url.parse(req.url, true);
   // 检查请求路径和方法
@@ -27,11 +27,11 @@ const server = http.createServer((req, res) => {
           // 在控制台输出接收到的数据
           console.log("Received data:", data);
           // 发送成功响应
-          res.writeHead(200, { "Content-Type": "application/json" });
+          res.writeHead(204);
           res.end();
         } catch (error) {
           // 发送错误响应
-          res.writeHead(400, { "Content-Type": "application/json" });
+          res.writeHead(400);
           res.end();
         }
       });
@@ -41,7 +41,7 @@ const server = http.createServer((req, res) => {
       // 在控制台输出接收到的查询参数
       console.log("Received query parameters:", queryParams);
       // 发送成功响应
-      res.writeHead(200, { "Content-Type": "application/json" });
+      res.writeHead(204);
       res.end();
     } else if (req.method === "OPTIONS") {
       // 处理 OPTIONS 请求（跨域预检请求）
@@ -54,12 +54,12 @@ const server = http.createServer((req, res) => {
       res.end();
     } else {
       // 发送 405 响应
-      res.writeHead(405, { "Content-Type": "text/plain" });
+      res.writeHead(405);
       res.end();
     }
   } else {
     // 发送 404 响应
-    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.writeHead(404);
     res.end();
   }
 });

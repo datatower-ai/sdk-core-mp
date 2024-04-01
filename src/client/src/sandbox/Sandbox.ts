@@ -1,8 +1,9 @@
 import { version } from '$/package.json';
 import type { DataTower } from '@/StaticDataTower';
-import { DEFAULT_INITIAL_CONFIG } from '@/constant';
+import { DEFAULT_CONFIG } from '@/constant';
 import type { Config } from '@/type';
 import { debounce } from '@/utils';
+import { MD5 } from 'crypto-js';
 import { Logger } from './Logger';
 import { TaskQueue } from './TaskQueue';
 import type { MiniShim } from './shim/MiniShim';
@@ -15,20 +16,32 @@ import type { WebShim } from './shim/WebShim';
  * includes platform: mini program/mini gram/quick app/quick game/web
  */
 export class Sandbox implements DataTower {
-  private config: Config = DEFAULT_INITIAL_CONFIG;
+  private config: Required<Config> = DEFAULT_CONFIG;
   private properties: Record<string, string | boolean | number> = { '#sdk_type': 'js', '#sdk_version_name': version };
   private dynamicPropertiesCallback: null | (() => Record<string, string | boolean | number>) = null;
   private taskQueue: TaskQueue<Record<string, any>, true> = new TaskQueue();
 
   constructor(private shim: MiniShim | QuickAppShim | QuickGameShim | WebShim) {}
 
+  private report() {
+    const tasks = this.taskQueue.flush();
+    if (!tasks.length) return;
+    const data = JSON.stringify(tasks);
+    const base64 = btoa(data);
+    const check = MD5(base64 + '@datatower').toString();
+    const params = new URLSearchParams({ data: encodeURIComponent(data), check }).toString();
+    return this.shim.request({ url: this.config.serverUrl, data: params });
+  }
+
   init(config: Config) {
-    this.config = { ...DEFAULT_INITIAL_CONFIG, ...config };
+    this.config = { ...DEFAULT_CONFIG, ...config };
     Logger.level = this.config.logLevel;
 
-    this.taskQueue.onMaxSize(() => this.enableUpload());
-    if (this.config.manualEnableUpload) this.taskQueue.setMaxSize(Infinity);
-    else this.taskQueue.onEnqueue(debounce(() => this.enableUpload(), 10000));
+    if (!this.config.manualEnableUpload) {
+      this.taskQueue.onMaxSize(() => this.report());
+      this.taskQueue.onEnqueue(debounce(() => this.report(), this.config.debounceWait));
+      this.config.maxQueueSize && this.taskQueue.setMaxSize(this.config.maxQueueSize);
+    }
 
     Logger.info('<call init>', config);
   }
@@ -37,8 +50,8 @@ export class Sandbox implements DataTower {
     this.taskQueue.enqueue(() => ({ ...properties, ...this.properties, ...this.dynamicPropertiesCallback?.() }));
   }
   enableUpload(): void {
+    if (this.config.manualEnableUpload) this.report();
     Logger.info('<call enableUpload>');
-    this.shim.request({ url: this.config.serverUrl, data: this.taskQueue.flush() });
   }
   userSet(properties: Record<string, string | boolean | number>): void {
     Logger.info('<call userSet>', properties);

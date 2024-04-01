@@ -1,3 +1,9 @@
+import crypto from 'crypto-js';
+
+export function md5(data: string) {
+  return crypto.MD5(data).toString();
+}
+
 // 序列化
 export function fmt(obj: Record<string, any>) {
   return JSON.stringify(obj);

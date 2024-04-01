@@ -53,14 +53,25 @@ export interface InitialNativeConfig {
   };
 }
 
-export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {}
+export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
+  /**
+   * track 时的 debounce 等待时间，默认为 10000ms
+   * 手动启动上报时，该值无效
+   */
+  debounceWait?: number;
+  /**
+   * 上报队列最大长度，默认为 10
+   * 手动启动上报时，该值无效
+   */
+  maxQueueSize?: number;
+}
 
 /**
  * 请求参数
  */
 export interface RequestOptions {
   url: string;
-  data: Record<string, any>;
+  data: string;
 }
 
 declare global {

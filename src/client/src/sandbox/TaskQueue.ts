@@ -10,8 +10,6 @@ type Task<T, S extends boolean | unknown = unknown> = S extends true
  * task queue
  */
 export class TaskQueue<T, S extends boolean | unknown = unknown> {
-  private static MAX_TASK_QUEUE_SIZE = 10;
-
   private processing: boolean = false;
   private queue: Task<T, S>[] = [];
   private onMaxSizeCallback?: () => void;
@@ -19,7 +17,7 @@ export class TaskQueue<T, S extends boolean | unknown = unknown> {
   private onDequeueCallback?: (task: Task<T, S>) => void;
   private onErrorCallback?: (task: Task<T, S>, error: Error) => void;
 
-  constructor(private maxSize: number = TaskQueue.MAX_TASK_QUEUE_SIZE) {}
+  constructor(private maxSize: number = Infinity) {}
 
   get size(): number {
     return this.queue.length;
@@ -105,7 +103,8 @@ export class TaskQueue<T, S extends boolean | unknown = unknown> {
   }
 
   /**
-   * try to perform the first task, if failed, perform the next task
+   * from the beginning to the single execution task
+   * if failed, perform the next task, until successful
    */
   static tryExecute<T = unknown>(tasks: SyncTask<T>[]): T | void;
   static tryExecute<T = unknown>(tasks: AsyncTask<T>[]): Promise<T | void>;
