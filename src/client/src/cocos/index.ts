@@ -1,6 +1,6 @@
-export * from '@/type';
-import type { DataTower } from '@/StaticDataTower';
-import { Web } from '@/sandbox/index';
+export * from '@/src/type';
+import type { DataTower } from '@/src/StaticDataTower';
+import { Web } from '@/src/sandbox/index';
 import { CocosAndroid } from './Android';
 import { CocosIOS } from './IOS';
 

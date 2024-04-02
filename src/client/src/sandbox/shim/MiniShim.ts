@@ -1,4 +1,4 @@
-import type { RequestOptions } from '@/type';
+import type { RequestOptions, Shim, SystemInfo } from './type';
 
 export enum MiniProgramPlatform {
   WECHAT = 'WECHAT_APP',
@@ -27,7 +27,7 @@ export enum MiniGamePlatform {
  * TODO:
  * mini program/mini game shim
  */
-export class MiniShim {
+export class MiniShim implements Shim {
   private api: Record<string, any>;
 
   constructor(private platform: MiniGamePlatform | MiniProgramPlatform) {
@@ -111,7 +111,25 @@ export class MiniShim {
 
   onNetworkStatusChange(callback: () => void) {}
 
-  getSystemInfo() {}
+  getSystemInfo(): SystemInfo {
+    const sys = this.api.getSystemInfoSync();
+    return {
+      height: sys.windowHeight || sys.screenHeight,
+      width: sys.windowWidth || sys.screenWidth,
+      language: sys.language,
+      appId: sys.host.appId,
+    };
+  }
 
-  getAppOptions() {}
+  getUserAgent(): string {
+    const sys = this.api.getSystemInfoSync();
+    // `设备品牌及型号; 操作系统及版本; 平台及版本号`
+    return `${sys.brand} ${sys.model}; ${sys.system}; ${this.platform.split('_')[0]} ${sys.version}`;
+  }
+
+  getReferrer(): string {
+    const pages = this.api.getCurrentPages();
+    if (!pages?.length) return '';
+    return pages[pages.length - 2].route;
+  }
 }

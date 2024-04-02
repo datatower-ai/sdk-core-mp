@@ -11,7 +11,6 @@
     "dev": "tsc -p tsconfig.build.json && node dist/scripts/build.dev.js"
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.11.30",
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",
@@ -21,6 +20,6 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "crypto-js": "^4.2.0"
+    "crypto-es": "^2.1.0"
   }
 }

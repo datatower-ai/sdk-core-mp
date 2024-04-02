@@ -1,8 +1,9 @@
-import { StaticDataTower } from '@/StaticDataTower';
+import { StaticDataTower } from '@/src/StaticDataTower';
 import { Sandbox } from './Sandbox';
 import { WebShim } from './shim/WebShim';
-export * from '@/type';
+export * from '@/src/type';
 export { Logger } from './Logger';
+
 export class Web extends StaticDataTower {
   protected static instance = new Sandbox(new WebShim());
 }

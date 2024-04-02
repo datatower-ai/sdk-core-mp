@@ -50,6 +50,9 @@ interface InitialNativeConfig {
         '#sdk_version_name': string;
     };
 }
+/**
+ * SDK 内部配置
+ */
 interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
     /**
      * track 时的 debounce 等待时间，默认为 10000ms
@@ -62,13 +65,8 @@ interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
      */
     maxQueueSize?: number;
 }
-/**
- * 请求参数
- */
-interface RequestOptions {
-    url: string;
-    data: string;
-}
+type PrivateKey = `#${string}`;
+type PublicKey<T extends string> = T extends PrivateKey ? never : T;
 declare global {
     interface Window {
         [key: `__${number}__`]: (arg: any) => void;
@@ -77,19 +75,19 @@ declare global {
 
 declare class StaticDataTower {
     protected static instance: DataTower;
-    static init(config: InitialNativeConfig): void;
+    static init(config: Config): Promise<void>;
     /**
      * manually start the report (if the manualEnableUpload is true)
      */
     static enableUpload(): void;
     static track(eventName: string, properties: Record<string, string | boolean | number>): void;
-    static userSet(properties: Record<string, string | boolean | number>): void;
-    static userSetOnce(properties: Record<string, string | boolean | number>): void;
-    static userAdd(properties: Record<string, number>): void;
+    static userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void;
+    static userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void;
+    static userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void;
     static userUnset(properties: string[]): void;
     static userDelete(): void;
-    static userAppend(properties: Record<string, string | boolean | number>): void;
-    static userUniqAppend(properties: Record<string, any[]>): void;
+    static userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void;
+    static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void;
     static getDataTowerId(callback: (id: string) => void): void;
     static getDataTowerId(): Promise<string>;
     static getDistinctId(callback: (id: string) => void): void;
@@ -100,7 +98,7 @@ declare class StaticDataTower {
     static setAppsFlyerId(id: string): void;
     static setKochavaId(id: string): void;
     static setAdjustId(id: string): void;
-    static setStaticCommonProperties(properties: Record<string, string | boolean | number>): void;
+    static setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void;
     static clearStaticCommonProperties(): void;
     static setCommonProperties(callback: () => Record<string, string | boolean | number>): void;
     static clearCommonProperties(): void;
@@ -113,4 +111,4 @@ type DataTower = Omit<typeof StaticDataTower, 'prototype'>;
  */
 declare const Cocos: DataTower;
 
-export { type Config, Cocos as DataTower, type InitialNativeConfig, LogLevel, type RequestOptions, Cocos as default };
+export { type Config, Cocos as DataTower, type InitialNativeConfig, LogLevel, type PrivateKey, type PublicKey, Cocos as default };

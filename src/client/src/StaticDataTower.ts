@@ -1,10 +1,10 @@
-import type { InitialNativeConfig } from '@/type';
+import type { Config, PublicKey } from '@/src/type';
 
 // TODO: multiple instance support
 export class StaticDataTower {
   protected static instance: DataTower;
 
-  static init(config: InitialNativeConfig): void {
+  static async init(config: Config): Promise<void> {
     return this.instance.init(config);
   }
   /**
@@ -16,13 +16,13 @@ export class StaticDataTower {
   static track(eventName: string, properties: Record<string, string | boolean | number>): void {
     return this.instance.track(eventName, properties);
   }
-  static userSet(properties: Record<string, string | boolean | number>): void {
+  static userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
     return this.instance.userSet(properties);
   }
-  static userSetOnce(properties: Record<string, string | boolean | number>): void {
+  static userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
     return this.instance.userSetOnce(properties);
   }
-  static userAdd(properties: Record<string, number>): void {
+  static userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
     return this.instance.userAdd(properties);
   }
   static userUnset(properties: string[]): void {
@@ -31,10 +31,10 @@ export class StaticDataTower {
   static userDelete(): void {
     return this.instance.userDelete();
   }
-  static userAppend(properties: Record<string, string | boolean | number>): void {
+  static userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
     return this.instance.userAppend(properties);
   }
-  static userUniqAppend(properties: Record<string, any[]>): void {
+  static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
     return this.instance.userUniqAppend(properties);
   }
   static getDataTowerId(callback: (id: string) => void): void;
@@ -65,7 +65,9 @@ export class StaticDataTower {
   static setAdjustId(id: string): void {
     return this.instance.setAdjustId(id);
   }
-  static setStaticCommonProperties(properties: Record<string, string | boolean | number>): void {
+  static setStaticCommonProperties<K extends string>(
+    properties: Record<PublicKey<K>, string | boolean | number>,
+  ): void {
     return this.instance.setStaticCommonProperties(properties);
   }
   static clearStaticCommonProperties(): void {

@@ -53,6 +53,9 @@ export interface InitialNativeConfig {
   };
 }
 
+/**
+ * SDK 内部配置
+ */
 export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
   /**
    * track 时的 debounce 等待时间，默认为 10000ms
@@ -66,13 +69,9 @@ export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>
   maxQueueSize?: number;
 }
 
-/**
- * 请求参数
- */
-export interface RequestOptions {
-  url: string;
-  data: string;
-}
+export type PrivateKey = `#${string}`;
+
+export type PublicKey<T extends string> = T extends PrivateKey ? never : T;
 
 declare global {
   interface Window {

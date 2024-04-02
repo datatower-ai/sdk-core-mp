@@ -1,8 +1,8 @@
-import { version } from '$/package.json';
-import { StaticDataTower } from '@/StaticDataTower';
-import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/constant';
-import type { Config } from '@/type';
-import { fmt, globalNativeCallback } from '@/utils';
+import { version } from '@/package.json';
+import { StaticDataTower } from '@/src/StaticDataTower';
+import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/src/constant';
+import type { Config, PublicKey } from '@/src/type';
+import { fmt, globalNativeCallback } from '@/src/utils';
 
 type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
 type Signature = [args: JavaType[], ret: JavaType];
@@ -12,8 +12,8 @@ type Signature = [args: JavaType[], ret: JavaType];
  */
 export class CocosAndroid extends StaticDataTower {
   protected static instance = new CocosAndroid();
-  private properties: Record<string, string | boolean | number> = { '#sdk_type': 'js', '#sdk_version_name': version };
-  private dynamicPropertiesCallback: null | (() => Record<string, string | boolean | number>) = null;
+  private staticProperties = { '#sdk_type': 'js', '#sdk_version_name': version };
+  private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
   private static typeMap: Record<JavaType, string> = {
     void: 'V',
@@ -29,24 +29,24 @@ export class CocosAndroid extends StaticDataTower {
     return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, this.generateSignature(signature), ...args);
   }
 
-  init(config: Config): void {
-    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, this.properties);
+  async init(config: Config): Promise<void> {
+    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.staticProperties });
     CocosAndroid.callStaticMethod('initSDK', [['String'], 'void'], fmt(config));
   }
   track(eventName: string, properties: Record<string, string | boolean | number>): void {
-    properties = { ...properties, ...this.dynamicPropertiesCallback?.() };
+    properties = { ...properties, ...this.dynamicProperties?.() };
     CocosAndroid.callStaticMethod('track', [['String', 'String'], 'void'], eventName, fmt(properties));
   }
   enableUpload(): void {
     CocosAndroid.callStaticMethod('enableUpload', [[], 'void']);
   }
-  userSet(properties: Record<string, string | boolean | number>): void {
+  userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
     CocosAndroid.callStaticMethod('userSet', [['String'], 'void'], fmt(properties));
   }
-  userSetOnce(properties: Record<string, string | boolean | number>): void {
+  userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
     CocosAndroid.callStaticMethod('userSetOnce', [['String'], 'void'], fmt(properties));
   }
-  userAdd(properties: Record<string, number>): void {
+  userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
     CocosAndroid.callStaticMethod('userAdd', [['String'], 'void'], fmt(properties));
   }
   userUnset(properties: string[]): void {
@@ -55,10 +55,10 @@ export class CocosAndroid extends StaticDataTower {
   userDelete(): void {
     CocosAndroid.callStaticMethod('userDelete', [[], 'void']);
   }
-  userAppend(properties: Record<string, string | boolean | number>): void {
+  userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
     CocosAndroid.callStaticMethod('userAppend', [['String'], 'void'], fmt(properties));
   }
-  userUniqAppend(properties: Record<string, any[]>): void {
+  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
     CocosAndroid.callStaticMethod('userUniqAppend', [['String'], 'void'], fmt(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;
@@ -91,17 +91,17 @@ export class CocosAndroid extends StaticDataTower {
   setAdjustId(id: string): void {
     CocosAndroid.callStaticMethod('setAdjustId', [['String'], 'void'], id);
   }
-  setStaticCommonProperties(properties: Record<string, string | boolean | number>): void {
+  setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
     CocosAndroid.callStaticMethod('setStaticCommonProperties', [['String'], 'void'], fmt(properties));
   }
   clearStaticCommonProperties(): void {
     CocosAndroid.callStaticMethod('clearStaticCommonProperties', [[], 'void']);
   }
   setCommonProperties(callback: () => Record<string, string | boolean | number>): void {
-    this.dynamicPropertiesCallback = callback;
+    this.dynamicProperties = callback;
   }
   clearCommonProperties(): void {
-    this.dynamicPropertiesCallback = null;
+    this.dynamicProperties = null;
   }
 }
 

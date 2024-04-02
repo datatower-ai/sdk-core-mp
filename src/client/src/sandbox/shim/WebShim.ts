@@ -1,5 +1,5 @@
-import { RequestOptions } from '../../type';
 import { TaskQueue } from '../TaskQueue';
+import type { RequestOptions, Shim, SystemInfo } from './type';
 
 class WebRequest {
   private supports = { beacon: true, xhr: true, cors: true, image: true };
@@ -87,7 +87,7 @@ class WebRequest {
 /**
  * web shim
  */
-export class WebShim extends WebRequest {
+export class WebShim extends WebRequest implements Shim {
   async getStorage<T = unknown>(key: string): Promise<T | null> {
     const data = localStorage.getItem(key);
     return JSON.parse(data || 'null');
@@ -100,5 +100,21 @@ export class WebShim extends WebRequest {
 
   async removeStorage(name: string): Promise<void> {
     localStorage.removeItem(name);
+  }
+
+  getUserAgent(): string {
+    return globalThis.navigator.userAgent;
+  }
+
+  getSystemInfo(): SystemInfo {
+    return {
+      height: globalThis.innerHeight,
+      width: globalThis.innerWidth,
+      language: globalThis.navigator.language,
+    };
+  }
+
+  getReferrer(): string {
+    return globalThis.document.referrer;
   }
 }
