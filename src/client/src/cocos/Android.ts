@@ -1,5 +1,5 @@
 import { version } from '@/package.json';
-import { StaticDataTower } from '@/src/StaticDataTower';
+import { DataTower, StaticDataTower } from '@/src/StaticDataTower';
 import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/src/constant';
 import type { Config, PublicKey } from '@/src/type';
 import { fmt, globalNativeCallback } from '@/src/utils';
@@ -10,9 +10,9 @@ type Signature = [args: JavaType[], ret: JavaType];
 /**
  * cocos CocosAndroid bridge
  */
-export class CocosAndroid extends StaticDataTower {
-  protected static instance = new CocosAndroid();
-  private staticProperties = { '#sdk_type': 'js', '#sdk_version_name': version };
+export class CocosAndroid extends StaticDataTower implements DataTower {
+  protected static createInstance = () => new CocosAndroid();
+  private presetProperties = { '#sdk_type': 'js', '#sdk_version_name': version } as const;
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
   private static typeMap: Record<JavaType, string> = {
@@ -30,7 +30,7 @@ export class CocosAndroid extends StaticDataTower {
   }
 
   async init(config: Config): Promise<void> {
-    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.staticProperties });
+    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
     CocosAndroid.callStaticMethod('initSDK', [['String'], 'void'], fmt(config));
   }
   track(eventName: string, properties: Record<string, string | boolean | number>): void {

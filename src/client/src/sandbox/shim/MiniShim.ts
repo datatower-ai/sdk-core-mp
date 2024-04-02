@@ -107,10 +107,6 @@ export class MiniShim implements Shim {
     });
   }
 
-  getNetworkStatus() {}
-
-  onNetworkStatusChange(callback: () => void) {}
-
   getSystemInfo(): SystemInfo {
     const sys = this.api.getSystemInfoSync();
     return {

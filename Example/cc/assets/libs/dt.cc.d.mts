@@ -74,34 +74,36 @@ declare global {
 }
 
 declare class StaticDataTower {
-    protected static instance: DataTower;
+    protected static instances: Record<string, DataTower>;
+    protected static createInstance(): DataTower;
+    private static getInstance;
     static init(config: Config): Promise<void>;
     /**
      * manually start the report (if the manualEnableUpload is true)
      */
-    static enableUpload(): void;
-    static track(eventName: string, properties: Record<string, string | boolean | number>): void;
-    static userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void;
-    static userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void;
-    static userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void;
-    static userUnset(properties: string[]): void;
-    static userDelete(): void;
-    static userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void;
-    static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void;
-    static getDataTowerId(callback: (id: string) => void): void;
-    static getDataTowerId(): Promise<string>;
-    static getDistinctId(callback: (id: string) => void): void;
-    static getDistinctId(): Promise<string>;
-    static setAccountId(id: string): void;
-    static setDistinctId(id: string): void;
-    static setFirebaseAppInstanceId(id: string): void;
-    static setAppsFlyerId(id: string): void;
-    static setKochavaId(id: string): void;
-    static setAdjustId(id: string): void;
-    static setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void;
-    static clearStaticCommonProperties(): void;
-    static setCommonProperties(callback: () => Record<string, string | boolean | number>): void;
-    static clearCommonProperties(): void;
+    static enableUpload(appId?: string): void;
+    static track(eventName: string, properties: Record<string, string | boolean | number>, appId?: string): void;
+    static userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>, appId?: string): void;
+    static userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>, appId?: string): void;
+    static userAdd<K extends string>(properties: Record<PublicKey<K>, number>, appId?: string): void;
+    static userUnset(properties: string[], appId?: string): void;
+    static userDelete(appId?: string): void;
+    static userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void;
+    static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void;
+    static getDataTowerId(callback: (id: string) => void, appId?: string): void;
+    static getDataTowerId(appId?: string): Promise<string>;
+    static getDistinctId(callback: (id: string) => void, appId?: string): void;
+    static getDistinctId(appId?: string): Promise<string>;
+    static setAccountId(id: string, appId?: string): void;
+    static setDistinctId(id: string, appId?: string): void;
+    static setFirebaseAppInstanceId(id: string, appId?: string): void;
+    static setAppsFlyerId(id: string, appId?: string): void;
+    static setKochavaId(id: string, appId?: string): void;
+    static setAdjustId(id: string, appId?: string): void;
+    static setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>, appId?: string): void;
+    static clearStaticCommonProperties(appId?: string): void;
+    static setCommonProperties(callback: () => Record<string, string | boolean | number>, appId?: string): void;
+    static clearCommonProperties(appId?: string): void;
 }
 type DataTower = Omit<typeof StaticDataTower, 'prototype'>;
 

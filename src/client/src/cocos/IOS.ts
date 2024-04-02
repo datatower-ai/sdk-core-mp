@@ -1,5 +1,5 @@
 import { version } from '@/package.json';
-import { StaticDataTower } from '@/src/StaticDataTower';
+import { DataTower, StaticDataTower } from '@/src/StaticDataTower';
 import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/src/constant';
 import type { Config, PublicKey } from '@/src/type';
 import { fmt, globalNativeCallback } from '@/src/utils';
@@ -7,9 +7,9 @@ import { fmt, globalNativeCallback } from '@/src/utils';
 /**
  * cocos CocosIOS bridge
  */
-export class CocosIOS extends StaticDataTower {
-  protected static instance = new CocosIOS();
-  private staticProperties = { '#sdk_type': 'js', '#sdk_version_name': version };
+export class CocosIOS extends StaticDataTower implements DataTower {
+  protected static createInstance = () => new CocosIOS();
+  private presetProperties = { '#sdk_type': 'js', '#sdk_version_name': version } as const;
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {
@@ -17,7 +17,7 @@ export class CocosIOS extends StaticDataTower {
   }
 
   async init(config: Config) {
-    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.staticProperties });
+    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
     CocosIOS.callStaticMethod('initSDK:', fmt(config));
   }
   track(eventName: string, properties: Record<string, string | boolean | number>): void {

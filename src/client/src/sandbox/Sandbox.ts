@@ -8,7 +8,7 @@ import { TaskQueue } from './TaskQueue';
 import type { Shim } from './shim/type';
 
 /**
- * TODO: Sandbox
+ * Sandbox
  * includes platform: mini program/mini gram/quick app/quick game/web
  */
 export class Sandbox implements DataTower {
@@ -39,7 +39,7 @@ export class Sandbox implements DataTower {
     const data = JSON.stringify(tasks);
     const base64 = btoa(data);
     const check = md5(base64 + '@datatower').toString();
-    const params = new URLSearchParams({ data: encodeURIComponent(data), check }).toString();
+    const params = new URLSearchParams({ data, check }).toString();
     return this.shim.request({ url: this.config.serverUrl, data: params });
   }
 
@@ -55,29 +55,30 @@ export class Sandbox implements DataTower {
       this.config.maxQueueSize && this.taskQueue.setMaxSize(this.config.maxQueueSize);
     }
     // 通过 #dt_id 判断是否为新用户，如果是新用户则初始化
-    if (!this.shim.getStorage('#dt_id')) await this.initializeNewUser();
+    if (!(await this.shim.getStorage('#dt_id'))) await this.initializeNewUser();
     this.settings['#dt_id'] = (await this.shim.getStorage<string>('#dt_id'))!;
 
-    // web平台无 #app_id
     this.settings['#app_id'] = this.config.appId ?? this.shim.getSystemInfo().appId;
 
-    Logger.info('<call init>', config);
+    Logger.info('<call init>', this.config, this.settings);
   }
 
   private async initializeNewUser() {
     const dt_id = this.generateDataTowerId();
     this.userSetOnce({
       '#first_visit_time': new Date().getTime(),
-      // '#first_referrer': getReferrer(false),
+      '#first_referrer': this.shim.getReferrer(),
       '#first_browser_language': navigator.language.toLowerCase(),
     });
     await this.shim.setStorage('#dt_id', dt_id);
   }
 
   track(eventName: string, properties: Record<string, string | boolean | number>): void {
-    Logger.info('<call track>', eventName, properties);
     this.taskQueue.enqueue(() => ({
       ...this.settings,
+      '#event_time': new Date().getTime(),
+      '#event_name': eventName,
+      '#event_type': 'track',
       properties: {
         ...properties,
         ...this.staticProperties,
@@ -85,6 +86,18 @@ export class Sandbox implements DataTower {
         ...this.presetProperties,
       },
     }));
+    Logger.info('<call track>', {
+      ...this.settings,
+      '#event_time': new Date().getTime(),
+      '#event_name': eventName,
+      '#event_type': 'track',
+      properties: {
+        ...properties,
+        ...this.staticProperties,
+        ...this.dynamicProperties?.(),
+        ...this.presetProperties,
+      },
+    });
   }
   enableUpload(): void {
     if (this.config.manualEnableUpload) this.report();

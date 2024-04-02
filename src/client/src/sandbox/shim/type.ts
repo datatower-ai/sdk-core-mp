@@ -6,6 +6,8 @@ export interface Shim {
   getSystemInfo(): SystemInfo;
   getUserAgent(): string;
   getReferrer(): string;
+  getNetworkStatus?(): void;
+  onNetworkStatusChange?(callback: () => void): void;
 }
 
 /**

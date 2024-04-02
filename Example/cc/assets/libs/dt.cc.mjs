@@ -56,78 +56,112 @@ var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
 
 // src/StaticDataTower.ts
 var StaticDataTower = class {
+  static createInstance() {
+    throw new Error("not implemented");
+  }
+  static getInstance(appId = "__default__") {
+    return this.instances[appId] || Logger.error("DataTower", `instance ${appId} not found, please init first`);
+  }
   static init(config) {
     return __async(this, null, function* () {
-      return this.instance.init(config);
+      const instance = this.createInstance();
+      if (!this.instances.__default__) {
+        this.instances.__default__ = instance;
+      } else {
+        this.instances[config.appId] = instance;
+      }
+      return instance.init(config);
     });
   }
   /**
    * manually start the report (if the manualEnableUpload is true)
    */
-  static enableUpload() {
-    return this.instance.enableUpload();
+  static enableUpload(appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.enableUpload();
   }
-  static track(eventName, properties) {
-    return this.instance.track(eventName, properties);
+  static track(eventName, properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.track(eventName, properties);
   }
-  static userSet(properties) {
-    return this.instance.userSet(properties);
+  static userSet(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userSet(properties);
   }
-  static userSetOnce(properties) {
-    return this.instance.userSetOnce(properties);
+  static userSetOnce(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userSetOnce(properties);
   }
-  static userAdd(properties) {
-    return this.instance.userAdd(properties);
+  static userAdd(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userAdd(properties);
   }
-  static userUnset(properties) {
-    return this.instance.userUnset(properties);
+  static userUnset(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userUnset(properties);
   }
-  static userDelete() {
-    return this.instance.userDelete();
+  static userDelete(appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userDelete();
   }
-  static userAppend(properties) {
-    return this.instance.userAppend(properties);
+  static userAppend(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userAppend(properties);
   }
-  static userUniqAppend(properties) {
-    return this.instance.userUniqAppend(properties);
+  static userUniqAppend(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.userUniqAppend(properties);
   }
-  static getDataTowerId(callback) {
-    return this.instance.getDataTowerId(callback);
+  static getDataTowerId(callbackOrAppId, appId) {
+    var _a2, _b2;
+    return typeof callbackOrAppId === "string" ? (_a2 = this.getInstance(callbackOrAppId)) == null ? void 0 : _a2.getDataTowerId() : (_b2 = this.getInstance(appId)) == null ? void 0 : _b2.getDataTowerId(callbackOrAppId);
   }
-  static getDistinctId(callback) {
-    return this.instance.getDistinctId(callback);
+  static getDistinctId(callbackOrAppId, appId) {
+    var _a2, _b2;
+    return typeof callbackOrAppId === "string" ? (_a2 = this.getInstance(callbackOrAppId)) == null ? void 0 : _a2.getDistinctId() : (_b2 = this.getInstance(appId)) == null ? void 0 : _b2.getDistinctId(callbackOrAppId);
   }
-  static setAccountId(id) {
-    return this.instance.setAccountId(id);
+  static setAccountId(id, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setAccountId(id);
   }
-  static setDistinctId(id) {
-    return this.instance.setDistinctId(id);
+  static setDistinctId(id, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setDistinctId(id);
   }
-  static setFirebaseAppInstanceId(id) {
-    return this.instance.setFirebaseAppInstanceId(id);
+  static setFirebaseAppInstanceId(id, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setFirebaseAppInstanceId(id);
   }
-  static setAppsFlyerId(id) {
-    return this.instance.setAppsFlyerId(id);
+  static setAppsFlyerId(id, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setAppsFlyerId(id);
   }
-  static setKochavaId(id) {
-    return this.instance.setKochavaId(id);
+  static setKochavaId(id, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setKochavaId(id);
   }
-  static setAdjustId(id) {
-    return this.instance.setAdjustId(id);
+  static setAdjustId(id, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setAdjustId(id);
   }
-  static setStaticCommonProperties(properties) {
-    return this.instance.setStaticCommonProperties(properties);
+  static setStaticCommonProperties(properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setStaticCommonProperties(properties);
   }
-  static clearStaticCommonProperties() {
-    return this.instance.clearStaticCommonProperties();
+  static clearStaticCommonProperties(appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.clearStaticCommonProperties();
   }
-  static setCommonProperties(callback) {
-    return this.instance.setCommonProperties(callback);
+  static setCommonProperties(callback, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setCommonProperties(callback);
   }
-  static clearCommonProperties() {
-    return this.instance.clearCommonProperties();
+  static clearCommonProperties(appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.clearCommonProperties();
   }
 };
+StaticDataTower.instances = {};
 
 // package.json
 var version = "1.0.0";
@@ -6049,7 +6083,7 @@ var Sandbox = class {
     const data = JSON.stringify(tasks);
     const base64 = btoa(data);
     const check = md5(base64 + "@datatower").toString();
-    const params = new URLSearchParams({ data: encodeURIComponent(data), check }).toString();
+    const params = new URLSearchParams({ data, check }).toString();
     return this.shim.request({ url: this.config.serverUrl, data: params });
   }
   init(config) {
@@ -6063,11 +6097,11 @@ var Sandbox = class {
         this.taskQueue.onEnqueue(debounce(() => this.report(), this.config.debounceWait));
         this.config.maxQueueSize && this.taskQueue.setMaxSize(this.config.maxQueueSize);
       }
-      if (!this.shim.getStorage("#dt_id"))
+      if (!(yield this.shim.getStorage("#dt_id")))
         yield this.initializeNewUser();
       this.settings["#dt_id"] = yield this.shim.getStorage("#dt_id");
       this.settings["#app_id"] = (_a2 = this.config.appId) != null ? _a2 : this.shim.getSystemInfo().appId;
-      Logger.info("<call init>", config);
+      Logger.info("<call init>", this.config, this.settings);
     });
   }
   initializeNewUser() {
@@ -6075,20 +6109,29 @@ var Sandbox = class {
       const dt_id = this.generateDataTowerId();
       this.userSetOnce({
         "#first_visit_time": (/* @__PURE__ */ new Date()).getTime(),
-        // '#first_referrer': getReferrer(false),
+        "#first_referrer": this.shim.getReferrer(),
         "#first_browser_language": navigator.language.toLowerCase()
       });
       yield this.shim.setStorage("#dt_id", dt_id);
     });
   }
   track(eventName, properties) {
-    Logger.info("<call track>", eventName, properties);
+    var _a2;
     this.taskQueue.enqueue(() => {
-      var _a2;
+      var _a3;
       return __spreadProps(__spreadValues({}, this.settings), {
-        properties: __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, properties), this.staticProperties), (_a2 = this.dynamicProperties) == null ? void 0 : _a2.call(this)), this.presetProperties)
+        "#event_time": (/* @__PURE__ */ new Date()).getTime(),
+        "#event_name": eventName,
+        "#event_type": "track",
+        properties: __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, properties), this.staticProperties), (_a3 = this.dynamicProperties) == null ? void 0 : _a3.call(this)), this.presetProperties)
       });
     });
+    Logger.info("<call track>", __spreadProps(__spreadValues({}, this.settings), {
+      "#event_time": (/* @__PURE__ */ new Date()).getTime(),
+      "#event_name": eventName,
+      "#event_type": "track",
+      properties: __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, properties), this.staticProperties), (_a2 = this.dynamicProperties) == null ? void 0 : _a2.call(this)), this.presetProperties)
+    }));
   }
   enableUpload() {
     if (this.config.manualEnableUpload)
@@ -6322,13 +6365,13 @@ var WebShim = class extends WebRequest {
 // src/sandbox/index.ts
 var Web = class extends StaticDataTower {
 };
-Web.instance = new Sandbox(new WebShim());
+Web.createInstance = () => new Sandbox(new WebShim());
 
 // src/cocos/Android.ts
 var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
   constructor() {
     super(...arguments);
-    this.staticProperties = { "#sdk_type": "js", "#sdk_version_name": version };
+    this.presetProperties = { "#sdk_type": "js", "#sdk_version_name": version };
     this.dynamicProperties = null;
   }
   static generateSignature([args, ret]) {
@@ -6339,7 +6382,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
   }
   init(config) {
     return __async(this, null, function* () {
-      config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.staticProperties });
+      config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
       _CocosAndroid.callStaticMethod("initSDK", [["String"], "void"], fmt(config));
     });
   }
@@ -6413,7 +6456,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
     this.dynamicProperties = null;
   }
 };
-_CocosAndroid.instance = new _CocosAndroid();
+_CocosAndroid.createInstance = () => new _CocosAndroid();
 _CocosAndroid.typeMap = {
   void: "V",
   int: "I",
@@ -6427,7 +6470,7 @@ var CocosAndroid = _CocosAndroid;
 var _CocosIOS = class _CocosIOS extends StaticDataTower {
   constructor() {
     super(...arguments);
-    this.staticProperties = { "#sdk_type": "js", "#sdk_version_name": version };
+    this.presetProperties = { "#sdk_type": "js", "#sdk_version_name": version };
     this.dynamicProperties = null;
   }
   static callStaticMethod(method, ...args) {
@@ -6435,7 +6478,7 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
   }
   init(config) {
     return __async(this, null, function* () {
-      config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.staticProperties });
+      config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
       _CocosIOS.callStaticMethod("initSDK:", fmt(config));
     });
   }
@@ -6509,7 +6552,7 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
     this.dynamicProperties = null;
   }
 };
-_CocosIOS.instance = new _CocosIOS();
+_CocosIOS.createInstance = () => new _CocosIOS();
 var CocosIOS = _CocosIOS;
 
 // src/cocos/index.ts
