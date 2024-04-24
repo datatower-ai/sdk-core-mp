@@ -2,6 +2,7 @@
   "include": ["scripts/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
