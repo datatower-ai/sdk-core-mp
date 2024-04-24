@@ -1,13 +1,16 @@
 package ai.datatower.bridge;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,13 +18,18 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Looper;
 
-//import com.cocos.lib.CocosJavascriptJavaBridge;
+import android.util.Log;
 
+import com.cocos.lib.CocosHelper;
+import com.cocos.lib.CocosJavascriptJavaBridge;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import ai.datatower.analytics.DT;
 import ai.datatower.analytics.DTAnalytics;
+import ai.datatower.analytics.OnDataTowerIdListener;
 
 public class DTCocosCreatorProxyApi {
 
@@ -73,18 +81,22 @@ public class DTCocosCreatorProxyApi {
         JSONObject configDic = stringToJSONObject(config);
         String appId = configDic.optString("appId");
         String serverUrl = configDic.optString("serverUrl");
-        boolean isDebug = configDic.optBoolean("isDebug");
-        int channel = configDic.optInt("channel");
-        int logLevel = configDic.optInt("logLevel");
+        boolean isDebug = configDic.optBoolean("isDebug", false);
+        String channel = configDic.optString("channel", "");
+        int logLevel = configDic.optInt("logLevel", 2);
+        boolean manualEnableUpload = configDic.optBoolean("manualEnableUpload", false);
+        JSONObject properties = configDic.optJSONObject("properties");
         Context mAppContext = getCocosContext();
 
         DT.initSDK(
                 mAppContext,
                 appId,
                 serverUrl,
-                channel.ToString(),
+                channel,
                 isDebug,
-                logLevel
+                logLevel,
+                manualEnableUpload,
+                properties == null? new JSONObject() : properties
         );
     }
 
@@ -97,12 +109,92 @@ public class DTCocosCreatorProxyApi {
         DTAnalytics.track(eventName, jsonObj);
     }
 
-    public static String getDeviceId (String appId)  {
-
+    public static void enableUpload() {
+        DT.enableUpload();
     }
 
-    private static JSONObject stringToJSONObject (String str) {
-        if (str != null && str.length() > 0) {
+    public static void userSet(String properties) {
+        DTAnalytics.userSet(stringToJSONObject(properties));
+    }
+
+    public static void userAdd(String properties) {
+        DTAnalytics.userAdd(stringToJSONObject(properties));
+    }
+
+    public static void userSetOnce(String properties) {
+        DTAnalytics.userSetOnce(stringToJSONObject(properties));
+    }
+
+    public static void userUnset(String properties) {
+        try {
+            JSONArray json = new JSONArray(properties);
+            if (json.length() > 0) {
+                int length = json.length();
+                ArrayList<String> arr = new ArrayList<>(length);
+                for (int i = 0; i < length; i++) {
+                    String value =  json.optString(i);
+                    if (!value.isEmpty()) {
+                        arr.add(value);
+                    }
+                }
+                DTAnalytics.userUnset(arr.toArray(new String[0]));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void userDelete() {
+        DTAnalytics.userDelete();
+    }
+
+    public static void userAppend(String properties) {
+        DTAnalytics.userAppend(stringToJSONObject(properties));
+    }
+
+    public static void userUniqAppend(String properties) {
+        DTAnalytics.userUniqAppend(stringToJSONObject(properties));
+    }
+
+    public static void getDataTowerId(String callback) {
+        DTAnalytics.getDataTowerId((id) ->
+                CocosHelper.runOnGameThread(() ->
+                        CocosJavascriptJavaBridge.evalString(callback + "(\"" + id + "\")")
+                )
+        );
+    }
+
+    public static void setAccountId(String id) {
+        DTAnalytics.setAccountId(id);
+    }
+
+    public static void setFirebaseAppInstanceId(String id) {
+        DTAnalytics.setFirebaseAppInstanceId(id);
+    }
+
+    public static void setAppsFlyerId(String id) {
+        DTAnalytics.setAppsFlyerId(id);
+    }
+
+    public static void setKochavaId(String id) {
+        DTAnalytics.setKochavaId(id);
+    }
+
+    public static void setAdjustId(String id) {
+        DTAnalytics.setAdjustId(id);
+    }
+
+    public static void setStaticCommonProperties(String properties) {
+        DTAnalytics.setStaticCommonProperties(stringToJSONObject(properties));
+    }
+
+    public static void clearStaticCommonProperties() {
+        DTAnalytics.clearStaticCommonProperties();
+    }
+
+
+    private static JSONObject stringToJSONObject(String str) {
+        if (str != null && !str.isEmpty()) {
             try {
                 return new JSONObject(str);
             }
