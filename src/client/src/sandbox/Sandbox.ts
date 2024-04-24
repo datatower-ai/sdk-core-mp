@@ -17,7 +17,6 @@ export class Sandbox implements DataTower {
 
   private settings = {
     '#acid': '',
-    '#disctId': '',
     '#app_id': '',
     '#dt_id': '',
   };
@@ -162,20 +161,9 @@ export class Sandbox implements DataTower {
     callback(this.settings['#dt_id']);
     Logger.info('<call getDataTowerId>', callback);
   }
-  getDistinctId(callback: (id: string) => void): void;
-  getDistinctId(): Promise<string>;
-  getDistinctId(callback?: (id: string) => void): void | Promise<string> {
-    if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
-    callback(this.settings['#disctId']);
-    Logger.info('<call getDistinctId>');
-  }
   setAccountId(id: string): void {
     this.settings['#acid'] = id;
     Logger.info('<call setAccountId>', id);
-  }
-  setDistinctId(id: string): void {
-    this.settings['#disctId'] = id;
-    Logger.info('<call setDistinctId>', id);
   }
   setFirebaseAppInstanceId(id: string): void {
     this.createTask('#user_set', 'user', { '#latest_firebase_iid': id });

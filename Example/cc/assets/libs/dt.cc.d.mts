@@ -92,10 +92,7 @@ declare class StaticDataTower {
     static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void;
     static getDataTowerId(callback: (id: string) => void, appId?: string): void;
     static getDataTowerId(appId?: string): Promise<string>;
-    static getDistinctId(callback: (id: string) => void, appId?: string): void;
-    static getDistinctId(appId?: string): Promise<string>;
     static setAccountId(id: string, appId?: string): void;
-    static setDistinctId(id: string, appId?: string): void;
     static setFirebaseAppInstanceId(id: string, appId?: string): void;
     static setAppsFlyerId(id: string, appId?: string): void;
     static setKochavaId(id: string, appId?: string): void;

@@ -116,17 +116,9 @@ var StaticDataTower = class {
     var _a2, _b2;
     return typeof callbackOrAppId === "string" ? (_a2 = this.getInstance(callbackOrAppId)) == null ? void 0 : _a2.getDataTowerId() : (_b2 = this.getInstance(appId)) == null ? void 0 : _b2.getDataTowerId(callbackOrAppId);
   }
-  static getDistinctId(callbackOrAppId, appId) {
-    var _a2, _b2;
-    return typeof callbackOrAppId === "string" ? (_a2 = this.getInstance(callbackOrAppId)) == null ? void 0 : _a2.getDistinctId() : (_b2 = this.getInstance(appId)) == null ? void 0 : _b2.getDistinctId(callbackOrAppId);
-  }
   static setAccountId(id, appId) {
     var _a2;
     return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setAccountId(id);
-  }
-  static setDistinctId(id, appId) {
-    var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.setDistinctId(id);
   }
   static setFirebaseAppInstanceId(id, appId) {
     var _a2;
@@ -6065,7 +6057,6 @@ var Sandbox = class {
     this.taskQueue = new TaskQueue();
     this.settings = {
       "#acid": "",
-      "#disctId": "",
       "#app_id": "",
       "#dt_id": ""
     };
@@ -6193,19 +6184,9 @@ var Sandbox = class {
     callback(this.settings["#dt_id"]);
     Logger.info("<call getDataTowerId>", callback);
   }
-  getDistinctId(callback) {
-    if (!callback)
-      return new Promise((resolve) => this.getDistinctId(resolve));
-    callback(this.settings["#disctId"]);
-    Logger.info("<call getDistinctId>");
-  }
   setAccountId(id) {
     this.settings["#acid"] = id;
     Logger.info("<call setAccountId>", id);
-  }
-  setDistinctId(id) {
-    this.settings["#disctId"] = id;
-    Logger.info("<call setDistinctId>", id);
   }
   setFirebaseAppInstanceId(id) {
     this.createTask("#user_set", "user", { "#latest_firebase_iid": id });
@@ -6420,16 +6401,8 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
       return new Promise((resolve) => this.getDataTowerId(resolve));
     globalNativeCallback((cb) => _CocosAndroid.callStaticMethod("getDataTowerId", [["String"], "void"], cb), callback);
   }
-  getDistinctId(callback) {
-    if (!callback)
-      return new Promise((resolve) => this.getDistinctId(resolve));
-    globalNativeCallback((cb) => _CocosAndroid.callStaticMethod("getDistinctId", [["String"], "void"], cb), callback);
-  }
   setAccountId(id) {
     _CocosAndroid.callStaticMethod("setAccountId", [["String"], "void"], id);
-  }
-  setDistinctId(id) {
-    _CocosAndroid.callStaticMethod("setDistinctId", [["String"], "void"], id);
   }
   setFirebaseAppInstanceId(id) {
     _CocosAndroid.callStaticMethod("setFirebaseAppInstanceId", [["String"], "void"], id);
@@ -6516,16 +6489,8 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
       return new Promise((resolve) => this.getDataTowerId(resolve));
     globalNativeCallback((cb) => _CocosIOS.callStaticMethod("getDataTowerId:", cb), callback);
   }
-  getDistinctId(callback) {
-    if (!callback)
-      return new Promise((resolve) => this.getDistinctId(resolve));
-    globalNativeCallback((cb) => _CocosIOS.callStaticMethod("getDistinctId:", cb), callback);
-  }
   setAccountId(id) {
     _CocosIOS.callStaticMethod("setAccountId:", id);
-  }
-  setDistinctId(id) {
-    _CocosIOS.callStaticMethod("setDistinctId:", id);
   }
   setFirebaseAppInstanceId(id) {
     _CocosIOS.callStaticMethod("setFirebaseAppInstanceId:", id);

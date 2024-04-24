@@ -67,17 +67,8 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
     globalNativeCallback((cb) => CocosAndroid.callStaticMethod('getDataTowerId', [['String'], 'void'], cb), callback);
   }
-  getDistinctId(callback: (id: string) => void): void;
-  getDistinctId(): Promise<string>;
-  getDistinctId(callback?: (id: string) => void): void | Promise<string> {
-    if (!callback) return new Promise((resolve) => this.getDistinctId(resolve));
-    globalNativeCallback((cb) => CocosAndroid.callStaticMethod('getDistinctId', [['String'], 'void'], cb), callback);
-  }
   setAccountId(id: string): void {
     CocosAndroid.callStaticMethod('setAccountId', [['String'], 'void'], id);
-  }
-  setDistinctId(id: string): void {
-    CocosAndroid.callStaticMethod('setDistinctId', [['String'], 'void'], id);
   }
   setFirebaseAppInstanceId(id: string): void {
     CocosAndroid.callStaticMethod('setFirebaseAppInstanceId', [['String'], 'void'], id);

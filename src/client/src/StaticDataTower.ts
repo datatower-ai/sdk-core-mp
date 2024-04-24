@@ -60,18 +60,8 @@ export class StaticDataTower {
       ? this.getInstance(callbackOrAppId)?.getDataTowerId()
       : this.getInstance(appId)?.getDataTowerId(callbackOrAppId!);
   }
-  static getDistinctId(callback: (id: string) => void, appId?: string): void;
-  static getDistinctId(appId?: string): Promise<string>;
-  static getDistinctId(callbackOrAppId?: ((id: string) => void) | string, appId?: string): void | Promise<string> {
-    return typeof callbackOrAppId === 'string'
-      ? this.getInstance(callbackOrAppId)?.getDistinctId()
-      : this.getInstance(appId)?.getDistinctId(callbackOrAppId!);
-  }
   static setAccountId(id: string, appId?: string): void {
     return this.getInstance(appId)?.setAccountId(id);
-  }
-  static setDistinctId(id: string, appId?: string): void {
-    return this.getInstance(appId)?.setDistinctId(id);
   }
   static setFirebaseAppInstanceId(id: string, appId?: string): void {
     return this.getInstance(appId)?.setFirebaseAppInstanceId(id);
