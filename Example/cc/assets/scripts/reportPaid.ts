@@ -8,7 +8,7 @@ export class reportPaid extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
-    editBox.string = `{"value":0,"precision":"","location":"","id":"","type":-1,"platform":-1,"mediation":-1,"mediationId":"","seq":"","properties":{},"country":""}`;
+    editBox.string = `{"value":0,"precision":"","location":"","id":"","type":-1,"platform":-1,"mediation":-1,"mediationId":"","seq":"seq","properties":{},"country":""}`;
 
     const submit = () => {
       const data = JSON.parse(editBox.string);

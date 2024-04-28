@@ -232,8 +232,8 @@ declare class StaticDataTower {
     static trackTimerPause(eventName: string, appId?: string): void;
     static trackTimerResume(eventName: string, appId?: string): void;
     static trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>, appId?: string): void;
-    static reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportLoadEnd<K extends string>(options: BaseReportOptions<K> & CommonReportOptions & {
+    static reportLoadBegin<K extends string>(options: BaseReportOptions<K>, appId?: string): void;
+    static reportLoadEnd<K extends string>(options: BaseReportOptions<K> & {
         duration: number;
         result: boolean;
         errorCode: number;

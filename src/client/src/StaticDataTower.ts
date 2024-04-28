@@ -107,12 +107,11 @@ export class StaticDataTower {
   }
 
   // Ad
-  static reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+  static reportLoadBegin<K extends string>(options: BaseReportOptions<K>, appId?: string): void {
     return this.getInstance(appId)?.reportLoadBegin(options);
   }
   static reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> &
-      CommonReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    options: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
     appId?: string,
   ): void {
     return this.getInstance(appId)?.reportLoadEnd(options);
