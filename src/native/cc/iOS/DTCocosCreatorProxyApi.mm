@@ -5,10 +5,24 @@
 //  Created by huangdiao on 2021/7/20.
 //
 
-#import "DTCocosCreatorProxyApi.h"
+#define ImportSource
+
+#ifdef ImportSource
+
+#import "DTAnalytics.h"
+#import "DT.h"
+#import "DTAnalyticsUtils.h"
+
+#else
+
 #import <DataTowerAICore/DTAnalytics.h>
 #import <DataTowerAICore/DT.h>
 #import <DataTowerAICore/DTAnalyticsUtils.h>
+
+#endif
+
+#import "DTCocosCreatorProxyApi.h"
+
 //#include "platform/apple/JsbBridge.h"
 //#include "bindings/sebind/sebind.h"
 //#include "platform/apple/JsbBridgeWrapper.h"
