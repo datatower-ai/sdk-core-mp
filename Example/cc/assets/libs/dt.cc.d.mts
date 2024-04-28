@@ -4,6 +4,108 @@
  * 内部使用的类型不应写在该文件下
  */
 /**
+ * 广告类型
+ */
+declare enum AdType {
+    /**
+     * 未知类型
+     */
+    UNKNOWN = -1,
+    /**
+     * 横幅广告
+     */
+    BANNER = 0,
+    /**
+     * 插屏广告
+     */
+    INTERSTITIAL = 1,
+    /**
+     * 原生广告
+     */
+    NATIVE = 2,
+    /**
+     * 激励视频广告
+     */
+    REWARDED = 3,
+    /**
+     * 插屏激励视频广告
+     */
+    REWARDED_INTERSTITIAL = 4,
+    /**
+     * 开屏广告
+     */
+    APP_OPEN = 5,
+    /**
+     * 中等矩形广告
+     */
+    MREC = 6
+}
+/**
+ * 广告平台
+ */
+declare enum AdPlatform {
+    /**
+     * 未授权平台
+     */
+    UNDISCLOSED = -2,
+    /**
+     * 未知平台
+     */
+    UNKNOWN = -1,
+    ADMOB = 0,
+    MOPUB = 1,
+    ADCOLONY = 2,
+    APPLOVIN = 3,
+    CHARTBOOST = 4,
+    FACEBOOK = 5,
+    INMOBI = 6,
+    IRONSOURCE = 7,
+    PANGLE = 8,
+    SNAP_AUDIENCE_NETWORK = 9,
+    TAPJOY = 10,
+    UNITY_ADS = 11,
+    VERIZON_MEDIA = 12,
+    VUNGLE = 13,
+    ADX = 14,
+    COMBO = 15,
+    BIGO = 16,
+    HISAVANA = 17,
+    APPLOVIN_EXCHANGE = 18,
+    MINTEGRAL = 19,
+    LIFTOFF = 20,
+    A4G = 21,
+    GOOGLE_AD_MANAGER = 22,
+    FYBER = 23,
+    MAIO = 24,
+    CRITEO = 25,
+    MYTARGET = 26,
+    OGURY = 27,
+    APPNEXT = 28,
+    KIDOZ = 29,
+    SMAATO = 30,
+    START_IO = 31,
+    VERVE = 32,
+    LOVINJOY_ADS = 33,
+    YANDEX = 34,
+    REKLAMUP = 35
+}
+/**
+ * 聚合广告平台
+ */
+declare enum AdMediation {
+    /**
+     * 无聚合平台
+     */
+    IDLE = -1,
+    MOPUB = 0,
+    MAX = 1,
+    HISAVANA = 2,
+    COMBO = 3,
+    TOPON = 4,
+    TRADPLUS = 5,
+    TOBID = 6
+}
+/**
  * 日志级别
  */
 declare enum LogLevel {
@@ -65,8 +167,33 @@ interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
      */
     maxQueueSize?: number;
 }
-type PrivateKey = `#${string}`;
+type PrivateKey = `#${string}` | `$${string}`;
 type PublicKey<T extends string> = T extends PrivateKey ? never : T;
+type Properties<K extends string> = Record<PublicKey<K>, string | boolean | number>;
+interface BaseReportOptions<K extends string> {
+    id: string;
+    type: AdType;
+    platform: AdPlatform;
+    mediation: AdMediation;
+    mediationId: string;
+    seq: string;
+    properties: Properties<K>;
+}
+interface CommonReportOptions {
+    location: string;
+    entrance: string;
+}
+interface ReportSuccessOptions<K extends string> {
+    sku: string;
+    price: number;
+    currency: string;
+    properties: Properties<K>;
+}
+interface BaseReportPaidOptions<K extends string> extends BaseReportOptions<K> {
+    value: number;
+    precision: string;
+    location: string;
+}
 declare global {
     interface Window {
         [key: `__${number}__`]: (arg: any) => void;
@@ -77,14 +204,14 @@ declare class StaticDataTower {
     protected static instances: Record<string, DataTower>;
     protected static createInstance(): DataTower;
     private static getInstance;
-    static init(config: Config): Promise<void>;
+    static initSDK(config: Config): Promise<void>;
     /**
      * manually start the report (if the manualEnableUpload is true)
      */
     static enableUpload(appId?: string): void;
     static track(eventName: string, properties: Record<string, string | boolean | number>, appId?: string): void;
-    static userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>, appId?: string): void;
-    static userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>, appId?: string): void;
+    static userSet<K extends string>(properties: Properties<K>, appId?: string): void;
+    static userSetOnce<K extends string>(properties: Properties<K>, appId?: string): void;
     static userAdd<K extends string>(properties: Record<PublicKey<K>, number>, appId?: string): void;
     static userUnset(properties: string[], appId?: string): void;
     static userDelete(appId?: string): void;
@@ -97,10 +224,48 @@ declare class StaticDataTower {
     static setAppsFlyerId(id: string, appId?: string): void;
     static setKochavaId(id: string, appId?: string): void;
     static setAdjustId(id: string, appId?: string): void;
-    static setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>, appId?: string): void;
+    static setStaticCommonProperties<K extends string>(properties: Properties<K>, appId?: string): void;
     static clearStaticCommonProperties(appId?: string): void;
     static setCommonProperties(callback: () => Record<string, string | boolean | number>, appId?: string): void;
     static clearCommonProperties(appId?: string): void;
+    static trackTimerStart(eventName: string, appId?: string): void;
+    static trackTimerPause(eventName: string, appId?: string): void;
+    static trackTimerResume(eventName: string, appId?: string): void;
+    static trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>, appId?: string): void;
+    static reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportLoadEnd<K extends string>(options: BaseReportOptions<K> & CommonReportOptions & {
+        duration: number;
+        result: boolean;
+        errorCode: number;
+        errorMessage: string;
+    }, appId?: string): void;
+    static reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportShowFailed<K extends string>(options: BaseReportOptions<K> & CommonReportOptions & {
+        errorCode: number;
+        errorMessage: string;
+    }, appId?: string): void;
+    static reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportConversionByClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportConversionByLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportConversionByRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportPaid<K extends string>(options: BaseReportPaidOptions<K> & {
+        country: string;
+    }, appId?: string): void;
+    static reportPaid<K extends string>(options: BaseReportPaidOptions<K> & {
+        currency: string;
+        entrance: string;
+    }, appId?: string): void;
+    static reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportPurchaseSuccess<K extends string>(options: ReportSuccessOptions<K> & {
+        order: string;
+    }, appId?: string): void;
+    static reportSubscribeSuccess<K extends string>(options: ReportSuccessOptions<K> & {
+        originalOrderId: string;
+        orderId: string;
+    }, appId?: string): void;
 }
 type DataTower = Omit<typeof StaticDataTower, 'prototype'>;
 
@@ -110,4 +275,4 @@ type DataTower = Omit<typeof StaticDataTower, 'prototype'>;
  */
 declare const Cocos: DataTower;
 
-export { type Config, Cocos as DataTower, type InitialNativeConfig, LogLevel, type PrivateKey, type PublicKey, Cocos as default };
+export { AdMediation, AdPlatform, AdType, type BaseReportOptions, type BaseReportPaidOptions, type CommonReportOptions, type Config, Cocos as DataTower, type InitialNativeConfig, LogLevel, type PrivateKey, type Properties, type PublicKey, type ReportSuccessOptions, Cocos as default };

@@ -3,20 +3,14 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("setCommonProperties")
-export class setCommonProperties extends Component {
+@ccclass("trackTimerPause")
+export class trackTimerPause extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
-    editBox.string = `123`;
+    editBox.string = `eventName`;
 
-    const callback = () => {
-      return { common_property: editBox.string };
-    };
-
-    const submit = () => {
-      DataTower.setCommonProperties(callback);
-    };
+    const submit = () => DataTower.trackTimerPause(editBox.string);
     const button = this.node.getComponentInChildren(Button);
     button.node.on("click", submit, this);
   }

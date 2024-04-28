@@ -3,19 +3,16 @@ import { DataTower } from "../libs/dt.cc.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("setCommonProperties")
-export class setCommonProperties extends Component {
+@ccclass("reportPurchaseSuccess")
+export class reportPurchaseSuccess extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
-    editBox.string = `123`;
-
-    const callback = () => {
-      return { common_property: editBox.string };
-    };
+    editBox.string = `{"sku":"","price":0,"currency":"","order":"","properties":{}}`;
 
     const submit = () => {
-      DataTower.setCommonProperties(callback);
+      const data = JSON.parse(editBox.string);
+      DataTower.reportPurchaseSuccess(data);
     };
     const button = this.node.getComponentInChildren(Button);
     button.node.on("click", submit, this);

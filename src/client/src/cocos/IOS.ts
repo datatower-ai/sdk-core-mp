@@ -1,7 +1,15 @@
 import { version } from '@/package.json';
 import { DataTower, StaticDataTower } from '@/src/StaticDataTower';
 import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/src/constant';
-import type { Config, PublicKey } from '@/src/type';
+import type {
+  BaseReportOptions,
+  BaseReportPaidOptions,
+  CommonReportOptions,
+  Config,
+  Properties,
+  PublicKey,
+  ReportSuccessOptions,
+} from '@/src/type';
 import { fmt, globalNativeCallback } from '@/src/utils';
 
 /**
@@ -9,14 +17,14 @@ import { fmt, globalNativeCallback } from '@/src/utils';
  */
 export class CocosIOS extends StaticDataTower implements DataTower {
   protected static createInstance = () => new CocosIOS();
-  private presetProperties = { '#sdk_type': 'js', '#sdk_version_name': version } as const;
+  private presetProperties = { '#sdk_type': 'cocos_ios', '#sdk_version_name': version } as const;
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {
     return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
 
-  async init(config: Config) {
+  async initSDK(config: Config) {
     config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
     CocosIOS.callStaticMethod('initSDK:', fmt(config));
   }
@@ -81,6 +89,76 @@ export class CocosIOS extends StaticDataTower implements DataTower {
   }
   clearCommonProperties(): void {
     this.dynamicProperties = null;
+  }
+
+  trackTimerStart(eventName: string): void {
+    CocosIOS.callStaticMethod('trackTimerStart:', eventName);
+  }
+  trackTimerPause(eventName: string): void {
+    CocosIOS.callStaticMethod('trackTimerPause:', eventName);
+  }
+  trackTimerResume(eventName: string): void {
+    CocosIOS.callStaticMethod('trackTimerResume:', eventName);
+  }
+  trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
+    CocosIOS.callStaticMethod('trackTimerEnd:properties:', eventName, fmt(properties));
+  }
+  // TODO: implement the following methods
+  reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportLoadEnd<K extends string>(
+    options: BaseReportOptions<K> &
+      CommonReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+  ): void {
+    throw new Error('Method not implemented.');
+  }
+  reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportShowFailed<K extends string>(
+    options: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
+  ): void {
+    throw new Error('Method not implemented.');
+  }
+  reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportConversionByClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportConversionByLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportConversionByRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { country: string }): void;
+  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
+  reportPaid<K extends string>(
+    options: BaseReportPaidOptions<K> & { country: string } & { currency: string; entrance: string },
+  ): void {
+    throw new Error('Method not implemented.');
+  }
+  reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+    throw new Error('Method not implemented.');
+  }
+  reportPurchaseSuccess<K extends string>(options: ReportSuccessOptions<K> & { order: string }): void {
+    throw new Error('Method not implemented.');
+  }
+  reportSubscribeSuccess<K extends string>(
+    options: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
+  ): void {
+    throw new Error('Method not implemented.');
   }
 }
 

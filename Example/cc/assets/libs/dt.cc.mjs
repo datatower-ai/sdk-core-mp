@@ -44,6 +44,69 @@ var __async = (__this, __arguments, generator) => {
 };
 
 // src/type.ts
+var AdType = /* @__PURE__ */ ((AdType2) => {
+  AdType2[AdType2["UNKNOWN"] = -1] = "UNKNOWN";
+  AdType2[AdType2["BANNER"] = 0] = "BANNER";
+  AdType2[AdType2["INTERSTITIAL"] = 1] = "INTERSTITIAL";
+  AdType2[AdType2["NATIVE"] = 2] = "NATIVE";
+  AdType2[AdType2["REWARDED"] = 3] = "REWARDED";
+  AdType2[AdType2["REWARDED_INTERSTITIAL"] = 4] = "REWARDED_INTERSTITIAL";
+  AdType2[AdType2["APP_OPEN"] = 5] = "APP_OPEN";
+  AdType2[AdType2["MREC"] = 6] = "MREC";
+  return AdType2;
+})(AdType || {});
+var AdPlatform = /* @__PURE__ */ ((AdPlatform2) => {
+  AdPlatform2[AdPlatform2["UNDISCLOSED"] = -2] = "UNDISCLOSED";
+  AdPlatform2[AdPlatform2["UNKNOWN"] = -1] = "UNKNOWN";
+  AdPlatform2[AdPlatform2["ADMOB"] = 0] = "ADMOB";
+  AdPlatform2[AdPlatform2["MOPUB"] = 1] = "MOPUB";
+  AdPlatform2[AdPlatform2["ADCOLONY"] = 2] = "ADCOLONY";
+  AdPlatform2[AdPlatform2["APPLOVIN"] = 3] = "APPLOVIN";
+  AdPlatform2[AdPlatform2["CHARTBOOST"] = 4] = "CHARTBOOST";
+  AdPlatform2[AdPlatform2["FACEBOOK"] = 5] = "FACEBOOK";
+  AdPlatform2[AdPlatform2["INMOBI"] = 6] = "INMOBI";
+  AdPlatform2[AdPlatform2["IRONSOURCE"] = 7] = "IRONSOURCE";
+  AdPlatform2[AdPlatform2["PANGLE"] = 8] = "PANGLE";
+  AdPlatform2[AdPlatform2["SNAP_AUDIENCE_NETWORK"] = 9] = "SNAP_AUDIENCE_NETWORK";
+  AdPlatform2[AdPlatform2["TAPJOY"] = 10] = "TAPJOY";
+  AdPlatform2[AdPlatform2["UNITY_ADS"] = 11] = "UNITY_ADS";
+  AdPlatform2[AdPlatform2["VERIZON_MEDIA"] = 12] = "VERIZON_MEDIA";
+  AdPlatform2[AdPlatform2["VUNGLE"] = 13] = "VUNGLE";
+  AdPlatform2[AdPlatform2["ADX"] = 14] = "ADX";
+  AdPlatform2[AdPlatform2["COMBO"] = 15] = "COMBO";
+  AdPlatform2[AdPlatform2["BIGO"] = 16] = "BIGO";
+  AdPlatform2[AdPlatform2["HISAVANA"] = 17] = "HISAVANA";
+  AdPlatform2[AdPlatform2["APPLOVIN_EXCHANGE"] = 18] = "APPLOVIN_EXCHANGE";
+  AdPlatform2[AdPlatform2["MINTEGRAL"] = 19] = "MINTEGRAL";
+  AdPlatform2[AdPlatform2["LIFTOFF"] = 20] = "LIFTOFF";
+  AdPlatform2[AdPlatform2["A4G"] = 21] = "A4G";
+  AdPlatform2[AdPlatform2["GOOGLE_AD_MANAGER"] = 22] = "GOOGLE_AD_MANAGER";
+  AdPlatform2[AdPlatform2["FYBER"] = 23] = "FYBER";
+  AdPlatform2[AdPlatform2["MAIO"] = 24] = "MAIO";
+  AdPlatform2[AdPlatform2["CRITEO"] = 25] = "CRITEO";
+  AdPlatform2[AdPlatform2["MYTARGET"] = 26] = "MYTARGET";
+  AdPlatform2[AdPlatform2["OGURY"] = 27] = "OGURY";
+  AdPlatform2[AdPlatform2["APPNEXT"] = 28] = "APPNEXT";
+  AdPlatform2[AdPlatform2["KIDOZ"] = 29] = "KIDOZ";
+  AdPlatform2[AdPlatform2["SMAATO"] = 30] = "SMAATO";
+  AdPlatform2[AdPlatform2["START_IO"] = 31] = "START_IO";
+  AdPlatform2[AdPlatform2["VERVE"] = 32] = "VERVE";
+  AdPlatform2[AdPlatform2["LOVINJOY_ADS"] = 33] = "LOVINJOY_ADS";
+  AdPlatform2[AdPlatform2["YANDEX"] = 34] = "YANDEX";
+  AdPlatform2[AdPlatform2["REKLAMUP"] = 35] = "REKLAMUP";
+  return AdPlatform2;
+})(AdPlatform || {});
+var AdMediation = /* @__PURE__ */ ((AdMediation2) => {
+  AdMediation2[AdMediation2["IDLE"] = -1] = "IDLE";
+  AdMediation2[AdMediation2["MOPUB"] = 0] = "MOPUB";
+  AdMediation2[AdMediation2["MAX"] = 1] = "MAX";
+  AdMediation2[AdMediation2["HISAVANA"] = 2] = "HISAVANA";
+  AdMediation2[AdMediation2["COMBO"] = 3] = "COMBO";
+  AdMediation2[AdMediation2["TOPON"] = 4] = "TOPON";
+  AdMediation2[AdMediation2["TRADPLUS"] = 5] = "TRADPLUS";
+  AdMediation2[AdMediation2["TOBID"] = 6] = "TOBID";
+  return AdMediation2;
+})(AdMediation || {});
 var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
   LogLevel2[LogLevel2["VERBOSE"] = 1] = "VERBOSE";
   LogLevel2[LogLevel2["ASSERT"] = 2] = "ASSERT";
@@ -60,9 +123,9 @@ var StaticDataTower = class {
     throw new Error("not implemented");
   }
   static getInstance(appId = "__default__") {
-    return this.instances[appId] || Logger.error("DataTower", `instance ${appId} not found, please init first`);
+    return this.instances[appId] || Logger.error("DataTower", `instance ${appId} not found, please initSDK first`);
   }
-  static init(config) {
+  static initSDK(config) {
     return __async(this, null, function* () {
       const instance = this.createInstance();
       if (!this.instances.__default__) {
@@ -70,7 +133,7 @@ var StaticDataTower = class {
       } else {
         this.instances[config.appId] = instance;
       }
-      return instance.init(config);
+      return instance.initSDK(config);
     });
   }
   /**
@@ -151,6 +214,86 @@ var StaticDataTower = class {
   static clearCommonProperties(appId) {
     var _a2;
     return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.clearCommonProperties();
+  }
+  // Timer
+  static trackTimerStart(eventName, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.trackTimerStart(eventName);
+  }
+  static trackTimerPause(eventName, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.trackTimerPause(eventName);
+  }
+  static trackTimerResume(eventName, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.trackTimerResume(eventName);
+  }
+  static trackTimerEnd(eventName, properties, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.trackTimerEnd(eventName, properties);
+  }
+  // Ad
+  static reportLoadBegin(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLoadBegin(options);
+  }
+  static reportLoadEnd(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLoadEnd(options);
+  }
+  static reportToShow(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportToShow(options);
+  }
+  static reportShow(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportShow(options);
+  }
+  static reportShowFailed(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportShowFailed(options);
+  }
+  static reportClose(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportClose(options);
+  }
+  static reportClick(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportClick(options);
+  }
+  static reportRewarded(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportRewarded(options);
+  }
+  static reportConversionByClick(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByClick(options);
+  }
+  static reportConversionByLeftApp(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByLeftApp(options);
+  }
+  static reportConversionByRewarded(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByRewarded(options);
+  }
+  static reportPaid(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPaid(options);
+  }
+  static reportLeftApp(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLeftApp(options);
+  }
+  // IAP
+  static reportPurchaseSuccess(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPurchaseSuccess(options);
+  }
+  // IAS
+  static reportSubscribeSuccess(options, appId) {
+    var _a2;
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportSubscribeSuccess(options);
   }
 };
 StaticDataTower.instances = {};
@@ -6077,7 +6220,7 @@ var Sandbox = class {
     const params = new URLSearchParams({ data, check }).toString();
     return this.shim.request({ url: this.config.serverUrl, data: params });
   }
-  init(config) {
+  initSDK(config) {
     return __async(this, null, function* () {
       var _a2;
       this.shim.getSystemInfo();
@@ -6092,7 +6235,7 @@ var Sandbox = class {
         yield this.initializeNewUser();
       this.settings["#dt_id"] = yield this.shim.getStorage("#dt_id");
       this.settings["#app_id"] = (_a2 = this.config.appId) != null ? _a2 : this.shim.getSystemInfo().appId;
-      Logger.info("<call init>", this.config, this.settings);
+      Logger.info("<call initSDK>", this.config, this.settings);
     });
   }
   initializeNewUser() {
@@ -6220,6 +6363,83 @@ var Sandbox = class {
   clearCommonProperties() {
     this.dynamicProperties = null;
     Logger.info("<call clearCommonProperties>");
+  }
+  // TODO: implement the following methods
+  trackTimerStart(eventName) {
+    Logger.info("<call trackTimerStart>", eventName);
+    throw new Error("Method not implemented.");
+  }
+  trackTimerPause(eventName) {
+    Logger.info("<call trackTimerPause>", eventName);
+    throw new Error("Method not implemented.");
+  }
+  trackTimerResume(eventName) {
+    Logger.info("<call trackTimerResume>", eventName);
+    throw new Error("Method not implemented.");
+  }
+  trackTimerEnd(eventName, properties) {
+    Logger.info("<call trackTimerEnd>", eventName, properties);
+    throw new Error("Method not implemented.");
+  }
+  reportLoadBegin(options) {
+    Logger.info("<call reportLoadBegin>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportLoadEnd(options) {
+    Logger.info("<call reportLoadEnd>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportToShow(options) {
+    Logger.info("<call reportToShow>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportShow(options) {
+    Logger.info("<call reportShow>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportShowFailed(options) {
+    Logger.info("<call reportShowFailed>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportClose(options) {
+    Logger.info("<call reportClose>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportClick(options) {
+    Logger.info("<call reportClick>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportRewarded(options) {
+    Logger.info("<call reportRewarded>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportConversionByClick(options) {
+    Logger.info("<call reportConversionByClick>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportConversionByLeftApp(options) {
+    Logger.info("<call reportConversionByLeftApp>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportConversionByRewarded(options) {
+    Logger.info("<call reportConversionByRewarded>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportPaid(options) {
+    Logger.info("<call reportPaid>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportLeftApp(options) {
+    Logger.info("<call reportLeftApp>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportPurchaseSuccess(options) {
+    Logger.info("<call reportPurchaseSuccess>", options);
+    throw new Error("Method not implemented.");
+  }
+  reportSubscribeSuccess(options) {
+    Logger.info("<call reportSubscribeSuccess>", options);
+    throw new Error("Method not implemented.");
   }
 };
 
@@ -6352,75 +6572,80 @@ Web.createInstance = () => new Sandbox(new WebShim());
 var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
   constructor() {
     super(...arguments);
-    this.presetProperties = { "#sdk_type": "js", "#sdk_version_name": version };
+    this.presetProperties = { "#sdk_type": "cocos_android", "#sdk_version_name": version };
     this.dynamicProperties = null;
   }
-  static generateSignature([args, ret]) {
-    return `(${args.map((arg) => this.typeMap[arg]).join("")})${this.typeMap[ret]}`;
+  static callStaticMethod(method, parameters, retType) {
+    const signature = `(${parameters.map(([type]) => this.typeMap[type]).join("")})${this.typeMap[retType]}`;
+    const values = parameters.map(([, value]) => value);
+    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, signature, ...values);
   }
-  static callStaticMethod(method, signature, ...args) {
-    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, this.generateSignature(signature), ...args);
-  }
-  init(config) {
+  initSDK(config) {
     return __async(this, null, function* () {
       config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
-      _CocosAndroid.callStaticMethod("initSDK", [["String"], "void"], fmt(config));
+      _CocosAndroid.callStaticMethod("initSDK", [["String", fmt(config)]], "void");
     });
   }
   track(eventName, properties) {
     var _a2;
-    properties = __spreadValues(__spreadValues({}, properties), (_a2 = this.dynamicProperties) == null ? void 0 : _a2.call(this));
-    _CocosAndroid.callStaticMethod("track", [["String", "String"], "void"], eventName, fmt(properties));
+    _CocosAndroid.callStaticMethod(
+      "track",
+      [
+        ["String", eventName],
+        ["String", fmt(__spreadValues(__spreadValues({}, properties), (_a2 = this.dynamicProperties) == null ? void 0 : _a2.call(this)))]
+      ],
+      "void"
+    );
   }
   enableUpload() {
-    _CocosAndroid.callStaticMethod("enableUpload", [[], "void"]);
+    _CocosAndroid.callStaticMethod("enableUpload", [], "void");
   }
   userSet(properties) {
-    _CocosAndroid.callStaticMethod("userSet", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userSet", [["String", fmt(properties)]], "void");
   }
   userSetOnce(properties) {
-    _CocosAndroid.callStaticMethod("userSetOnce", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userSetOnce", [["String", fmt(properties)]], "void");
   }
   userAdd(properties) {
-    _CocosAndroid.callStaticMethod("userAdd", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userAdd", [["String", fmt(properties)]], "void");
   }
   userUnset(properties) {
-    _CocosAndroid.callStaticMethod("userUnset", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userUnset", [["String", fmt(properties)]], "void");
   }
   userDelete() {
-    _CocosAndroid.callStaticMethod("userDelete", [[], "void"]);
+    _CocosAndroid.callStaticMethod("userDelete", [], "void");
   }
   userAppend(properties) {
-    _CocosAndroid.callStaticMethod("userAppend", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userAppend", [["String", fmt(properties)]], "void");
   }
   userUniqAppend(properties) {
-    _CocosAndroid.callStaticMethod("userUniqAppend", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("userUniqAppend", [["String", fmt(properties)]], "void");
   }
   getDataTowerId(callback) {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
-    globalNativeCallback((cb) => _CocosAndroid.callStaticMethod("getDataTowerId", [["String"], "void"], cb), callback);
+    globalNativeCallback((cb) => _CocosAndroid.callStaticMethod("getDataTowerId", [["String", cb]], "void"), callback);
   }
   setAccountId(id) {
-    _CocosAndroid.callStaticMethod("setAccountId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setAccountId", [["String", id]], "void");
   }
   setFirebaseAppInstanceId(id) {
-    _CocosAndroid.callStaticMethod("setFirebaseAppInstanceId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setFirebaseAppInstanceId", [["String", id]], "void");
   }
   setAppsFlyerId(id) {
-    _CocosAndroid.callStaticMethod("setAppsFlyerId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setAppsFlyerId", [["String", id]], "void");
   }
   setKochavaId(id) {
-    _CocosAndroid.callStaticMethod("setKochavaId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setKochavaId", [["String", id]], "void");
   }
   setAdjustId(id) {
-    _CocosAndroid.callStaticMethod("setAdjustId", [["String"], "void"], id);
+    _CocosAndroid.callStaticMethod("setAdjustId", [["String", id]], "void");
   }
   setStaticCommonProperties(properties) {
-    _CocosAndroid.callStaticMethod("setStaticCommonProperties", [["String"], "void"], fmt(properties));
+    _CocosAndroid.callStaticMethod("setStaticCommonProperties", [["String", fmt(properties)]], "void");
   }
   clearStaticCommonProperties() {
-    _CocosAndroid.callStaticMethod("clearStaticCommonProperties", [[], "void"]);
+    _CocosAndroid.callStaticMethod("clearStaticCommonProperties", [], "void");
   }
   setCommonProperties(callback) {
     this.dynamicProperties = callback;
@@ -6428,12 +6653,306 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
   clearCommonProperties() {
     this.dynamicProperties = null;
   }
+  trackTimerStart(eventName) {
+    _CocosAndroid.callStaticMethod("trackTimerStart", [["String", eventName]], "void");
+  }
+  trackTimerPause(eventName) {
+    _CocosAndroid.callStaticMethod("trackTimerPause", [["String", eventName]], "void");
+  }
+  trackTimerResume(eventName) {
+    _CocosAndroid.callStaticMethod("trackTimerResume", [["String", eventName]], "void");
+  }
+  trackTimerEnd(eventName, properties) {
+    _CocosAndroid.callStaticMethod(
+      "trackTimerEnd",
+      [
+        ["String", eventName],
+        ["String", fmt(properties)]
+      ],
+      "void"
+    );
+  }
+  reportLoadBegin(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportLoadBegin",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportLoadEnd(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportLoadEnd",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["long", options.duration],
+        ["boolean", options.result],
+        ["String", options.seq],
+        ["int", options.errorCode],
+        ["String", options.errorMessage],
+        ["String", fmt(options.properties)],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportToShow(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportToShow",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportShow(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportShow",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportShowFailed(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportShowFailed",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["int", options.errorCode],
+        ["String", options.errorMessage],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportClose(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportClose",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportClick(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportClick",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportRewarded(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportRewarded",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportConversionByClick(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportConversionByClick",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportConversionByLeftApp(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportConversionByLeftApp",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportConversionByRewarded(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportConversionByRewarded",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportPaid(options) {
+    if ("country" in options) {
+      _CocosAndroid.callStaticMethod(
+        "reportPaid",
+        [
+          ["String", options.id],
+          ["int", options.type],
+          ["int", options.platform],
+          ["String", options.location],
+          ["String", options.seq],
+          ["int", options.mediation],
+          ["String", options.mediationId],
+          ["double", options.value],
+          ["String", options.precision],
+          ["String", options.country],
+          ["String", fmt(options.properties)]
+        ],
+        "void"
+      );
+    } else {
+      _CocosAndroid.callStaticMethod(
+        "reportPaid",
+        [
+          ["String", options.id],
+          ["int", options.type],
+          ["int", options.platform],
+          ["String", options.location],
+          ["String", options.seq],
+          ["double", options.value],
+          ["String", options.currency],
+          ["String", options.precision],
+          ["String", fmt(options.properties)],
+          ["String", options.entrance],
+          ["int", options.mediation],
+          ["String", options.mediationId]
+        ],
+        "void"
+      );
+    }
+  }
+  reportLeftApp(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportLeftApp",
+      [
+        ["String", options.id],
+        ["int", options.type],
+        ["int", options.platform],
+        ["String", options.location],
+        ["String", options.seq],
+        ["String", fmt(options.properties)],
+        ["String", options.entrance],
+        ["int", options.mediation],
+        ["String", options.mediationId]
+      ],
+      "void"
+    );
+  }
+  reportPurchaseSuccess(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportPurchaseSuccess",
+      [
+        ["String", options.order],
+        ["String", options.sku],
+        ["double", options.price],
+        ["String", options.currency],
+        ["String", fmt(options.properties)]
+      ],
+      "void"
+    );
+  }
+  reportSubscribeSuccess(options) {
+    _CocosAndroid.callStaticMethod(
+      "reportSubscribeSuccess",
+      [
+        ["String", options.originalOrderId],
+        ["String", options.orderId],
+        ["String", options.sku],
+        ["double", options.price],
+        ["String", options.currency],
+        ["String", fmt(options.properties)]
+      ],
+      "void"
+    );
+  }
 };
 _CocosAndroid.createInstance = () => new _CocosAndroid();
 _CocosAndroid.typeMap = {
   void: "V",
   int: "I",
   float: "F",
+  double: "D",
+  long: "J",
   boolean: "Z",
   String: "Ljava/lang/String;"
 };
@@ -6443,13 +6962,13 @@ var CocosAndroid = _CocosAndroid;
 var _CocosIOS = class _CocosIOS extends StaticDataTower {
   constructor() {
     super(...arguments);
-    this.presetProperties = { "#sdk_type": "js", "#sdk_version_name": version };
+    this.presetProperties = { "#sdk_type": "cocos_ios", "#sdk_version_name": version };
     this.dynamicProperties = null;
   }
   static callStaticMethod(method, ...args) {
     return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
-  init(config) {
+  initSDK(config) {
     return __async(this, null, function* () {
       config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
       _CocosIOS.callStaticMethod("initSDK:", fmt(config));
@@ -6516,6 +7035,64 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
   clearCommonProperties() {
     this.dynamicProperties = null;
   }
+  trackTimerStart(eventName) {
+    _CocosIOS.callStaticMethod("trackTimerStart:", eventName);
+  }
+  trackTimerPause(eventName) {
+    _CocosIOS.callStaticMethod("trackTimerPause:", eventName);
+  }
+  trackTimerResume(eventName) {
+    _CocosIOS.callStaticMethod("trackTimerResume:", eventName);
+  }
+  trackTimerEnd(eventName, properties) {
+    _CocosIOS.callStaticMethod("trackTimerEnd:properties:", eventName, fmt(properties));
+  }
+  // TODO: implement the following methods
+  reportLoadBegin(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportLoadEnd(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportToShow(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportShow(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportShowFailed(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportClose(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportClick(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportRewarded(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportConversionByClick(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportConversionByLeftApp(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportConversionByRewarded(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportPaid(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportLeftApp(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportPurchaseSuccess(options) {
+    throw new Error("Method not implemented.");
+  }
+  reportSubscribeSuccess(options) {
+    throw new Error("Method not implemented.");
+  }
 };
 _CocosIOS.createInstance = () => new _CocosIOS();
 var CocosIOS = _CocosIOS;
@@ -6559,4 +7136,4 @@ crypto-es/lib/mode-ctr-gladman.js:
    *)
 */
 
-export { Cocos as DataTower, LogLevel, cocos_default as default };
+export { AdMediation, AdPlatform, AdType, Cocos as DataTower, LogLevel, cocos_default as default };
