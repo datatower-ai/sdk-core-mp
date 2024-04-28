@@ -229,12 +229,12 @@ public class DTCocosCreatorProxyApi {
     }
 
     public static void reportLoadEnd(
-            String id, int type, int platform, long duration, boolean result, String seq,
+            String id, int type, int platform, float duration, boolean result, String seq,
             int errorCode /* 0 */, String errorMessage /* "" */, String properties /* {} */,
             int mediation /* -1 */, String mediationId /* "" */
     ) {
         DTAdReport.reportLoadEnd(
-                id, getAdType(type), getAdPlatform(platform), duration, result, seq,
+                id, getAdType(type), getAdPlatform(platform), (long) duration, result, seq,
                 errorCode, errorMessage, jsonObjectToMap(stringToJSONObject(properties)),
                 getAdMediation(mediation), mediationId
         );
@@ -350,7 +350,7 @@ public class DTCocosCreatorProxyApi {
 
     public static void reportPaid(
             String id, int type, int platform, String location, String seq,
-            double value, String currency, String precision,
+            float value, String currency, String precision,
             String properties /* {} */, String entrance /* "" */,
             int mediation /* -1 */, String mediationId /* "" */
     ) {
@@ -365,7 +365,7 @@ public class DTCocosCreatorProxyApi {
     public static void reportPaid(
             String id, int type, int platform, String location, String seq,
             int mediation, String mediationId,
-            double value, String precision, String country,
+            float value, String precision, String country,
             String properties /* {} */
     ) {
         DTAdReport.reportPaid(
@@ -390,7 +390,7 @@ public class DTCocosCreatorProxyApi {
 
     // IAP
     public static void reportPurchaseSuccess(
-            String order, String sku, double price, String currency,
+            String order, String sku, float price, String currency,
             String properties /* {} */
     ) {
         DTIAPReport.reportPurchaseSuccess(
@@ -400,7 +400,7 @@ public class DTCocosCreatorProxyApi {
 
     // IAS
     public static void reportSubscribeSuccess(
-            String originalOrderId, String orderId, String sku, double price, String currency,
+            String originalOrderId, String orderId, String sku, float price, String currency,
             String properties /* {} */
     ) {
         DTIASReport.reportSubscribeSuccess(
