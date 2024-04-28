@@ -5901,32 +5901,32 @@ var Logger = class {
   static verbose(...args) {
     if (this.level > 1 /* VERBOSE */)
       return;
-    console.log("[VERBOSE]", ...args);
+    console.log("%c[VERBOSE]", "color: gray", ...args);
   }
   static assert(condition, ...args) {
     if (this.level > 2 /* ASSERT */)
       return;
-    console.assert(condition, "[ASSERT]", ...args);
+    console.assert(condition, "%c[ASSERT]", "color: purple", ...args);
   }
   static debug(...args) {
     if (this.level > 3 /* DEBUG */)
       return;
-    console.debug("[DEBUG]", ...args);
+    console.debug("%c[DEBUG]", "color: blue", ...args);
   }
   static info(...args) {
     if (this.level > 4 /* INFO */)
       return;
-    console.info("[INFO]", ...args);
+    console.info("%c[INFO]", "color: green", ...args);
   }
   static warn(...args) {
     if (this.level > 5 /* WARN */)
       return;
-    console.warn("[WARN]", ...args);
+    console.warn("%c[WARN]", "color: orange", ...args);
   }
   static error(...args) {
     if (this.level > 6 /* ERROR */)
       return;
-    console.error("[ERROR]", ...args);
+    console.error("%c[ERROR]", "color: red", ...args);
   }
 };
 Logger.level = 1 /* VERBOSE */;

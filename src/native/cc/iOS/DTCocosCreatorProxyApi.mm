@@ -91,14 +91,15 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     NSString *jsonStr = configDict[@"commonProperties"];
     BOOL isDebug = [configDict[@"isDebug"] boolValue];
     BOOL manualEnableUpload =  [configDict[@"manualEnableUpload"] boolValue];
+    BOOL enableUpload = !manualEnableUpload;
 
     DTLoggingLevel iOSLogLevel = convertUnityLogLevel((enum MPLogLevel)logLevel);
     
     if (jsonStr != NULL) {
         NSDictionary *props = [jsonStr jsonDictionary];
-        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel commonProperties:props enableTrack:manualEnableUpload];
+        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel commonProperties:props enableTrack:enableUpload];
     } else {
-        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel enableTrack:manualEnableUpload];
+        [DT initSDK:appId serverUrl:serverUrl channel:DTChannelAppStore isDebug:isDebug logLevel:iOSLogLevel enableTrack:enableUpload];
     }
 }
 
