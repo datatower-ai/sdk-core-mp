@@ -293,7 +293,7 @@ public class DTCocosCreatorProxyApi {
             String properties /* {} */, String entrance /* "" */,
             int mediation /* -1 */, String mediationId /* "" */
     ) {
-        DTAdReport.reportClose(
+        DTAdReport.reportClick(
                 id, getAdType(type), getAdPlatform(platform), location, seq,
                 jsonObjectToMap(stringToJSONObject(properties)), entrance,
                 getAdMediation(mediation), mediationId
@@ -305,7 +305,7 @@ public class DTCocosCreatorProxyApi {
             String properties /* {} */, String entrance /* "" */,
             int mediation /* -1 */, String mediationId /* "" */
     ) {
-        DTAdReport.reportClose(
+        DTAdReport.reportRewarded(
                 id, getAdType(type), getAdPlatform(platform), location, seq,
                 jsonObjectToMap(stringToJSONObject(properties)), entrance,
                 getAdMediation(mediation), mediationId
@@ -329,7 +329,7 @@ public class DTCocosCreatorProxyApi {
             String properties /* {} */, String entrance /* "" */,
             int mediation /* -1 */, String mediationId /* "" */
     ) {
-        DTAdReport.reportConversionByClick(
+        DTAdReport.reportConversionByLeftApp(
                 id, getAdType(type), getAdPlatform(platform), location, seq,
                 jsonObjectToMap(stringToJSONObject(properties)), entrance,
                 getAdMediation(mediation), mediationId
@@ -341,7 +341,7 @@ public class DTCocosCreatorProxyApi {
             String properties /* {} */, String entrance /* "" */,
             int mediation /* -1 */, String mediationId /* "" */
     ) {
-        DTAdReport.reportConversionByClick(
+        DTAdReport.reportConversionByRewarded(
                 id, getAdType(type), getAdPlatform(platform), location, seq,
                 jsonObjectToMap(stringToJSONObject(properties)), entrance,
                 getAdMediation(mediation), mediationId
