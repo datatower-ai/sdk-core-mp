@@ -219,7 +219,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     [DTAnalyticsUtils trackTimerResume:eventName];
 }
 
-+ (void)trackTimerEnd:(NSString *)eventName  withProperties:(NSString *)jsonStr {
++ (void)trackTimerEnd:(NSString *)eventName  properties:(NSString *)jsonStr {
     [DTAnalyticsUtils trackTimerEnd:eventName properties:[jsonStr jsonDictionary]];
 }
 
@@ -468,7 +468,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     [DTAdReport reportLeftApp:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
 }
 
-+ (void)reportPurchaseSuccess:(NSString *)jsonStr {
++ (void)reportPurchased:(NSString *)jsonStr {
     NSDictionary *param = [jsonStr jsonDictionary];
     NSString *order = param[@"order"];
     NSString *seq = param[@"seq"];
@@ -484,7 +484,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     [DTIAPReport reportPurchased:order sku:sku price:price currency:currency seq:seq placement:placement];
 }
 
-+ (void)reportSubscribeSuccess:(NSString *)jsonStr {
++ (void)reportSubscribed:(NSString *)jsonStr {
     NSDictionary *param = [jsonStr jsonDictionary];
     NSString *order = param[@"order"];
     NSString *originalOrderId = param[@"originalOrderId"];
