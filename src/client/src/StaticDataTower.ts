@@ -107,83 +107,83 @@ export class StaticDataTower {
   }
 
   // Ad
-  static reportLoadBegin<K extends string>(options: BaseReportOptions<K>, appId?: string): void {
-    return this.getInstance(appId)?.reportLoadBegin(options);
+  static reportLoadBegin<K extends string>(opts: BaseReportOptions<K>, appId?: string): void {
+    return this.getInstance(appId)?.reportLoadBegin(opts);
   }
   static reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportLoadEnd(options);
+    return this.getInstance(appId)?.reportLoadEnd(opts);
   }
-  static reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportToShow(options);
+  static reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+    return this.getInstance(appId)?.reportToShow(opts);
   }
-  static reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportShow(options);
+  static reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+    return this.getInstance(appId)?.reportShow(opts);
   }
   static reportShowFailed<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportShowFailed(options);
+    return this.getInstance(appId)?.reportShowFailed(opts);
   }
-  static reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportClose(options);
+  static reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+    return this.getInstance(appId)?.reportClose(opts);
   }
-  static reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportClick(options);
+  static reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+    return this.getInstance(appId)?.reportClick(opts);
   }
-  static reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportRewarded(options);
+  static reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+    return this.getInstance(appId)?.reportRewarded(opts);
   }
   static reportConversionByClick<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions,
+    opts: BaseReportOptions<K> & CommonReportOptions,
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportConversionByClick(options);
+    return this.getInstance(appId)?.reportConversionByClick(opts);
   }
   static reportConversionByLeftApp<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions,
+    opts: BaseReportOptions<K> & CommonReportOptions,
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportConversionByLeftApp(options);
+    return this.getInstance(appId)?.reportConversionByLeftApp(opts);
   }
   static reportConversionByRewarded<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions,
+    opts: BaseReportOptions<K> & CommonReportOptions,
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportConversionByRewarded(options);
+    return this.getInstance(appId)?.reportConversionByRewarded(opts);
   }
-  static reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { country: string }, appId?: string): void;
+  static reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }, appId?: string): void;
   static reportPaid<K extends string>(
-    options: BaseReportPaidOptions<K> & { currency: string; entrance: string },
+    opts: BaseReportPaidOptions<K> & { currency: string; entrance: string },
     appId?: string,
   ): void;
   static reportPaid<K extends string>(
-    options: BaseReportPaidOptions<K> & ({ country: string } & { currency: string; entrance: string }),
+    opts: BaseReportPaidOptions<K> & ({ country: string } & { currency: string; entrance: string }),
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportPaid(options);
+    return this.getInstance(appId)?.reportPaid(opts);
   }
-  static reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportLeftApp(options);
+  static reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
+    return this.getInstance(appId)?.reportLeftApp(opts);
   }
 
   // IAP
   static reportPurchaseSuccess<K extends string>(
-    options: ReportSuccessOptions<K> & { order: string },
+    opts: ReportSuccessOptions<K> & { order: string },
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportPurchaseSuccess(options);
+    return this.getInstance(appId)?.reportPurchaseSuccess(opts);
   }
 
   // IAS
   static reportSubscribeSuccess<K extends string>(
-    options: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
+    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
     appId?: string,
   ): void {
-    return this.getInstance(appId)?.reportSubscribeSuccess(options);
+    return this.getInstance(appId)?.reportSubscribeSuccess(opts);
   }
 }
 

@@ -128,219 +128,219 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
       'void',
     );
   }
-  reportLoadBegin<K extends string>(options: BaseReportOptions<K>): void {
+  reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
     CocosAndroid.callStaticMethod(
       'reportLoadBegin',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
   reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
     CocosAndroid.callStaticMethod(
       'reportLoadEnd',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['float', options.duration],
-        ['boolean', options.result],
-        ['String', options.seq],
-        ['int', options.errorCode],
-        ['String', options.errorMessage],
-        ['String', fmt(options.properties)],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['float', opts.duration],
+        ['boolean', opts.result],
+        ['String', opts.seq],
+        ['int', opts.errorCode],
+        ['String', opts.errorMessage],
+        ['String', fmt(opts.properties)],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportToShow',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportShow',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
   reportShowFailed<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
   ): void {
     CocosAndroid.callStaticMethod(
       'reportShowFailed',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['int', options.errorCode],
-        ['String', options.errorMessage],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['int', opts.errorCode],
+        ['String', opts.errorMessage],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportClose',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportClick',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportRewarded',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportConversionByClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportConversionByClick',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportConversionByLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportConversionByLeftApp',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportConversionByRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportConversionByRewarded',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { country: string }): void;
-  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
+  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
+  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
   reportPaid<K extends string>(
-    options: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
+    opts: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
   ): void {
-    if ('country' in options) {
+    if ('country' in opts) {
       CocosAndroid.callStaticMethod(
         'reportPaid',
         [
-          ['String', options.id],
-          ['int', options.type],
-          ['int', options.platform],
-          ['String', options.location],
-          ['String', options.seq],
-          ['int', options.mediation],
-          ['String', options.mediationId],
-          ['float', options.value],
-          ['String', options.precision],
-          ['String', options.country],
-          ['String', fmt(options.properties)],
+          ['String', opts.id],
+          ['int', opts.type],
+          ['int', opts.platform],
+          ['String', opts.location],
+          ['String', opts.seq],
+          ['int', opts.mediation],
+          ['String', opts.mediationId],
+          ['float', opts.value],
+          ['String', opts.precision],
+          ['String', opts.country],
+          ['String', fmt(opts.properties)],
         ],
         'void',
       );
@@ -348,65 +348,65 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
       CocosAndroid.callStaticMethod(
         'reportPaid',
         [
-          ['String', options.id],
-          ['int', options.type],
-          ['int', options.platform],
-          ['String', options.location],
-          ['String', options.seq],
-          ['float', options.value],
-          ['String', options.currency],
-          ['String', options.precision],
-          ['String', fmt(options.properties)],
-          ['String', options.entrance],
-          ['int', options.mediation],
-          ['String', options.mediationId],
+          ['String', opts.id],
+          ['int', opts.type],
+          ['int', opts.platform],
+          ['String', opts.location],
+          ['String', opts.seq],
+          ['float', opts.value],
+          ['String', opts.currency],
+          ['String', opts.precision],
+          ['String', fmt(opts.properties)],
+          ['String', opts.entrance],
+          ['int', opts.mediation],
+          ['String', opts.mediationId],
         ],
         'void',
       );
     }
   }
-  reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportLeftApp',
       [
-        ['String', options.id],
-        ['int', options.type],
-        ['int', options.platform],
-        ['String', options.location],
-        ['String', options.seq],
-        ['String', fmt(options.properties)],
-        ['String', options.entrance],
-        ['int', options.mediation],
-        ['String', options.mediationId],
+        ['String', opts.id],
+        ['int', opts.type],
+        ['int', opts.platform],
+        ['String', opts.location],
+        ['String', opts.seq],
+        ['String', fmt(opts.properties)],
+        ['String', opts.entrance],
+        ['int', opts.mediation],
+        ['String', opts.mediationId],
       ],
       'void',
     );
   }
-  reportPurchaseSuccess<K extends string>(options: ReportSuccessOptions<K> & { order: string }): void {
+  reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
     CocosAndroid.callStaticMethod(
       'reportPurchaseSuccess',
       [
-        ['String', options.order],
-        ['String', options.sku],
-        ['float', options.price],
-        ['String', options.currency],
-        ['String', fmt(options.properties)],
+        ['String', opts.order],
+        ['String', opts.sku],
+        ['float', opts.price],
+        ['String', opts.currency],
+        ['String', fmt(opts.properties)],
       ],
       'void',
     );
   }
   reportSubscribeSuccess<K extends string>(
-    options: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
+    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
   ): void {
     CocosAndroid.callStaticMethod(
       'reportSubscribeSuccess',
       [
-        ['String', options.originalOrderId],
-        ['String', options.orderId],
-        ['String', options.sku],
-        ['float', options.price],
-        ['String', options.currency],
-        ['String', fmt(options.properties)],
+        ['String', opts.originalOrderId],
+        ['String', opts.orderId],
+        ['String', opts.sku],
+        ['float', opts.price],
+        ['String', opts.currency],
+        ['String', fmt(opts.properties)],
       ],
       'void',
     );

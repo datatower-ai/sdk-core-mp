@@ -233,67 +233,67 @@ var StaticDataTower = class {
     return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.trackTimerEnd(eventName, properties);
   }
   // Ad
-  static reportLoadBegin(options, appId) {
+  static reportLoadBegin(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLoadBegin(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLoadBegin(opts);
   }
-  static reportLoadEnd(options, appId) {
+  static reportLoadEnd(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLoadEnd(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLoadEnd(opts);
   }
-  static reportToShow(options, appId) {
+  static reportToShow(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportToShow(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportToShow(opts);
   }
-  static reportShow(options, appId) {
+  static reportShow(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportShow(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportShow(opts);
   }
-  static reportShowFailed(options, appId) {
+  static reportShowFailed(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportShowFailed(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportShowFailed(opts);
   }
-  static reportClose(options, appId) {
+  static reportClose(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportClose(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportClose(opts);
   }
-  static reportClick(options, appId) {
+  static reportClick(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportClick(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportClick(opts);
   }
-  static reportRewarded(options, appId) {
+  static reportRewarded(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportRewarded(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportRewarded(opts);
   }
-  static reportConversionByClick(options, appId) {
+  static reportConversionByClick(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByClick(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByClick(opts);
   }
-  static reportConversionByLeftApp(options, appId) {
+  static reportConversionByLeftApp(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByLeftApp(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByLeftApp(opts);
   }
-  static reportConversionByRewarded(options, appId) {
+  static reportConversionByRewarded(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByRewarded(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportConversionByRewarded(opts);
   }
-  static reportPaid(options, appId) {
+  static reportPaid(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPaid(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPaid(opts);
   }
-  static reportLeftApp(options, appId) {
+  static reportLeftApp(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLeftApp(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLeftApp(opts);
   }
   // IAP
-  static reportPurchaseSuccess(options, appId) {
+  static reportPurchaseSuccess(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPurchaseSuccess(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPurchaseSuccess(opts);
   }
   // IAS
-  static reportSubscribeSuccess(options, appId) {
+  static reportSubscribeSuccess(opts, appId) {
     var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportSubscribeSuccess(options);
+    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportSubscribeSuccess(opts);
   }
 };
 StaticDataTower.instances = {};
@@ -6381,64 +6381,64 @@ var Sandbox = class {
     Logger.info("<call trackTimerEnd>", eventName, properties);
     throw new Error("Method not implemented.");
   }
-  reportLoadBegin(options) {
-    Logger.info("<call reportLoadBegin>", options);
+  reportLoadBegin(opts) {
+    Logger.info("<call reportLoadBegin>", opts);
     throw new Error("Method not implemented.");
   }
-  reportLoadEnd(options) {
-    Logger.info("<call reportLoadEnd>", options);
+  reportLoadEnd(opts) {
+    Logger.info("<call reportLoadEnd>", opts);
     throw new Error("Method not implemented.");
   }
-  reportToShow(options) {
-    Logger.info("<call reportToShow>", options);
+  reportToShow(opts) {
+    Logger.info("<call reportToShow>", opts);
     throw new Error("Method not implemented.");
   }
-  reportShow(options) {
-    Logger.info("<call reportShow>", options);
+  reportShow(opts) {
+    Logger.info("<call reportShow>", opts);
     throw new Error("Method not implemented.");
   }
-  reportShowFailed(options) {
-    Logger.info("<call reportShowFailed>", options);
+  reportShowFailed(opts) {
+    Logger.info("<call reportShowFailed>", opts);
     throw new Error("Method not implemented.");
   }
-  reportClose(options) {
-    Logger.info("<call reportClose>", options);
+  reportClose(opts) {
+    Logger.info("<call reportClose>", opts);
     throw new Error("Method not implemented.");
   }
-  reportClick(options) {
-    Logger.info("<call reportClick>", options);
+  reportClick(opts) {
+    Logger.info("<call reportClick>", opts);
     throw new Error("Method not implemented.");
   }
-  reportRewarded(options) {
-    Logger.info("<call reportRewarded>", options);
+  reportRewarded(opts) {
+    Logger.info("<call reportRewarded>", opts);
     throw new Error("Method not implemented.");
   }
-  reportConversionByClick(options) {
-    Logger.info("<call reportConversionByClick>", options);
+  reportConversionByClick(opts) {
+    Logger.info("<call reportConversionByClick>", opts);
     throw new Error("Method not implemented.");
   }
-  reportConversionByLeftApp(options) {
-    Logger.info("<call reportConversionByLeftApp>", options);
+  reportConversionByLeftApp(opts) {
+    Logger.info("<call reportConversionByLeftApp>", opts);
     throw new Error("Method not implemented.");
   }
-  reportConversionByRewarded(options) {
-    Logger.info("<call reportConversionByRewarded>", options);
+  reportConversionByRewarded(opts) {
+    Logger.info("<call reportConversionByRewarded>", opts);
     throw new Error("Method not implemented.");
   }
-  reportPaid(options) {
-    Logger.info("<call reportPaid>", options);
+  reportPaid(opts) {
+    Logger.info("<call reportPaid>", opts);
     throw new Error("Method not implemented.");
   }
-  reportLeftApp(options) {
-    Logger.info("<call reportLeftApp>", options);
+  reportLeftApp(opts) {
+    Logger.info("<call reportLeftApp>", opts);
     throw new Error("Method not implemented.");
   }
-  reportPurchaseSuccess(options) {
-    Logger.info("<call reportPurchaseSuccess>", options);
+  reportPurchaseSuccess(opts) {
+    Logger.info("<call reportPurchaseSuccess>", opts);
     throw new Error("Method not implemented.");
   }
-  reportSubscribeSuccess(options) {
-    Logger.info("<call reportSubscribeSuccess>", options);
+  reportSubscribeSuccess(opts) {
+    Logger.info("<call reportSubscribeSuccess>", opts);
     throw new Error("Method not implemented.");
   }
 };
@@ -6672,211 +6672,211 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
       "void"
     );
   }
-  reportLoadBegin(options) {
+  reportLoadBegin(opts) {
     _CocosAndroid.callStaticMethod(
       "reportLoadBegin",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportLoadEnd(options) {
+  reportLoadEnd(opts) {
     _CocosAndroid.callStaticMethod(
       "reportLoadEnd",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["float", options.duration],
-        ["boolean", options.result],
-        ["String", options.seq],
-        ["int", options.errorCode],
-        ["String", options.errorMessage],
-        ["String", fmt(options.properties)],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["float", opts.duration],
+        ["boolean", opts.result],
+        ["String", opts.seq],
+        ["int", opts.errorCode],
+        ["String", opts.errorMessage],
+        ["String", fmt(opts.properties)],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportToShow(options) {
+  reportToShow(opts) {
     _CocosAndroid.callStaticMethod(
       "reportToShow",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportShow(options) {
+  reportShow(opts) {
     _CocosAndroid.callStaticMethod(
       "reportShow",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportShowFailed(options) {
+  reportShowFailed(opts) {
     _CocosAndroid.callStaticMethod(
       "reportShowFailed",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["int", options.errorCode],
-        ["String", options.errorMessage],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["int", opts.errorCode],
+        ["String", opts.errorMessage],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportClose(options) {
+  reportClose(opts) {
     _CocosAndroid.callStaticMethod(
       "reportClose",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportClick(options) {
+  reportClick(opts) {
     _CocosAndroid.callStaticMethod(
       "reportClick",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportRewarded(options) {
+  reportRewarded(opts) {
     _CocosAndroid.callStaticMethod(
       "reportRewarded",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportConversionByClick(options) {
+  reportConversionByClick(opts) {
     _CocosAndroid.callStaticMethod(
       "reportConversionByClick",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportConversionByLeftApp(options) {
+  reportConversionByLeftApp(opts) {
     _CocosAndroid.callStaticMethod(
       "reportConversionByLeftApp",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportConversionByRewarded(options) {
+  reportConversionByRewarded(opts) {
     _CocosAndroid.callStaticMethod(
       "reportConversionByRewarded",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportPaid(options) {
-    if ("country" in options) {
+  reportPaid(opts) {
+    if ("country" in opts) {
       _CocosAndroid.callStaticMethod(
         "reportPaid",
         [
-          ["String", options.id],
-          ["int", options.type],
-          ["int", options.platform],
-          ["String", options.location],
-          ["String", options.seq],
-          ["int", options.mediation],
-          ["String", options.mediationId],
-          ["float", options.value],
-          ["String", options.precision],
-          ["String", options.country],
-          ["String", fmt(options.properties)]
+          ["String", opts.id],
+          ["int", opts.type],
+          ["int", opts.platform],
+          ["String", opts.location],
+          ["String", opts.seq],
+          ["int", opts.mediation],
+          ["String", opts.mediationId],
+          ["float", opts.value],
+          ["String", opts.precision],
+          ["String", opts.country],
+          ["String", fmt(opts.properties)]
         ],
         "void"
       );
@@ -6884,63 +6884,63 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
       _CocosAndroid.callStaticMethod(
         "reportPaid",
         [
-          ["String", options.id],
-          ["int", options.type],
-          ["int", options.platform],
-          ["String", options.location],
-          ["String", options.seq],
-          ["float", options.value],
-          ["String", options.currency],
-          ["String", options.precision],
-          ["String", fmt(options.properties)],
-          ["String", options.entrance],
-          ["int", options.mediation],
-          ["String", options.mediationId]
+          ["String", opts.id],
+          ["int", opts.type],
+          ["int", opts.platform],
+          ["String", opts.location],
+          ["String", opts.seq],
+          ["float", opts.value],
+          ["String", opts.currency],
+          ["String", opts.precision],
+          ["String", fmt(opts.properties)],
+          ["String", opts.entrance],
+          ["int", opts.mediation],
+          ["String", opts.mediationId]
         ],
         "void"
       );
     }
   }
-  reportLeftApp(options) {
+  reportLeftApp(opts) {
     _CocosAndroid.callStaticMethod(
       "reportLeftApp",
       [
-        ["String", options.id],
-        ["int", options.type],
-        ["int", options.platform],
-        ["String", options.location],
-        ["String", options.seq],
-        ["String", fmt(options.properties)],
-        ["String", options.entrance],
-        ["int", options.mediation],
-        ["String", options.mediationId]
+        ["String", opts.id],
+        ["int", opts.type],
+        ["int", opts.platform],
+        ["String", opts.location],
+        ["String", opts.seq],
+        ["String", fmt(opts.properties)],
+        ["String", opts.entrance],
+        ["int", opts.mediation],
+        ["String", opts.mediationId]
       ],
       "void"
     );
   }
-  reportPurchaseSuccess(options) {
+  reportPurchaseSuccess(opts) {
     _CocosAndroid.callStaticMethod(
       "reportPurchaseSuccess",
       [
-        ["String", options.order],
-        ["String", options.sku],
-        ["float", options.price],
-        ["String", options.currency],
-        ["String", fmt(options.properties)]
+        ["String", opts.order],
+        ["String", opts.sku],
+        ["float", opts.price],
+        ["String", opts.currency],
+        ["String", fmt(opts.properties)]
       ],
       "void"
     );
   }
-  reportSubscribeSuccess(options) {
+  reportSubscribeSuccess(opts) {
     _CocosAndroid.callStaticMethod(
       "reportSubscribeSuccess",
       [
-        ["String", options.originalOrderId],
-        ["String", options.orderId],
-        ["String", options.sku],
-        ["float", options.price],
-        ["String", options.currency],
-        ["String", fmt(options.properties)]
+        ["String", opts.originalOrderId],
+        ["String", opts.orderId],
+        ["String", opts.sku],
+        ["float", opts.price],
+        ["String", opts.currency],
+        ["String", fmt(opts.properties)]
       ],
       "void"
     );
@@ -7045,230 +7045,51 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
   trackTimerEnd(eventName, properties) {
     _CocosIOS.callStaticMethod("trackTimerEnd:properties:", eventName, fmt(properties));
   }
-  reportLoadBegin(options) {
-    _CocosIOS.callStaticMethod(
-      "reportLoadBegin:type:platform:seq:mediation:mediationId:properties:",
-      options.id,
-      options.type,
-      options.platform,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties)
-    );
+  reportLoadBegin(opts) {
+    _CocosIOS.callStaticMethod("reportLoadBegin:", fmt(opts));
   }
-  reportLoadEnd(options) {
-    _CocosIOS.callStaticMethod(
-      "reportLoadEnd:type:platform:duration:result:seq:mediation:mediationId:errorCode:errorMessage:properties:",
-      options.id,
-      options.type,
-      options.platform,
-      options.duration,
-      options.result,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      options.errorCode,
-      options.errorMessage,
-      fmt(options.properties)
-    );
+  reportLoadEnd(opts) {
+    _CocosIOS.callStaticMethod("reportLoadEnd:", fmt(opts));
   }
-  reportToShow(options) {
-    _CocosIOS.callStaticMethod(
-      "reportToShow:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportToShow(opts) {
+    _CocosIOS.callStaticMethod("reportToShow:", fmt(opts));
   }
-  reportShow(options) {
-    _CocosIOS.callStaticMethod(
-      "reportShow:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportShow(opts) {
+    _CocosIOS.callStaticMethod("reportShow:", fmt(opts));
   }
-  reportShowFailed(options) {
-    _CocosIOS.callStaticMethod(
-      "reportAdShowFail:type:platform:location:seq:mediation:mediationId:errorCode:errorMessage:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      options.errorCode,
-      options.errorMessage,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportShowFailed(opts) {
+    _CocosIOS.callStaticMethod("reportShowFailed:", fmt(opts));
   }
-  reportClose(options) {
-    _CocosIOS.callStaticMethod(
-      "reportClose:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportClose(opts) {
+    _CocosIOS.callStaticMethod("reportClose:", fmt(opts));
   }
-  reportClick(options) {
-    _CocosIOS.callStaticMethod(
-      "reportClick:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportClick(opts) {
+    _CocosIOS.callStaticMethod("reportClick:", fmt(opts));
   }
-  reportRewarded(options) {
-    _CocosIOS.callStaticMethod(
-      "reportRewarded:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportRewarded(opts) {
+    _CocosIOS.callStaticMethod("reportRewarded:", fmt(opts));
   }
-  reportConversionByClick(options) {
-    _CocosIOS.callStaticMethod(
-      "reportConversionByClick:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportConversionByClick(opts) {
+    _CocosIOS.callStaticMethod("reportConversionByClick:", fmt(opts));
   }
-  reportConversionByLeftApp(options) {
-    _CocosIOS.callStaticMethod(
-      "reportConversionByLeftApp:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportConversionByLeftApp(opts) {
+    _CocosIOS.callStaticMethod("reportConversionByLeftApp:", fmt(opts));
   }
-  reportConversionByRewarded(options) {
-    _CocosIOS.callStaticMethod(
-      "reportConversionByRewarded:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportConversionByRewarded(opts) {
+    _CocosIOS.callStaticMethod("reportConversionByRewarded:", fmt(opts));
   }
-  reportPaid(options) {
-    if ("country" in options) {
-      _CocosIOS.callStaticMethod(
-        "reportPaid:type:platform:location:seq:mediation:mediationId:value:precision:country:properties:",
-        options.id,
-        options.type,
-        options.platform,
-        options.location,
-        options.seq,
-        options.mediation,
-        options.mediationId,
-        options.value,
-        options.precision,
-        options.country,
-        fmt(options.properties)
-        // TODO:
-        // options.entrance,
-      );
-    } else {
-      _CocosIOS.callStaticMethod(
-        "reportPaid:type:platform:location:seq:mediation:mediationId:value:currency:precision:properties:entrance:",
-        options.id,
-        options.type,
-        options.platform,
-        options.location,
-        options.seq,
-        options.mediation,
-        options.mediationId,
-        options.value,
-        options.currency,
-        options.precision,
-        fmt(options.properties),
-        options.entrance
-      );
-    }
+  reportPaid(opts) {
+    _CocosIOS.callStaticMethod("reportPaid:", fmt(opts));
   }
-  reportLeftApp(options) {
-    _CocosIOS.callStaticMethod(
-      "reportLeftApp:type:platform:location:seq:mediation:mediationId:properties:entrance:",
-      options.id,
-      options.type,
-      options.platform,
-      options.location,
-      options.seq,
-      options.mediation,
-      options.mediationId,
-      fmt(options.properties),
-      options.entrance
-    );
+  reportLeftApp(opts) {
+    _CocosIOS.callStaticMethod("reportLeftApp:", fmt(opts));
   }
-  reportPurchaseSuccess(options) {
-    throw new Error("Method not implemented.");
+  reportPurchaseSuccess(opts) {
+    _CocosIOS.callStaticMethod("reportPurchased:", fmt(opts));
   }
-  reportSubscribeSuccess(options) {
-    throw new Error("Method not implemented.");
+  reportSubscribeSuccess(opts) {
+    _CocosIOS.callStaticMethod("reportSubscribed:", fmt(opts));
   }
-  // TODO: reportReturnApp
-  // + (void) reportReturnApp:(NSString *)adid
-  //                     type:(DTAdType)type
-  //                 platform:(DTAdPlatform)platform
-  //                 location:(NSString *)location
-  //                 clickGap:(NSNumber *)clickGap
-  //                returnGap:(NSNumber *)returnGap
-  //                      seq:(NSString *)seq
-  //                mediation:(DTAdMediation)mediation
-  //              mediationId:(NSString *)mediationId
-  //               properties:(NSDictionary *)properties
-  //                 entrance:(NSString *)entrance;
 };
 _CocosIOS.createInstance = () => new _CocosIOS();
 var CocosIOS = _CocosIOS;

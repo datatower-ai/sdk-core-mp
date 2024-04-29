@@ -225,74 +225,74 @@ export class Sandbox implements DataTower {
     Logger.info('<call trackTimerEnd>', eventName, properties);
     throw new Error('Method not implemented.');
   }
-  reportLoadBegin<K extends string>(options: BaseReportOptions<K>): void {
-    Logger.info('<call reportLoadBegin>', options);
+  reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
+    Logger.info('<call reportLoadBegin>', opts);
     throw new Error('Method not implemented.');
   }
   reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
-    Logger.info('<call reportLoadEnd>', options);
+    Logger.info('<call reportLoadEnd>', opts);
     throw new Error('Method not implemented.');
   }
-  reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportToShow>', options);
+  reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportToShow>', opts);
     throw new Error('Method not implemented.');
   }
-  reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportShow>', options);
+  reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportShow>', opts);
     throw new Error('Method not implemented.');
   }
   reportShowFailed<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
   ): void {
-    Logger.info('<call reportShowFailed>', options);
+    Logger.info('<call reportShowFailed>', opts);
     throw new Error('Method not implemented.');
   }
-  reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportClose>', options);
+  reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportClose>', opts);
     throw new Error('Method not implemented.');
   }
-  reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportClick>', options);
+  reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportClick>', opts);
     throw new Error('Method not implemented.');
   }
-  reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportRewarded>', options);
+  reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportRewarded>', opts);
     throw new Error('Method not implemented.');
   }
-  reportConversionByClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportConversionByClick>', options);
+  reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportConversionByClick>', opts);
     throw new Error('Method not implemented.');
   }
-  reportConversionByLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportConversionByLeftApp>', options);
+  reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportConversionByLeftApp>', opts);
     throw new Error('Method not implemented.');
   }
-  reportConversionByRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportConversionByRewarded>', options);
+  reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportConversionByRewarded>', opts);
     throw new Error('Method not implemented.');
   }
-  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { country: string }): void;
-  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
+  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
+  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
   reportPaid<K extends string>(
-    options: BaseReportPaidOptions<K> & { country: string } & { currency: string; entrance: string },
+    opts: BaseReportPaidOptions<K> & { country: string } & { currency: string; entrance: string },
   ): void {
-    Logger.info('<call reportPaid>', options);
+    Logger.info('<call reportPaid>', opts);
     throw new Error('Method not implemented.');
   }
-  reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportLeftApp>', options);
+  reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    Logger.info('<call reportLeftApp>', opts);
     throw new Error('Method not implemented.');
   }
-  reportPurchaseSuccess<K extends string>(options: ReportSuccessOptions<K> & { order: string }): void {
-    Logger.info('<call reportPurchaseSuccess>', options);
+  reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
+    Logger.info('<call reportPurchaseSuccess>', opts);
     throw new Error('Method not implemented.');
   }
   reportSubscribeSuccess<K extends string>(
-    options: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
+    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
   ): void {
-    Logger.info('<call reportSubscribeSuccess>', options);
+    Logger.info('<call reportSubscribeSuccess>', opts);
     throw new Error('Method not implemented.');
   }
 }

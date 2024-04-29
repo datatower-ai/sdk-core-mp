@@ -232,37 +232,37 @@ declare class StaticDataTower {
     static trackTimerPause(eventName: string, appId?: string): void;
     static trackTimerResume(eventName: string, appId?: string): void;
     static trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>, appId?: string): void;
-    static reportLoadBegin<K extends string>(options: BaseReportOptions<K>, appId?: string): void;
-    static reportLoadEnd<K extends string>(options: BaseReportOptions<K> & {
+    static reportLoadBegin<K extends string>(opts: BaseReportOptions<K>, appId?: string): void;
+    static reportLoadEnd<K extends string>(opts: BaseReportOptions<K> & {
         duration: number;
         result: boolean;
         errorCode: number;
         errorMessage: string;
     }, appId?: string): void;
-    static reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportShowFailed<K extends string>(options: BaseReportOptions<K> & CommonReportOptions & {
+    static reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportShowFailed<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions & {
         errorCode: number;
         errorMessage: string;
     }, appId?: string): void;
-    static reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportConversionByClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportConversionByLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportConversionByRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportPaid<K extends string>(options: BaseReportPaidOptions<K> & {
+    static reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & {
         country: string;
     }, appId?: string): void;
-    static reportPaid<K extends string>(options: BaseReportPaidOptions<K> & {
+    static reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & {
         currency: string;
         entrance: string;
     }, appId?: string): void;
-    static reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
-    static reportPurchaseSuccess<K extends string>(options: ReportSuccessOptions<K> & {
+    static reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
+    static reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & {
         order: string;
     }, appId?: string): void;
-    static reportSubscribeSuccess<K extends string>(options: ReportSuccessOptions<K> & {
+    static reportSubscribeSuccess<K extends string>(opts: ReportSuccessOptions<K> & {
         originalOrderId: string;
         orderId: string;
     }, appId?: string): void;

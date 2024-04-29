@@ -103,63 +103,60 @@ export class CocosIOS extends StaticDataTower implements DataTower {
   trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
     CocosIOS.callStaticMethod('trackTimerEnd:properties:', eventName, fmt(properties));
   }
-  // TODO: implement the following methods
-  reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    var jsonStr: string = JSON.stringify(options);
-    CocosIOS.callStaticMethod('reportLoadBegin:', jsonStr);
+  reportLoadBegin<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportLoadBegin:', fmt(opts));
   }
   reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> &
-      CommonReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
-    throw new Error('Method not implemented.');
+    CocosIOS.callStaticMethod('reportLoadEnd:', fmt(opts));
   }
-  reportToShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportToShow:', fmt(opts));
   }
-  reportShow<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportShow:', fmt(opts));
   }
   reportShowFailed<K extends string>(
-    options: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
+    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
   ): void {
-    throw new Error('Method not implemented.');
+    CocosIOS.callStaticMethod('reportShowFailed:', fmt(opts));
   }
-  reportClose<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportClose:', fmt(opts));
   }
-  reportClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportClick:', fmt(opts));
   }
-  reportRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportRewarded:', fmt(opts));
   }
-  reportConversionByClick<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportConversionByClick:', fmt(opts));
   }
-  reportConversionByLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportConversionByLeftApp:', fmt(opts));
   }
-  reportConversionByRewarded<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportConversionByRewarded:', fmt(opts));
   }
-  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { country: string }): void;
-  reportPaid<K extends string>(options: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
+  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
+  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
   reportPaid<K extends string>(
-    options: BaseReportPaidOptions<K> & { country: string } & { currency: string; entrance: string },
+    opts: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
   ): void {
-    throw new Error('Method not implemented.');
+    CocosIOS.callStaticMethod('reportPaid:', fmt(opts));
   }
-  reportLeftApp<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+  reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+    CocosIOS.callStaticMethod('reportLeftApp:', fmt(opts));
   }
-  reportPurchaseSuccess<K extends string>(options: ReportSuccessOptions<K> & { order: string }): void {
-    throw new Error('Method not implemented.');
+  reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
+    CocosIOS.callStaticMethod('reportPurchased:', fmt(opts));
   }
   reportSubscribeSuccess<K extends string>(
-    options: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
+    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
   ): void {
-    throw new Error('Method not implemented.');
+    CocosIOS.callStaticMethod('reportSubscribed:', fmt(opts));
   }
 }
 
