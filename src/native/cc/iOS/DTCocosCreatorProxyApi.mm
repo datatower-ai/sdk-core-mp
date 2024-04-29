@@ -171,7 +171,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 }
 
 + (void)setAccountId:(NSString *)acctId {
-    [DTAnalytics setAdjustId:acctId];
+    [DTAnalytics setAccountId:acctId];
 }
 
 + (void)setDistinctId:(NSString *)acctId {
