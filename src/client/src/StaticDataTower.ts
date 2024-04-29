@@ -12,19 +12,24 @@ import { Logger } from './sandbox';
 export class StaticDataTower {
   protected static instances: Record<string, DataTower> = {};
   protected static createInstance(): DataTower {
-    throw new Error('not implemented');
+    return StaticDataTower;
   }
 
-  private static getInstance(appId: string = '__default__'): DataTower {
-    return this.instances[appId] || Logger.error('DataTower', `instance ${appId} not found, please initSDK first`);
+  private static getInstance(appId: string = 'default'): DataTower {
+    return (
+      this.instances[appId] || Logger.error('DataTower', `instance '${appId}' not found, please initialize SDK first`)
+    );
   }
 
   static async initSDK(config: Config): Promise<void> {
     const instance = this.createInstance();
-    if (!this.instances.__default__) {
-      this.instances.__default__ = instance;
-    } else {
+    if (!this.instances.default) {
+      this.instances.default = instance;
+    } else if (!this.instances[config.appId]) {
       this.instances[config.appId] = instance;
+    } else {
+      Logger.warn('DataTower', `instance '${config.appId}' already exists, will be replaced`);
+      return;
     }
     return instance.initSDK(config);
   }

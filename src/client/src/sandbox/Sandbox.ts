@@ -29,10 +29,7 @@ export class Sandbox implements DataTower {
     '#dt_id': '',
   };
 
-  private presetProperties = {
-    '#sdk_type': 'javascript',
-    '#sdk_version_name': version,
-  } as const;
+  private presetProperties = { '#sdk_type': 'javascript', '#sdk_version_name': version } as const;
 
   private staticProperties: Record<string, any> = {};
 
@@ -67,7 +64,7 @@ export class Sandbox implements DataTower {
 
     this.settings['#app_id'] = this.config.appId ?? this.shim.getSystemInfo().appId;
 
-    Logger.info('<call initSDK>', this.config, this.settings);
+    Logger.debug('<initSDK>', this.config, this.settings);
   }
 
   private async initializeNewUser() {
@@ -81,7 +78,7 @@ export class Sandbox implements DataTower {
   }
 
   track(eventName: string, properties: Record<string, string | boolean | number>): void {
-    this.taskQueue.enqueue(() => ({
+    const data = {
       ...this.settings,
       '#event_time': new Date().getTime(),
       '#event_name': eventName,
@@ -92,62 +89,54 @@ export class Sandbox implements DataTower {
         ...this.dynamicProperties?.(),
         ...this.presetProperties,
       },
-    }));
-    Logger.info('<call track>', {
-      ...this.settings,
-      '#event_time': new Date().getTime(),
-      '#event_name': eventName,
-      '#event_type': 'track',
-      properties: {
-        ...properties,
-        ...this.staticProperties,
-        ...this.dynamicProperties?.(),
-        ...this.presetProperties,
-      },
-    });
+    };
+    this.taskQueue.enqueue(() => data);
+    Logger.debug('<track>', data);
   }
   enableUpload(): void {
     if (this.config.manualEnableUpload) this.report();
-    Logger.info('<call enableUpload>');
+    Logger.debug('<enableUpload>');
   }
 
   private createTask(event_name: string, event_type: string, properties: Record<string, any>) {
-    this.taskQueue.enqueue(() => ({
+    const data = {
       ...this.settings,
       '#event_name': event_name,
       '#event_type': event_type,
       '#event_time': new Date().getTime(),
       properties,
-    }));
+    };
+    this.taskQueue.enqueue(() => data);
+    Logger.debug('<createTask>', data);
   }
   /* user */
   userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+    Logger.debug('<userSet>', properties);
     this.createTask('#user_set', 'user', properties);
-    Logger.info('<call userSet>', properties);
   }
   userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+    Logger.debug('<userSetOnce>', properties);
     this.createTask('#user_set_once', 'user', properties);
-    Logger.info('<call userSetOnce>', properties);
   }
   userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
+    Logger.debug('<userAdd>', properties);
     this.createTask('#user_add', 'user', properties);
-    Logger.info('<call userAdd>', properties);
   }
   userUnset(properties: string[]): void {
+    Logger.debug('<userUnset>', properties);
     this.createTask('#user_unset', 'user', properties);
-    Logger.info('<call userUnset>', properties);
   }
   userDelete(): void {
+    Logger.debug('<userDelete>');
     this.createTask('#user_delete', 'user', {});
-    Logger.info('<call userDelete>');
   }
   userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+    Logger.debug('<userAppend>', properties);
     this.createTask('#user_append', 'user', properties);
-    Logger.info('<call userAppend>', properties);
   }
   userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+    Logger.debug('<userUniqAppend>', properties);
     this.createTask('#user_uniq_append', 'user', properties);
-    Logger.info('<call userUniqAppend>', properties);
   }
 
   /* id */
@@ -167,132 +156,132 @@ export class Sandbox implements DataTower {
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
     callback(this.settings['#dt_id']);
-    Logger.info('<call getDataTowerId>', callback);
+    Logger.debug('<getDataTowerId>', callback);
   }
   setAccountId(id: string): void {
     this.settings['#acid'] = id;
-    Logger.info('<call setAccountId>', id);
+    Logger.debug('<setAccountId>', id);
   }
   setFirebaseAppInstanceId(id: string): void {
+    Logger.debug('<setFirebaseAppInstanceId>', id);
     this.createTask('#user_set', 'user', { '#latest_firebase_iid': id });
-    Logger.info('<call setFirebaseAppInstanceId>', id);
   }
   setAppsFlyerId(id: string): void {
+    Logger.debug('<setAppsFlyerId>', id);
     this.createTask('#user_set', 'user', { '#latest_appsflyer_id': id });
-    Logger.info('<call setAppsFlyerId>', id);
   }
   setKochavaId(id: string): void {
+    Logger.debug('<setKochavaId>', id);
     this.createTask('#user_set', 'user', { '#latest_kochava_id': id });
-    Logger.info('<call setKochavaId>', id);
   }
   setAdjustId(id: string): void {
+    Logger.debug('<setAdjustId>', id);
     this.createTask('#user_set', 'user', { '#latest_adjust_id': id });
-    Logger.info('<call setAdjustId>', id);
   }
 
   /* properties */
   setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
     this.staticProperties = { ...this.staticProperties, ...properties };
-    Logger.info('<call setStaticCommonProperties>', properties);
+    Logger.debug('<setStaticCommonProperties>', properties);
   }
   clearStaticCommonProperties(): void {
     this.staticProperties = {};
-    Logger.info('<call clearStaticCommonProperties>');
+    Logger.debug('<clearStaticCommonProperties>');
   }
   setCommonProperties(callback: () => Record<string, string | boolean | number>): void {
     this.dynamicProperties = callback;
-    Logger.info('<call setCommonProperties>', callback);
+    Logger.debug('<setCommonProperties>', callback);
   }
   clearCommonProperties(): void {
     this.dynamicProperties = null;
-    Logger.info('<call clearCommonProperties>');
+    Logger.debug('<clearCommonProperties>');
   }
 
   // TODO: implement the following methods
   trackTimerStart(eventName: string): void {
-    Logger.info('<call trackTimerStart>', eventName);
+    Logger.debug('<trackTimerStart>', eventName);
     throw new Error('Method not implemented.');
   }
   trackTimerPause(eventName: string): void {
-    Logger.info('<call trackTimerPause>', eventName);
+    Logger.debug('<trackTimerPause>', eventName);
     throw new Error('Method not implemented.');
   }
   trackTimerResume(eventName: string): void {
-    Logger.info('<call trackTimerResume>', eventName);
+    Logger.debug('<trackTimerResume>', eventName);
     throw new Error('Method not implemented.');
   }
   trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
-    Logger.info('<call trackTimerEnd>', eventName, properties);
+    Logger.debug('<trackTimerEnd>', eventName, properties);
     throw new Error('Method not implemented.');
   }
   reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
-    Logger.info('<call reportLoadBegin>', opts);
+    Logger.debug('<reportLoadBegin>', opts);
     throw new Error('Method not implemented.');
   }
   reportLoadEnd<K extends string>(
     opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
-    Logger.info('<call reportLoadEnd>', opts);
+    Logger.debug('<reportLoadEnd>', opts);
     throw new Error('Method not implemented.');
   }
   reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportToShow>', opts);
+    Logger.debug('<reportToShow>', opts);
     throw new Error('Method not implemented.');
   }
   reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportShow>', opts);
+    Logger.debug('<reportShow>', opts);
     throw new Error('Method not implemented.');
   }
   reportShowFailed<K extends string>(
     opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
   ): void {
-    Logger.info('<call reportShowFailed>', opts);
+    Logger.debug('<reportShowFailed>', opts);
     throw new Error('Method not implemented.');
   }
   reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportClose>', opts);
+    Logger.debug('<reportClose>', opts);
     throw new Error('Method not implemented.');
   }
   reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportClick>', opts);
+    Logger.debug('<reportClick>', opts);
     throw new Error('Method not implemented.');
   }
   reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportRewarded>', opts);
+    Logger.debug('<reportRewarded>', opts);
     throw new Error('Method not implemented.');
   }
   reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportConversionByClick>', opts);
+    Logger.debug('<reportConversionByClick>', opts);
     throw new Error('Method not implemented.');
   }
   reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportConversionByLeftApp>', opts);
+    Logger.debug('<reportConversionByLeftApp>', opts);
     throw new Error('Method not implemented.');
   }
   reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportConversionByRewarded>', opts);
+    Logger.debug('<reportConversionByRewarded>', opts);
     throw new Error('Method not implemented.');
   }
   reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
   reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
   reportPaid<K extends string>(
-    opts: BaseReportPaidOptions<K> & { country: string } & { currency: string; entrance: string },
+    opts: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
   ): void {
-    Logger.info('<call reportPaid>', opts);
+    Logger.debug('<reportPaid>', opts);
     throw new Error('Method not implemented.');
   }
   reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.info('<call reportLeftApp>', opts);
+    Logger.debug('<reportLeftApp>', opts);
     throw new Error('Method not implemented.');
   }
   reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
-    Logger.info('<call reportPurchaseSuccess>', opts);
+    Logger.debug('<reportPurchaseSuccess>', opts);
     throw new Error('Method not implemented.');
   }
   reportSubscribeSuccess<K extends string>(
     opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
   ): void {
-    Logger.info('<call reportSubscribeSuccess>', opts);
+    Logger.debug('<reportSubscribeSuccess>', opts);
     throw new Error('Method not implemented.');
   }
 }

@@ -118,20 +118,23 @@ var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
 })(LogLevel || {});
 
 // src/StaticDataTower.ts
-var StaticDataTower = class {
+var _StaticDataTower = class _StaticDataTower {
   static createInstance() {
-    throw new Error("not implemented");
+    return _StaticDataTower;
   }
-  static getInstance(appId = "__default__") {
-    return this.instances[appId] || Logger.error("DataTower", `instance ${appId} not found, please initSDK first`);
+  static getInstance(appId = "default") {
+    return this.instances[appId] || Logger.error("DataTower", `instance '${appId}' not found, please initialize SDK first`);
   }
   static initSDK(config) {
     return __async(this, null, function* () {
       const instance = this.createInstance();
-      if (!this.instances.__default__) {
-        this.instances.__default__ = instance;
-      } else {
+      if (!this.instances.default) {
+        this.instances.default = instance;
+      } else if (!this.instances[config.appId]) {
         this.instances[config.appId] = instance;
+      } else {
+        Logger.warn("DataTower", `instance '${config.appId}' already exists, will be replaced`);
+        return;
       }
       return instance.initSDK(config);
     });
@@ -296,7 +299,8 @@ var StaticDataTower = class {
     return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportSubscribeSuccess(opts);
   }
 };
-StaticDataTower.instances = {};
+_StaticDataTower.instances = {};
+var StaticDataTower = _StaticDataTower;
 
 // package.json
 var version = "1.0.0";
@@ -6203,10 +6207,7 @@ var Sandbox = class {
       "#app_id": "",
       "#dt_id": ""
     };
-    this.presetProperties = {
-      "#sdk_type": "javascript",
-      "#sdk_version_name": version
-    };
+    this.presetProperties = { "#sdk_type": "javascript", "#sdk_version_name": version };
     this.staticProperties = {};
     this.dynamicProperties = null;
   }
@@ -6235,7 +6236,7 @@ var Sandbox = class {
         yield this.initializeNewUser();
       this.settings["#dt_id"] = yield this.shim.getStorage("#dt_id");
       this.settings["#app_id"] = (_a2 = this.config.appId) != null ? _a2 : this.shim.getSystemInfo().appId;
-      Logger.info("<call initSDK>", this.config, this.settings);
+      Logger.debug("<initSDK>", this.config, this.settings);
     });
   }
   initializeNewUser() {
@@ -6251,63 +6252,58 @@ var Sandbox = class {
   }
   track(eventName, properties) {
     var _a2;
-    this.taskQueue.enqueue(() => {
-      var _a3;
-      return __spreadProps(__spreadValues({}, this.settings), {
-        "#event_time": (/* @__PURE__ */ new Date()).getTime(),
-        "#event_name": eventName,
-        "#event_type": "track",
-        properties: __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, properties), this.staticProperties), (_a3 = this.dynamicProperties) == null ? void 0 : _a3.call(this)), this.presetProperties)
-      });
-    });
-    Logger.info("<call track>", __spreadProps(__spreadValues({}, this.settings), {
+    const data = __spreadProps(__spreadValues({}, this.settings), {
       "#event_time": (/* @__PURE__ */ new Date()).getTime(),
       "#event_name": eventName,
       "#event_type": "track",
       properties: __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, properties), this.staticProperties), (_a2 = this.dynamicProperties) == null ? void 0 : _a2.call(this)), this.presetProperties)
-    }));
+    });
+    this.taskQueue.enqueue(() => data);
+    Logger.debug("<track>", data);
   }
   enableUpload() {
     if (this.config.manualEnableUpload)
       this.report();
-    Logger.info("<call enableUpload>");
+    Logger.debug("<enableUpload>");
   }
   createTask(event_name, event_type, properties) {
-    this.taskQueue.enqueue(() => __spreadProps(__spreadValues({}, this.settings), {
+    const data = __spreadProps(__spreadValues({}, this.settings), {
       "#event_name": event_name,
       "#event_type": event_type,
       "#event_time": (/* @__PURE__ */ new Date()).getTime(),
       properties
-    }));
+    });
+    this.taskQueue.enqueue(() => data);
+    Logger.debug("<createTask>", data);
   }
   /* user */
   userSet(properties) {
+    Logger.debug("<userSet>", properties);
     this.createTask("#user_set", "user", properties);
-    Logger.info("<call userSet>", properties);
   }
   userSetOnce(properties) {
+    Logger.debug("<userSetOnce>", properties);
     this.createTask("#user_set_once", "user", properties);
-    Logger.info("<call userSetOnce>", properties);
   }
   userAdd(properties) {
+    Logger.debug("<userAdd>", properties);
     this.createTask("#user_add", "user", properties);
-    Logger.info("<call userAdd>", properties);
   }
   userUnset(properties) {
+    Logger.debug("<userUnset>", properties);
     this.createTask("#user_unset", "user", properties);
-    Logger.info("<call userUnset>", properties);
   }
   userDelete() {
+    Logger.debug("<userDelete>");
     this.createTask("#user_delete", "user", {});
-    Logger.info("<call userDelete>");
   }
   userAppend(properties) {
+    Logger.debug("<userAppend>", properties);
     this.createTask("#user_append", "user", properties);
-    Logger.info("<call userAppend>", properties);
   }
   userUniqAppend(properties) {
+    Logger.debug("<userUniqAppend>", properties);
     this.createTask("#user_uniq_append", "user", properties);
-    Logger.info("<call userUniqAppend>", properties);
   }
   /* id */
   generateDataTowerId() {
@@ -6325,120 +6321,120 @@ var Sandbox = class {
     if (!callback)
       return new Promise((resolve) => this.getDataTowerId(resolve));
     callback(this.settings["#dt_id"]);
-    Logger.info("<call getDataTowerId>", callback);
+    Logger.debug("<getDataTowerId>", callback);
   }
   setAccountId(id) {
     this.settings["#acid"] = id;
-    Logger.info("<call setAccountId>", id);
+    Logger.debug("<setAccountId>", id);
   }
   setFirebaseAppInstanceId(id) {
+    Logger.debug("<setFirebaseAppInstanceId>", id);
     this.createTask("#user_set", "user", { "#latest_firebase_iid": id });
-    Logger.info("<call setFirebaseAppInstanceId>", id);
   }
   setAppsFlyerId(id) {
+    Logger.debug("<setAppsFlyerId>", id);
     this.createTask("#user_set", "user", { "#latest_appsflyer_id": id });
-    Logger.info("<call setAppsFlyerId>", id);
   }
   setKochavaId(id) {
+    Logger.debug("<setKochavaId>", id);
     this.createTask("#user_set", "user", { "#latest_kochava_id": id });
-    Logger.info("<call setKochavaId>", id);
   }
   setAdjustId(id) {
+    Logger.debug("<setAdjustId>", id);
     this.createTask("#user_set", "user", { "#latest_adjust_id": id });
-    Logger.info("<call setAdjustId>", id);
   }
   /* properties */
   setStaticCommonProperties(properties) {
     this.staticProperties = __spreadValues(__spreadValues({}, this.staticProperties), properties);
-    Logger.info("<call setStaticCommonProperties>", properties);
+    Logger.debug("<setStaticCommonProperties>", properties);
   }
   clearStaticCommonProperties() {
     this.staticProperties = {};
-    Logger.info("<call clearStaticCommonProperties>");
+    Logger.debug("<clearStaticCommonProperties>");
   }
   setCommonProperties(callback) {
     this.dynamicProperties = callback;
-    Logger.info("<call setCommonProperties>", callback);
+    Logger.debug("<setCommonProperties>", callback);
   }
   clearCommonProperties() {
     this.dynamicProperties = null;
-    Logger.info("<call clearCommonProperties>");
+    Logger.debug("<clearCommonProperties>");
   }
   // TODO: implement the following methods
   trackTimerStart(eventName) {
-    Logger.info("<call trackTimerStart>", eventName);
+    Logger.debug("<trackTimerStart>", eventName);
     throw new Error("Method not implemented.");
   }
   trackTimerPause(eventName) {
-    Logger.info("<call trackTimerPause>", eventName);
+    Logger.debug("<trackTimerPause>", eventName);
     throw new Error("Method not implemented.");
   }
   trackTimerResume(eventName) {
-    Logger.info("<call trackTimerResume>", eventName);
+    Logger.debug("<trackTimerResume>", eventName);
     throw new Error("Method not implemented.");
   }
   trackTimerEnd(eventName, properties) {
-    Logger.info("<call trackTimerEnd>", eventName, properties);
+    Logger.debug("<trackTimerEnd>", eventName, properties);
     throw new Error("Method not implemented.");
   }
   reportLoadBegin(opts) {
-    Logger.info("<call reportLoadBegin>", opts);
+    Logger.debug("<reportLoadBegin>", opts);
     throw new Error("Method not implemented.");
   }
   reportLoadEnd(opts) {
-    Logger.info("<call reportLoadEnd>", opts);
+    Logger.debug("<reportLoadEnd>", opts);
     throw new Error("Method not implemented.");
   }
   reportToShow(opts) {
-    Logger.info("<call reportToShow>", opts);
+    Logger.debug("<reportToShow>", opts);
     throw new Error("Method not implemented.");
   }
   reportShow(opts) {
-    Logger.info("<call reportShow>", opts);
+    Logger.debug("<reportShow>", opts);
     throw new Error("Method not implemented.");
   }
   reportShowFailed(opts) {
-    Logger.info("<call reportShowFailed>", opts);
+    Logger.debug("<reportShowFailed>", opts);
     throw new Error("Method not implemented.");
   }
   reportClose(opts) {
-    Logger.info("<call reportClose>", opts);
+    Logger.debug("<reportClose>", opts);
     throw new Error("Method not implemented.");
   }
   reportClick(opts) {
-    Logger.info("<call reportClick>", opts);
+    Logger.debug("<reportClick>", opts);
     throw new Error("Method not implemented.");
   }
   reportRewarded(opts) {
-    Logger.info("<call reportRewarded>", opts);
+    Logger.debug("<reportRewarded>", opts);
     throw new Error("Method not implemented.");
   }
   reportConversionByClick(opts) {
-    Logger.info("<call reportConversionByClick>", opts);
+    Logger.debug("<reportConversionByClick>", opts);
     throw new Error("Method not implemented.");
   }
   reportConversionByLeftApp(opts) {
-    Logger.info("<call reportConversionByLeftApp>", opts);
+    Logger.debug("<reportConversionByLeftApp>", opts);
     throw new Error("Method not implemented.");
   }
   reportConversionByRewarded(opts) {
-    Logger.info("<call reportConversionByRewarded>", opts);
+    Logger.debug("<reportConversionByRewarded>", opts);
     throw new Error("Method not implemented.");
   }
   reportPaid(opts) {
-    Logger.info("<call reportPaid>", opts);
+    Logger.debug("<reportPaid>", opts);
     throw new Error("Method not implemented.");
   }
   reportLeftApp(opts) {
-    Logger.info("<call reportLeftApp>", opts);
+    Logger.debug("<reportLeftApp>", opts);
     throw new Error("Method not implemented.");
   }
   reportPurchaseSuccess(opts) {
-    Logger.info("<call reportPurchaseSuccess>", opts);
+    Logger.debug("<reportPurchaseSuccess>", opts);
     throw new Error("Method not implemented.");
   }
   reportSubscribeSuccess(opts) {
-    Logger.info("<call reportSubscribeSuccess>", opts);
+    Logger.debug("<reportSubscribeSuccess>", opts);
     throw new Error("Method not implemented.");
   }
 };
@@ -7085,10 +7081,10 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
     _CocosIOS.callStaticMethod("reportLeftApp:", fmt(opts));
   }
   reportPurchaseSuccess(opts) {
-    _CocosIOS.callStaticMethod("reportPurchased:", fmt(opts));
+    _CocosIOS.callStaticMethod("reportPurchaseSuccess:", fmt(opts));
   }
   reportSubscribeSuccess(opts) {
-    _CocosIOS.callStaticMethod("reportSubscribed:", fmt(opts));
+    _CocosIOS.callStaticMethod("reportSubscribeSuccess:", fmt(opts));
   }
 };
 _CocosIOS.createInstance = () => new _CocosIOS();

@@ -103,7 +103,7 @@ export class CocosIOS extends StaticDataTower implements DataTower {
   trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
     CocosIOS.callStaticMethod('trackTimerEnd:properties:', eventName, fmt(properties));
   }
-  reportLoadBegin<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
     CocosIOS.callStaticMethod('reportLoadBegin:', fmt(opts));
   }
   reportLoadEnd<K extends string>(
@@ -151,12 +151,12 @@ export class CocosIOS extends StaticDataTower implements DataTower {
     CocosIOS.callStaticMethod('reportLeftApp:', fmt(opts));
   }
   reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
-    CocosIOS.callStaticMethod('reportPurchased:', fmt(opts));
+    CocosIOS.callStaticMethod('reportPurchaseSuccess:', fmt(opts));
   }
   reportSubscribeSuccess<K extends string>(
     opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
   ): void {
-    CocosIOS.callStaticMethod('reportSubscribed:', fmt(opts));
+    CocosIOS.callStaticMethod('reportSubscribeSuccess:', fmt(opts));
   }
 }
 
