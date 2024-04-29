@@ -13,6 +13,8 @@
 #import "DT.h"
 #import "DTAnalyticsUtils.h"
 #import "DTAdReport.h"
+#import "DTIAPReport.h"
+#import "DTIASReport.h"
 
 #else
 
@@ -20,6 +22,8 @@
 #import <DataTowerAICore/DT.h>
 #import <DataTowerAICore/DTAnalyticsUtils.h>
 #import <DataTowerAICore/DTAdReport.h>
+#import <DataTowerAICore/DTIAPReport.h>
+#import <DataTowerAICore/DTIASReport.h>
 
 #endif
 
@@ -236,6 +240,60 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     [DTAdReport reportLoadBegin:adid type:adType platform:platform seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary]];
 }
 
++ (void)reportLoadEnd:(NSString *)jsonStr {
+    
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSNumber *duration = param[@"duration"];
+    BOOL result = [param[@"result"] boolValue];
+    NSInteger errorCode = [param[@"errorCode"] intValue];
+    NSString *errorMsg = param[@"errorMsg"];
+    
+//    NSString *location = param[@"location"];
+//    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportLoadEnd:adid type:adType platform:platform duration:duration result:result seq:seq mediation:adMedia mediationId:admediaId errorCode:errorCode errorMessage:errorMsg properties:[properties jsonDictionary]];
+}
+
++ (void)reportToShow:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportToShow:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportShow:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportShow:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
 + (void)callJSMethod:(NSString *)selector arg1:(NSString *)arg1 {
 //    JsbBridge* m = [JsbBridge sharedInstance];
 //    [m sendToScript:selector arg1:arg1];
@@ -246,6 +304,202 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
         se::ScriptEngine::getInstance()->evalString(string->c_str());
         delete string;
     });
+}
+
++ (void)reportShowFailed:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    NSInteger errorCode = [param[@"errorCode"] intValue];
+    NSString *errorMsg = param[@"errorMsg"];
+    
+    [DTAdReport reportAdShowFail:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId errorCode:errorCode errorMessage:errorMsg properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportClose:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportClose:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportClick:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportClick:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportRewarded:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportRewarded:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportConversionByClick:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportConversionByClick:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportConversionByLeftApp:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportConversionByLeftApp:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportConversionByRewarded:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportConversionByRewarded:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportPaid:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    double value = [param[@"entrance"] doubleValue];
+    NSString *precision = param[@"precision"];
+    NSString *country = param[@"country"];
+    
+    if(param[@"currency"])
+    {
+        NSString *currency = param[@"currency"];
+        [DTAdReport reportPaid:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId value:value currency:currency precision:precision properties:[properties jsonDictionary] entrance:entrance];
+    }
+    else {
+        [DTAdReport reportPaid:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId value:value precision:precision country:country properties:[properties jsonDictionary] entrance:entrance];
+    }
+}
+
++ (void)reportLeftApp:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+    NSString *location = param[@"location"];
+    NSString *entrance = param[@"entrance"];
+    
+    double value = [param[@"entrance"] doubleValue];
+    NSString *precision = param[@"precision"];
+    NSString *country = param[@"country"];
+    
+    [DTAdReport reportLeftApp:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary] entrance:entrance];
+}
+
++ (void)reportPurchaseSuccess:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *order = param[@"order"];
+    NSString *seq = param[@"seq"];
+//    NSString *properties = param[@"properties"];
+    
+    NSString *sku = param[@"sku"];
+//    NSString *entrance = param[@"entrance"];
+    
+    NSNumber *price = param[@"price"];
+    NSString *currency = param[@"currency"];
+    NSString *placement = param[@"placement"];
+    
+    [DTIAPReport reportPurchased:order sku:sku price:price currency:currency seq:seq placement:placement];
+}
+
++ (void)reportSubscribeSuccess:(NSString *)jsonStr {
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *order = param[@"order"];
+    NSString *originalOrderId = param[@"originalOrderId"];
+
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    
+    NSString *sku = param[@"sku"];
+    NSString *entrance = param[@"entrance"];
+    
+    NSString *price = param[@"price"];
+    NSString *currency = param[@"currency"];
+    NSString *placement = param[@"placement"];
+    
+    [DTIASReport reportSubscribeSuccess:seq entrance:entrance placement:placement sku:sku orderId:order originalOrderId:originalOrderId price:price currency:currency properties:[properties jsonDictionary]];
 }
 
 @end
