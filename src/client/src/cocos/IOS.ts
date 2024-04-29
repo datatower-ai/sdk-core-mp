@@ -105,7 +105,8 @@ export class CocosIOS extends StaticDataTower implements DataTower {
   }
   // TODO: implement the following methods
   reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
-    throw new Error('Method not implemented.');
+    var jsonStr: string = JSON.stringify(options);
+    CocosIOS.callStaticMethod('reportLoadBegin:', jsonStr);
   }
   reportLoadEnd<K extends string>(
     options: BaseReportOptions<K> &

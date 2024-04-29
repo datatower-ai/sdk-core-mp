@@ -6694,7 +6694,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
         ["String", options.id],
         ["int", options.type],
         ["int", options.platform],
-        ["long", options.duration],
+        ["float", options.duration],
         ["boolean", options.result],
         ["String", options.seq],
         ["int", options.errorCode],
@@ -6873,7 +6873,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
           ["String", options.seq],
           ["int", options.mediation],
           ["String", options.mediationId],
-          ["double", options.value],
+          ["float", options.value],
           ["String", options.precision],
           ["String", options.country],
           ["String", fmt(options.properties)]
@@ -6889,7 +6889,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
           ["int", options.platform],
           ["String", options.location],
           ["String", options.seq],
-          ["double", options.value],
+          ["float", options.value],
           ["String", options.currency],
           ["String", options.precision],
           ["String", fmt(options.properties)],
@@ -6924,7 +6924,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
       [
         ["String", options.order],
         ["String", options.sku],
-        ["double", options.price],
+        ["float", options.price],
         ["String", options.currency],
         ["String", fmt(options.properties)]
       ],
@@ -6938,7 +6938,7 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
         ["String", options.originalOrderId],
         ["String", options.orderId],
         ["String", options.sku],
-        ["double", options.price],
+        ["float", options.price],
         ["String", options.currency],
         ["String", fmt(options.properties)]
       ],
@@ -6951,8 +6951,6 @@ _CocosAndroid.typeMap = {
   void: "V",
   int: "I",
   float: "F",
-  double: "D",
-  long: "J",
   boolean: "Z",
   String: "Ljava/lang/String;"
 };
@@ -7047,45 +7045,211 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
   trackTimerEnd(eventName, properties) {
     _CocosIOS.callStaticMethod("trackTimerEnd:properties:", eventName, fmt(properties));
   }
-  // TODO: implement the following methods
   reportLoadBegin(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportLoadBegin:type:platform:seq:mediation:mediationId:properties:",
+      options.id,
+      options.type,
+      options.platform,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties)
+    );
   }
   reportLoadEnd(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportLoadEnd:type:platform:duration:result:seq:mediation:mediationId:errorCode:errorMessage:properties:",
+      options.id,
+      options.type,
+      options.platform,
+      options.duration,
+      options.result,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      options.errorCode,
+      options.errorMessage,
+      fmt(options.properties)
+    );
   }
   reportToShow(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportToShow:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportShow(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportShow:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportShowFailed(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportAdShowFail:type:platform:location:seq:mediation:mediationId:errorCode:errorMessage:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      options.errorCode,
+      options.errorMessage,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportClose(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportClose:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportClick(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportClick:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportRewarded(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportRewarded:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportConversionByClick(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportConversionByClick:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportConversionByLeftApp(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportConversionByLeftApp:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportConversionByRewarded(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportConversionByRewarded:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportPaid(options) {
-    throw new Error("Method not implemented.");
+    if ("country" in options) {
+      _CocosIOS.callStaticMethod(
+        "reportPaid:type:platform:location:seq:mediation:mediationId:value:precision:country:properties:",
+        options.id,
+        options.type,
+        options.platform,
+        options.location,
+        options.seq,
+        options.mediation,
+        options.mediationId,
+        options.value,
+        options.precision,
+        options.country,
+        fmt(options.properties)
+        // TODO:
+        // options.entrance,
+      );
+    } else {
+      _CocosIOS.callStaticMethod(
+        "reportPaid:type:platform:location:seq:mediation:mediationId:value:currency:precision:properties:entrance:",
+        options.id,
+        options.type,
+        options.platform,
+        options.location,
+        options.seq,
+        options.mediation,
+        options.mediationId,
+        options.value,
+        options.currency,
+        options.precision,
+        fmt(options.properties),
+        options.entrance
+      );
+    }
   }
   reportLeftApp(options) {
-    throw new Error("Method not implemented.");
+    _CocosIOS.callStaticMethod(
+      "reportLeftApp:type:platform:location:seq:mediation:mediationId:properties:entrance:",
+      options.id,
+      options.type,
+      options.platform,
+      options.location,
+      options.seq,
+      options.mediation,
+      options.mediationId,
+      fmt(options.properties),
+      options.entrance
+    );
   }
   reportPurchaseSuccess(options) {
     throw new Error("Method not implemented.");
@@ -7093,6 +7257,18 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
   reportSubscribeSuccess(options) {
     throw new Error("Method not implemented.");
   }
+  // TODO: reportReturnApp
+  // + (void) reportReturnApp:(NSString *)adid
+  //                     type:(DTAdType)type
+  //                 platform:(DTAdPlatform)platform
+  //                 location:(NSString *)location
+  //                 clickGap:(NSNumber *)clickGap
+  //                returnGap:(NSNumber *)returnGap
+  //                      seq:(NSString *)seq
+  //                mediation:(DTAdMediation)mediation
+  //              mediationId:(NSString *)mediationId
+  //               properties:(NSDictionary *)properties
+  //                 entrance:(NSString *)entrance;
 };
 _CocosIOS.createInstance = () => new _CocosIOS();
 var CocosIOS = _CocosIOS;

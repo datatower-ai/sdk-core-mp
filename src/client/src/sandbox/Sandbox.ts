@@ -225,13 +225,12 @@ export class Sandbox implements DataTower {
     Logger.info('<call trackTimerEnd>', eventName, properties);
     throw new Error('Method not implemented.');
   }
-  reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportLoadBegin<K extends string>(options: BaseReportOptions<K>): void {
     Logger.info('<call reportLoadBegin>', options);
     throw new Error('Method not implemented.');
   }
   reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> &
-      CommonReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    options: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
     Logger.info('<call reportLoadEnd>', options);
     throw new Error('Method not implemented.');

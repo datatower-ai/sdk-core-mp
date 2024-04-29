@@ -11,7 +11,7 @@ import type {
 } from '@/src/type';
 import { fmt, globalNativeCallback } from '@/src/utils';
 
-type JavaType = 'void' | 'int' | 'float' | 'double' | 'long' | 'boolean' | 'String';
+type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
 
 /**
  * cocos CocosAndroid bridge
@@ -25,8 +25,6 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
     void: 'V',
     int: 'I',
     float: 'F',
-    double: 'D',
-    long: 'J',
     boolean: 'Z',
     String: 'Ljava/lang/String;',
   };
@@ -130,7 +128,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
       'void',
     );
   }
-  reportLoadBegin<K extends string>(options: BaseReportOptions<K> & CommonReportOptions): void {
+  reportLoadBegin<K extends string>(options: BaseReportOptions<K>): void {
     CocosAndroid.callStaticMethod(
       'reportLoadBegin',
       [
@@ -146,8 +144,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
     );
   }
   reportLoadEnd<K extends string>(
-    options: BaseReportOptions<K> &
-      CommonReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+    options: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
     CocosAndroid.callStaticMethod(
       'reportLoadEnd',
@@ -155,7 +152,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
         ['String', options.id],
         ['int', options.type],
         ['int', options.platform],
-        ['long', options.duration],
+        ['float', options.duration],
         ['boolean', options.result],
         ['String', options.seq],
         ['int', options.errorCode],
@@ -340,7 +337,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
           ['String', options.seq],
           ['int', options.mediation],
           ['String', options.mediationId],
-          ['double', options.value],
+          ['float', options.value],
           ['String', options.precision],
           ['String', options.country],
           ['String', fmt(options.properties)],
@@ -356,7 +353,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
           ['int', options.platform],
           ['String', options.location],
           ['String', options.seq],
-          ['double', options.value],
+          ['float', options.value],
           ['String', options.currency],
           ['String', options.precision],
           ['String', fmt(options.properties)],
@@ -391,7 +388,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
       [
         ['String', options.order],
         ['String', options.sku],
-        ['double', options.price],
+        ['float', options.price],
         ['String', options.currency],
         ['String', fmt(options.properties)],
       ],
@@ -407,7 +404,7 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
         ['String', options.originalOrderId],
         ['String', options.orderId],
         ['String', options.sku],
-        ['double', options.price],
+        ['float', options.price],
         ['String', options.currency],
         ['String', fmt(options.properties)],
       ],

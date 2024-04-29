@@ -5,10 +5,26 @@
 //  Created by huangdiao on 2021/7/20.
 //
 
-#import "DTCocosCreatorProxyApi.h"
+#define ImportSource
+
+#ifdef ImportSource
+
+#import "DTAnalytics.h"
+#import "DT.h"
+#import "DTAnalyticsUtils.h"
+#import "DTAdReport.h"
+
+#else
+
 #import <DataTowerAICore/DTAnalytics.h>
 #import <DataTowerAICore/DT.h>
 #import <DataTowerAICore/DTAnalyticsUtils.h>
+#import <DataTowerAICore/DTAdReport.h>
+
+#endif
+
+#import "DTCocosCreatorProxyApi.h"
+
 //#include "platform/apple/JsbBridge.h"
 //#include "bindings/sebind/sebind.h"
 //#include "platform/apple/JsbBridgeWrapper.h"
@@ -185,6 +201,39 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 
 + (void)clearStaticCommonProperties {
     [DTAnalytics setSuperProperties:nil];
+}
+
++ (void)trackTimerStart:(NSString *)eventName {
+    [DTAnalyticsUtils trackTimerStart:eventName];
+}
+
++ (void)trackTimerPause:(NSString *)eventName {
+    [DTAnalyticsUtils trackTimerPause:eventName];
+}
+
++ (void)trackTimerResume:(NSString *)eventName {
+    [DTAnalyticsUtils trackTimerResume:eventName];
+}
+
++ (void)trackTimerEnd:(NSString *)eventName  withProperties:(NSString *)jsonStr {
+    [DTAnalyticsUtils trackTimerEnd:eventName properties:[jsonStr jsonDictionary]];
+}
+
++ (void)reportLoadBegin:(NSString *)jsonStr
+{
+    NSDictionary *param = [jsonStr jsonDictionary];
+    NSString *adid = param[@"id"];
+    DTAdPlatform platform = (DTAdPlatform)[param[@"platform"] intValue];
+    DTAdType adType = (DTAdType)[param[@"type"] intValue];
+    DTAdMediation adMedia = (DTAdMediation)[param[@"mediation"] intValue];
+    NSString *seq = param[@"seq"];
+    NSString *properties = param[@"properties"];
+    NSString *admediaId = param[@"mediationId"];
+    
+//    NSString *location = param[@"location"];
+//    NSString *entrance = param[@"entrance"];
+    
+    [DTAdReport reportLoadBegin:adid type:adType platform:platform seq:seq mediation:adMedia mediationId:admediaId properties:[properties jsonDictionary]];
 }
 
 + (void)callJSMethod:(NSString *)selector arg1:(NSString *)arg1 {
