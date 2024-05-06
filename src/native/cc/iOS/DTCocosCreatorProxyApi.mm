@@ -434,7 +434,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     NSString *location = param[@"location"];
     NSString *entrance = param[@"entrance"];
     
-    double value = [param[@"entrance"] doubleValue];
+    double value = [param[@"value"] doubleValue];
     NSString *precision = param[@"precision"];
     NSString *country = param[@"country"];
     
@@ -460,11 +460,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     
     NSString *location = param[@"location"];
     NSString *entrance = param[@"entrance"];
-    
-    double value = [param[@"entrance"] doubleValue];
-    NSString *precision = param[@"precision"];
-    NSString *country = param[@"country"];
-    
+        
     [DTAdReport reportLeftApp:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId properties:properties entrance:entrance];
 }
 
