@@ -254,7 +254,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     NSNumber *duration = param[@"duration"];
     BOOL result = [param[@"result"] boolValue];
     NSInteger errorCode = [param[@"errorCode"] intValue];
-    NSString *errorMsg = param[@"errorMsg"];
+    NSString *errorMsg = param[@"errorMessage"];
     
 //    NSString *location = param[@"location"];
 //    NSString *entrance = param[@"entrance"];
@@ -320,7 +320,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
     NSString *entrance = param[@"entrance"];
     
     NSInteger errorCode = [param[@"errorCode"] intValue];
-    NSString *errorMsg = param[@"errorMsg"];
+    NSString *errorMsg = param[@"errorMessage"];
     
     [DTAdReport reportAdShowFail:adid type:adType platform:platform location:location seq:seq mediation:adMedia mediationId:admediaId errorCode:errorCode errorMessage:errorMsg properties:properties entrance:entrance];
 }
@@ -486,7 +486,7 @@ DTLoggingLevel convertUnityLogLevel(enum MPLogLevel level) {
 
 + (void)reportSubscribeSuccess:(NSString *)jsonStr {
     NSDictionary *param = [jsonStr jsonDictionary];
-    NSString *order = param[@"order"];
+    NSString *order = param[@"orderId"];
     NSString *originalOrderId = param[@"originalOrderId"];
 
     NSString *seq = param[@"seq"];
