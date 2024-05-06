@@ -130,11 +130,11 @@ export class Sandbox implements DataTower {
     Logger.debug('<userDelete>');
     this.createTask('#user_delete', 'user', {});
   }
-  userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+  userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
     Logger.debug('<userAppend>', properties);
     this.createTask('#user_append', 'user', properties);
   }
-  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
     Logger.debug('<userUniqAppend>', properties);
     this.createTask('#user_uniq_append', 'user', properties);
   }

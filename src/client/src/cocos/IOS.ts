@@ -51,10 +51,10 @@ export class CocosIOS extends StaticDataTower implements DataTower {
   userDelete(): void {
     CocosIOS.callStaticMethod('userDelete');
   }
-  userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+  userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
     CocosIOS.callStaticMethod('userAppend:', fmt(properties));
   }
-  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
     CocosIOS.callStaticMethod('userUniqAppend:', fmt(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;

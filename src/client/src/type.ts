@@ -187,7 +187,7 @@ export interface BaseReportOptions<K extends string> {
   mediation: AdMediation;
   mediationId: string;
   seq: string;
-  properties: Properties<K>;
+  properties: Record<PublicKey<K>, any>;
 }
 
 export interface CommonReportOptions {
@@ -199,7 +199,7 @@ export interface ReportSuccessOptions<K extends string> {
   sku: string;
   price: number;
   currency: string;
-  properties: Properties<K>;
+  properties: Record<PublicKey<K>, any>;
 }
 
 export interface BaseReportPaidOptions<K extends string> extends BaseReportOptions<K> {

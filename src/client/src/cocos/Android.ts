@@ -66,10 +66,10 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
   userDelete(): void {
     CocosAndroid.callStaticMethod('userDelete', [], 'void');
   }
-  userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+  userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
     CocosAndroid.callStaticMethod('userAppend', [['String', fmt(properties)]], 'void');
   }
-  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>): void {
+  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
     CocosAndroid.callStaticMethod('userUniqAppend', [['String', fmt(properties)]], 'void');
   }
   getDataTowerId(callback: (id: string) => void): void;

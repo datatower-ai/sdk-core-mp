@@ -57,10 +57,16 @@ export class StaticDataTower {
   static userDelete(appId?: string): void {
     return this.getInstance(appId)?.userDelete();
   }
-  static userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void {
+  static userAppend<K extends string>(
+    properties: Record<PublicKey<K>, (string | boolean | number)[]>,
+    appId?: string,
+  ): void {
     return this.getInstance(appId)?.userAppend(properties);
   }
-  static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void {
+  static userUniqAppend<K extends string>(
+    properties: Record<PublicKey<K>, (string | boolean | number)[]>,
+    appId?: string,
+  ): void {
     return this.getInstance(appId)?.userUniqAppend(properties);
   }
   static getDataTowerId(callback: (id: string) => void, appId?: string): void;

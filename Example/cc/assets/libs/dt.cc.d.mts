@@ -215,8 +215,8 @@ declare class StaticDataTower {
     static userAdd<K extends string>(properties: Record<PublicKey<K>, number>, appId?: string): void;
     static userUnset(properties: string[], appId?: string): void;
     static userDelete(appId?: string): void;
-    static userAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void;
-    static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, any[]>, appId?: string): void;
+    static userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>, appId?: string): void;
+    static userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>, appId?: string): void;
     static getDataTowerId(callback: (id: string) => void, appId?: string): void;
     static getDataTowerId(appId?: string): Promise<string>;
     static setAccountId(id: string, appId?: string): void;
