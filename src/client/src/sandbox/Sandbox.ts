@@ -270,10 +270,6 @@ export class Sandbox implements DataTower {
     Logger.debug('<reportPaid>', opts);
     throw new Error('Method not implemented.');
   }
-  reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportLeftApp>', opts);
-    throw new Error('Method not implemented.');
-  }
   reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
     Logger.debug('<reportPurchaseSuccess>', opts);
     throw new Error('Method not implemented.');

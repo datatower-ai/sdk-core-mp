@@ -177,7 +177,7 @@ interface BaseReportOptions<K extends string> {
     mediation: AdMediation;
     mediationId: string;
     seq: string;
-    properties: Properties<K>;
+    properties: Record<PublicKey<K>, any>;
 }
 interface CommonReportOptions {
     location: string;
@@ -187,7 +187,7 @@ interface ReportSuccessOptions<K extends string> {
     sku: string;
     price: number;
     currency: string;
-    properties: Properties<K>;
+    properties: Record<PublicKey<K>, any>;
 }
 interface BaseReportPaidOptions<K extends string> extends BaseReportOptions<K> {
     value: number;
@@ -258,7 +258,6 @@ declare class StaticDataTower {
         currency: string;
         entrance: string;
     }, appId?: string): void;
-    static reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void;
     static reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & {
         order: string;
     }, appId?: string): void;

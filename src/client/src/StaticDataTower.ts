@@ -177,9 +177,6 @@ export class StaticDataTower {
   ): void {
     return this.getInstance(appId)?.reportPaid(opts);
   }
-  static reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportLeftApp(opts);
-  }
 
   // IAP
   static reportPurchaseSuccess<K extends string>(

@@ -284,10 +284,6 @@ var _StaticDataTower = class _StaticDataTower {
     var _a2;
     return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportPaid(opts);
   }
-  static reportLeftApp(opts, appId) {
-    var _a2;
-    return (_a2 = this.getInstance(appId)) == null ? void 0 : _a2.reportLeftApp(opts);
-  }
   // IAP
   static reportPurchaseSuccess(opts, appId) {
     var _a2;
@@ -6425,10 +6421,6 @@ var Sandbox = class {
     Logger.debug("<reportPaid>", opts);
     throw new Error("Method not implemented.");
   }
-  reportLeftApp(opts) {
-    Logger.debug("<reportLeftApp>", opts);
-    throw new Error("Method not implemented.");
-  }
   reportPurchaseSuccess(opts) {
     Logger.debug("<reportPurchaseSuccess>", opts);
     throw new Error("Method not implemented.");
@@ -6897,23 +6889,6 @@ var _CocosAndroid = class _CocosAndroid extends StaticDataTower {
       );
     }
   }
-  reportLeftApp(opts) {
-    _CocosAndroid.callStaticMethod(
-      "reportLeftApp",
-      [
-        ["String", opts.id],
-        ["int", opts.type],
-        ["int", opts.platform],
-        ["String", opts.location],
-        ["String", opts.seq],
-        ["String", fmt(opts.properties)],
-        ["String", opts.entrance],
-        ["int", opts.mediation],
-        ["String", opts.mediationId]
-      ],
-      "void"
-    );
-  }
   reportPurchaseSuccess(opts) {
     _CocosAndroid.callStaticMethod(
       "reportPurchaseSuccess",
@@ -7076,9 +7051,6 @@ var _CocosIOS = class _CocosIOS extends StaticDataTower {
   }
   reportPaid(opts) {
     _CocosIOS.callStaticMethod("reportPaid:", fmt(opts));
-  }
-  reportLeftApp(opts) {
-    _CocosIOS.callStaticMethod("reportLeftApp:", fmt(opts));
   }
   reportPurchaseSuccess(opts) {
     _CocosIOS.callStaticMethod("reportPurchaseSuccess:", fmt(opts));

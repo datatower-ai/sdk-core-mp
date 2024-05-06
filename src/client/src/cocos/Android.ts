@@ -365,23 +365,6 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
       );
     }
   }
-  reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    CocosAndroid.callStaticMethod(
-      'reportLeftApp',
-      [
-        ['String', opts.id],
-        ['int', opts.type],
-        ['int', opts.platform],
-        ['String', opts.location],
-        ['String', opts.seq],
-        ['String', fmt(opts.properties)],
-        ['String', opts.entrance],
-        ['int', opts.mediation],
-        ['String', opts.mediationId],
-      ],
-      'void',
-    );
-  }
   reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
     CocosAndroid.callStaticMethod(
       'reportPurchaseSuccess',

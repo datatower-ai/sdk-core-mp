@@ -147,9 +147,6 @@ export class CocosIOS extends StaticDataTower implements DataTower {
   ): void {
     CocosIOS.callStaticMethod('reportPaid:', fmt(opts));
   }
-  reportLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    CocosIOS.callStaticMethod('reportLeftApp:', fmt(opts));
-  }
   reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
     CocosIOS.callStaticMethod('reportPurchaseSuccess:', fmt(opts));
   }
