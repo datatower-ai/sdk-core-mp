@@ -16,7 +16,7 @@ const DEFAULT_CONFIG: Options = {
 
 type Platform = 'cocos';
 
-const exampleDir = '../../Example';
+const exampleDir = './Example';
 
 const ConfigMap: Record<Platform, Options> = {
   cocos: {

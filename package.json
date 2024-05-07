@@ -1,5 +1,5 @@
 {
-  "name": "dt-sdk",
+  "name": "datatower-sdk",
   "version": "1.0.0",
   "license": "MIT",
   "author": "DataTower",
@@ -7,7 +7,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.node.json && node dist/scripts/build.js",
+    "build": "tsc -p tsconfig.node.json && node dist/scripts/build.prod.js",
     "dev": "tsc -p tsconfig.node.json && node dist/scripts/build.dev.js"
   },
   "devDependencies": {

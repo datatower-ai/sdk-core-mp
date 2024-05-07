@@ -7,7 +7,7 @@ cd $SCRIPT_DIR
 # 检查是否已安装 Node.js
 if ! command -v node &> /dev/null; then
     echo "Node.js 未安装，开始安装..."
-    
+
     # 使用包管理器安装 Node.js
     if command -v brew &> /dev/null; then
         brew install node
@@ -20,13 +20,13 @@ if ! command -v node &> /dev/null; then
         echo "无法确定系统的包管理器，请手动安装 Node.js。"
         exit 1
     fi
-    
+
     # 验证安装结果
     if ! command -v node &> /dev/null; then
         echo "Node.js 安装失败，请检查网络连接或手动安装。"
         exit 1
     fi
-    
+
     echo "Node.js 安装成功！"
 else
     echo "Node.js 已安装。"
@@ -71,5 +71,4 @@ else
     echo "pnpm 已安装。"
 fi
 
-cd ../src/client
 pnpm install
