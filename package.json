@@ -11,7 +11,11 @@
     "dev": "tsc -p tsconfig.node.json && node dist/scripts/build.dev.js"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
+    "@types/inquirer": "^9.0.7",
     "@types/node": "^20.11.30",
+    "adm-zip": "^0.5.12",
+    "inquirer": "^9.2.20",
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3"

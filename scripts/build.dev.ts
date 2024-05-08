@@ -26,7 +26,7 @@ const ConfigMap: Record<Platform, Options> = {
   },
 };
 
-export async function build(platform: Platform, defaultConfig: Options = DEFAULT_CONFIG) {
+async function build(platform: Platform, defaultConfig: Options = DEFAULT_CONFIG) {
   const config = ConfigMap[platform];
   Object.keys(config.entry as object).forEach((entry) => {
     const filename = `${config.outDir}/${entry}`;

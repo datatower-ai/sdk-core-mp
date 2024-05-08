@@ -1,5 +1,11 @@
+import Zip from 'adm-zip';
 import { rename } from 'fs';
+import inquirer from 'inquirer';
+import path from 'path';
 import tsup, { type Options } from 'tsup';
+
+const version = process.env.npm_package_version;
+const root = process.cwd();
 
 const DEFAULT_CONFIG: Options = {
   minify: true,
@@ -18,11 +24,12 @@ const DEFAULT_CONFIG: Options = {
 
 type Platform = 'cocos' | 'web';
 
-const ConfigMap: Record<Platform, Options> = {
+const ConfigMap: Record<Platform, Options & { native?: string }> = {
   cocos: {
     entry: { 'dt.cc': 'src/cocos/index.ts' },
     outDir: 'dist/cocos',
     format: ['esm', 'cjs'],
+    native: 'src/native/cc',
   },
   web: {
     entry: { 'dt.web': 'src/sandbox/index.ts' },
@@ -31,7 +38,7 @@ const ConfigMap: Record<Platform, Options> = {
   },
 };
 
-export async function build(platform: Platform, defaultConfig: Options = DEFAULT_CONFIG) {
+async function build(platform: Platform, defaultConfig: Options = DEFAULT_CONFIG) {
   const config = ConfigMap[platform];
   await tsup.build({ ...defaultConfig, ...config });
   await Promise.all(
@@ -40,7 +47,30 @@ export async function build(platform: Platform, defaultConfig: Options = DEFAULT
       return new Promise((resolve) => rename(`${filename}.d.ts`, `${filename}.d.mts`, resolve));
     }),
   );
+  pack(platform, config.native);
 }
 
-build('cocos');
-build('web');
+function pack(platform: Platform, native?: string) {
+  const zip = new Zip();
+  zip.addLocalFolder(path.posix.join(root, 'dist', platform));
+  if (native) zip.addLocalFolder(path.posix.join(root, native));
+  zip.writeZip(path.posix.join(root, 'dist', `${platform}-${version}.zip`));
+}
+
+async function command() {
+  const { platform } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'platform',
+      message: 'Select a platform to build',
+      choices: ['all', ...Object.keys(ConfigMap)],
+    },
+  ]);
+  if (platform === 'all') {
+    await Promise.all(Object.keys(ConfigMap).map((platform) => build(platform as Platform)));
+  } else {
+    await build(platform as Platform);
+  }
+}
+
+command();
