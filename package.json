@@ -1,7 +1,7 @@
 {
   "name": "datatower-sdk",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "author": "DataTower",
   "description": "DataTower SDK",
   "private": true,
