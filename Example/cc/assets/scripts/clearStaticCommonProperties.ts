@@ -1,5 +1,5 @@
 import { _decorator, Button, Component } from "cc";
-import { DataTower } from "../libs/dt.cc.mjs";
+import { DataTower } from "@datatower-ai/sdk-core-js/dist/cocos.mjs";
 
 const { ccclass } = _decorator;
 

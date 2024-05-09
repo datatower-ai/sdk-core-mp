@@ -3,5 +3,8 @@
   "uuid": "04bb4623-d7e4-4962-946f-67039232bb6b",
   "creator": {
     "version": "3.8.2"
+  },
+  "dependencies": {
+    "@datatower-ai/sdk-core-js": "file:../../"
   }
 }

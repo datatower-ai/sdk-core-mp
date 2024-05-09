@@ -1,8 +1,8 @@
 import Zip from 'adm-zip';
-import { rename } from 'fs';
-import inquirer from 'inquirer';
+import { readdirSync, rename } from 'fs';
 import path from 'path';
 import tsup, { type Options } from 'tsup';
+import { command } from './command.js';
 
 const version = process.env.npm_package_version;
 const root = process.cwd();
@@ -26,14 +26,14 @@ type Platform = 'cocos' | 'web';
 
 const ConfigMap: Record<Platform, Options & { native?: string }> = {
   cocos: {
-    entry: { 'dt.cc': 'src/cocos/index.ts' },
-    outDir: 'dist/cocos',
+    entry: { cocos: 'src/cocos/index.ts' },
+    outDir: 'dist',
     format: ['esm', 'cjs'],
     native: 'src/native/cc',
   },
   web: {
-    entry: { 'dt.web': 'src/sandbox/index.ts' },
-    outDir: 'dist/web',
+    entry: { web: 'src/sandbox/index.ts' },
+    outDir: 'dist',
     format: ['esm', 'cjs'],
   },
 };
@@ -52,25 +52,18 @@ async function build(platform: Platform, defaultConfig: Options = DEFAULT_CONFIG
 
 function pack(platform: Platform, native?: string) {
   const zip = new Zip();
-  zip.addLocalFolder(path.posix.join(root, 'dist', platform));
+  readdirSync(path.posix.join(root, 'dist')).forEach((file) => {
+    if (!file.startsWith(platform)) return;
+    zip.addLocalFile(path.posix.join(root, 'dist', file));
+  });
   if (native) zip.addLocalFolder(path.posix.join(root, native));
-  zip.writeZip(path.posix.join(root, 'dist', `${platform}-${version}.zip`));
+  zip.writeZip(path.posix.join(root, 'pack', `${platform}-${version}.zip`));
 }
 
-async function command() {
-  const { platform } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'platform',
-      message: 'Select a platform to build',
-      choices: ['all', ...Object.keys(ConfigMap)],
-    },
-  ]);
-  if (platform === 'all') {
-    await Promise.all(Object.keys(ConfigMap).map((platform) => build(platform as Platform)));
-  } else {
-    await build(platform as Platform);
-  }
+async function main() {
+  const platforms = Object.keys(ConfigMap) as Platform[];
+  const { platform } = await command(platforms);
+  platform === 'all' ? await Promise.all(platforms.map((platform) => build(platform))) : await build(platform);
 }
 
-command();
+main();

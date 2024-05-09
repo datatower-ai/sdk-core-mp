@@ -1,6 +1,21 @@
 # sdk-core-mp
 
-## 1. 开发指南
+## 1. 开始使用
+
+- 1. 安装依赖
+```bash
+npm i @datatower-ai/sdk-core-js
+```
+
+- 2. 引入并使用
+
+```typescript
+// cocos creator
+import { DataTower } from '@datatower-ai/sdk-core-js/dist/cocos.mjs'
+DataTower.initSDK({/* ... */})
+```
+
+## 2. 开发指南
 
 - 1. 安装依赖
 
@@ -9,26 +24,32 @@
 sh scripts/install.sh
 ```
 
-- 2. 启动开发环境，编译后的代码后会自动编译到`Example`
+- 2. 启动开发环境，编译后的代码后会自动关联到`Example`
 
 ```bash
-# 在 `client` 目录下执行命令:
+# 在根目录下执行命令:
 pnpm install
 pnpm dev
 ```
 
 - 3. 打开运行`Example`目录下的项目，打包到不同平台。
 
-## 2. 编译打包
+```bash
+# 为 cocos creator 项目安装依赖
+cd Example/cc
+npm i
+```
+
+## 3. 编译打包
 
 ```bash
 # 在项目根目录下运行 `install.sh` 脚本
 sh scripts/install.sh
-# 编译打包，选择对应的平台，生成的文件和压缩包在 `dist` 目录下
+# 编译打包，选择对应的平台，生成的文件在 `dist` 目录下，压缩包在 `pack` 目录下
 pnpm build
 ```
 
-## mini app/mini game development documentation
+## 4. mini app/mini game development documentation
 
 - [微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)
 - [微信小游戏](https://developers.weixin.qq.com/minigame/dev/api/)

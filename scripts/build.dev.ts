@@ -1,5 +1,6 @@
 import { rename, watchFile } from 'fs';
 import tsup, { type Options } from 'tsup';
+import { command } from './command.js';
 
 const DEFAULT_CONFIG: Options = {
   watch: true,
@@ -16,12 +17,10 @@ const DEFAULT_CONFIG: Options = {
 
 type Platform = 'cocos';
 
-const exampleDir = './Example';
-
 const ConfigMap: Record<Platform, Options> = {
   cocos: {
-    entry: { 'dt.cc': 'src/cocos/index.ts' },
-    outDir: `${exampleDir}/cc/assets/libs`,
+    entry: { cocos: 'src/cocos/index.ts' },
+    outDir: 'dist',
     format: ['esm'],
   },
 };
@@ -36,4 +35,10 @@ async function build(platform: Platform, defaultConfig: Options = DEFAULT_CONFIG
   await tsup.build({ ...defaultConfig, ...config });
 }
 
-build('cocos');
+async function main() {
+  const platforms = Object.keys(ConfigMap) as Platform[];
+  const { platform } = await command(platforms);
+  platform === 'all' ? await Promise.all(platforms.map((platform) => build(platform))) : await build(platform);
+}
+
+main();

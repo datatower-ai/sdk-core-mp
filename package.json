@@ -1,15 +1,28 @@
 {
-  "name": "datatower-sdk",
+  "name": "@datatower-ai/sdk-core-js",
   "version": "1.0.0",
   "license": "BSD-3-Clause",
-  "author": "DataTower",
+  "author": "DataTower.ai",
   "description": "DataTower SDK",
-  "private": true,
   "type": "module",
-  "scripts": {
-    "build": "tsc -p tsconfig.node.json && node dist/scripts/build.prod.js",
-    "dev": "tsc -p tsconfig.node.json && node dist/scripts/build.dev.js"
+  "exports": {
+    "./cocos": {
+      "require": "./dist/cocos.cjs",
+      "import": "./dist/cocos.mjs",
+      "types": {
+        "require": "./dist/cocos.d.cts",
+        "import": "./dist/cocos.d.mts"
+      }
+    }
   },
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "build": "tsc -p tsconfig.node.json && node scripts/dist/build.prod.js",
+    "dev": "tsc -p tsconfig.node.json && node scripts/dist/build.dev.js"
+  },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/adm-zip": "^0.5.5",
     "@types/inquirer": "^9.0.7",

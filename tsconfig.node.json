@@ -2,11 +2,11 @@
   "include": ["scripts/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "composite": true,
+    "declaration": false,
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "outDir": "./dist/scripts",
+    "outDir": "./scripts/dist",
     "rootDir": "./scripts",
     "strict": true,
     "noImplicitThis": true,
