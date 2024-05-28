@@ -14,8 +14,7 @@ export class StaticDataTower {
   protected static createInstance(): DataTower {
     return StaticDataTower;
   }
-
-  private static getInstance(appId: string = 'default'): DataTower {
+  protected static getInstance(appId: string = 'default'): DataTower {
     return (
       this.instances[appId] || Logger.error('DataTower', `instance '${appId}' not found, please initialize SDK first`)
     );
@@ -103,6 +102,17 @@ export class StaticDataTower {
   static clearCommonProperties(appId?: string): void {
     return this.getInstance(appId)?.clearCommonProperties();
   }
+}
+
+export class AnalysisStaticDataTower extends StaticDataTower {
+  protected static instances: Record<string, AnalysisDataTower> = {};
+  protected static createInstance(): AnalysisDataTower {
+    return AnalysisStaticDataTower;
+  }
+  protected static getInstance(appId: string = 'default'): AnalysisDataTower {
+    return this.getInstance(appId);
+  }
+
   // Timer
   static trackTimerStart(eventName: string, appId?: string): void {
     return this.getInstance(appId)?.trackTimerStart(eventName);
@@ -194,5 +204,7 @@ export class StaticDataTower {
     return this.getInstance(appId)?.reportSubscribeSuccess(opts);
   }
 }
+
+export type AnalysisDataTower = Omit<typeof AnalysisStaticDataTower, 'prototype'>;
 
 export type DataTower = Omit<typeof StaticDataTower, 'prototype'>;

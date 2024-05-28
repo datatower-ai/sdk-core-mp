@@ -1,15 +1,7 @@
 import { version } from '@/package.json';
 import type { DataTower } from '@/src/StaticDataTower';
 import { DEFAULT_CONFIG } from '@/src/constant';
-import type {
-  BaseReportOptions,
-  BaseReportPaidOptions,
-  CommonReportOptions,
-  Config,
-  Properties,
-  PublicKey,
-  ReportSuccessOptions,
-} from '@/src/type';
+import type { Config, PublicKey } from '@/src/type';
 import { debounce, md5, sha256 } from '@/src/utils';
 import { Logger } from './Logger';
 import { TaskQueue } from './TaskQueue';
@@ -195,89 +187,5 @@ export class Sandbox implements DataTower {
   clearCommonProperties(): void {
     this.dynamicProperties = null;
     Logger.debug('<clearCommonProperties>');
-  }
-
-  // TODO: implement the following methods
-  trackTimerStart(eventName: string): void {
-    Logger.debug('<trackTimerStart>', eventName);
-    throw new Error('Method not implemented.');
-  }
-  trackTimerPause(eventName: string): void {
-    Logger.debug('<trackTimerPause>', eventName);
-    throw new Error('Method not implemented.');
-  }
-  trackTimerResume(eventName: string): void {
-    Logger.debug('<trackTimerResume>', eventName);
-    throw new Error('Method not implemented.');
-  }
-  trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
-    Logger.debug('<trackTimerEnd>', eventName, properties);
-    throw new Error('Method not implemented.');
-  }
-  reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
-    Logger.debug('<reportLoadBegin>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportLoadEnd<K extends string>(
-    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
-  ): void {
-    Logger.debug('<reportLoadEnd>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportToShow>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportShow>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportShowFailed<K extends string>(
-    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
-  ): void {
-    Logger.debug('<reportShowFailed>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportClose>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportClick>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportRewarded>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportConversionByClick>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportConversionByLeftApp>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
-    Logger.debug('<reportConversionByRewarded>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
-  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
-  reportPaid<K extends string>(
-    opts: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
-  ): void {
-    Logger.debug('<reportPaid>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
-    Logger.debug('<reportPurchaseSuccess>', opts);
-    throw new Error('Method not implemented.');
-  }
-  reportSubscribeSuccess<K extends string>(
-    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
-  ): void {
-    Logger.debug('<reportSubscribeSuccess>', opts);
-    throw new Error('Method not implemented.');
   }
 }

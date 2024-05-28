@@ -1,5 +1,5 @@
 import { version } from '@/package.json';
-import { DataTower, StaticDataTower } from '@/src/StaticDataTower';
+import { AnalysisDataTower, AnalysisStaticDataTower } from '@/src/StaticDataTower';
 import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/src/constant';
 import type {
   BaseReportOptions,
@@ -15,7 +15,7 @@ import { fmt, globalNativeCallback } from '@/src/utils';
 /**
  * cocos CocosIOS bridge
  */
-export class CocosIOS extends StaticDataTower implements DataTower {
+export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTower {
   protected static createInstance = () => new CocosIOS();
   private presetProperties = { '#sdk_type': 'cocos_ios', '#sdk_version_name': version } as const;
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;

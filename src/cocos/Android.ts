@@ -1,5 +1,5 @@
 import { version } from '@/package.json';
-import { DataTower, StaticDataTower } from '@/src/StaticDataTower';
+import { AnalysisDataTower, AnalysisStaticDataTower } from '@/src/StaticDataTower';
 import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/src/constant';
 import type {
   BaseReportOptions,
@@ -16,7 +16,7 @@ type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
 /**
  * cocos CocosAndroid bridge
  */
-export class CocosAndroid extends StaticDataTower implements DataTower {
+export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDataTower {
   protected static createInstance = () => new CocosAndroid();
   private presetProperties = { '#sdk_type': 'cocos_android', '#sdk_version_name': version } as const;
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
@@ -396,5 +396,5 @@ export class CocosAndroid extends StaticDataTower implements DataTower {
   }
 }
 
-export { CocosAndroid as StaticDataTower };
+export { CocosAndroid as AnalysisStaticDataTower };
 export default CocosAndroid;
