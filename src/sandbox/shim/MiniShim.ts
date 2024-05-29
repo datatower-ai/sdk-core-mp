@@ -1,26 +1,26 @@
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
 export enum MiniProgramPlatform {
-  WECHAT = 'WECHAT_APP',
-  QQ = 'QQ_APP',
-  BAIDU = 'BAIDU_APP',
-  TOUTIAO = 'TOUTIAO_APP',
-  ALIPAY = 'ALIPAY_APP',
-  DINGDING = 'DINGDING_APP',
-  KUAISHOU = 'KUAISHOU_APP',
-  QIHOO = 'QIHOO_APP',
-  TAOBAO = 'TAOBAO_APP',
-  JINGDONG = 'JINGDONG_APP',
+  WECHAT = 'WECHAT APP',
+  QQ = 'QQ APP',
+  BAIDU = 'BAIDU APP',
+  TOUTIAO = 'TOUTIAO APP',
+  ALIPAY = 'ALIPAY APP',
+  DINGDING = 'DINGDING APP',
+  KUAISHOU = 'KUAISHOU APP',
+  QIHOO = 'QIHOO APP',
+  TAOBAO = 'TAOBAO APP',
+  JINGDONG = 'JINGDONG APP',
 }
 
 export enum MiniGamePlatform {
-  WECHAT = 'WECHAT_GAME',
-  QQ = 'QQ_GAME',
-  BAIDU = 'BAIDU_GAME',
-  TOUTIAO = 'TOUTIAO_GAME',
-  ALIPAY = 'ALIPAY_GAME',
-  BILIBILI = 'BILIBILI_GAME',
-  QIHOO = 'QIHOO_GAME',
+  WECHAT = 'WECHAT GAME',
+  QQ = 'QQ GAME',
+  BAIDU = 'BAIDU GAME',
+  TOUTIAO = 'TOUTIAO GAME',
+  ALIPAY = 'ALIPAY GAME',
+  BILIBILI = 'BILIBILI GAME',
+  QIHOO = 'QIHOO GAME',
 }
 
 /**
@@ -34,40 +34,40 @@ export class MiniShim implements Shim {
     switch (platform) {
       case MiniProgramPlatform.WECHAT:
       case MiniGamePlatform.WECHAT:
-        this.api = globalThis.wx;
+        this.api = wx;
         break;
       case MiniProgramPlatform.QQ:
       case MiniGamePlatform.QQ:
-        this.api = globalThis.qq;
+        this.api = qq;
         break;
       case MiniProgramPlatform.BAIDU:
       case MiniGamePlatform.BAIDU:
-        this.api = globalThis.swan;
+        this.api = swan;
         break;
       case MiniProgramPlatform.TOUTIAO:
       case MiniGamePlatform.TOUTIAO:
-        this.api = globalThis.tt;
+        this.api = tt;
         break;
       case MiniProgramPlatform.ALIPAY:
       case MiniGamePlatform.ALIPAY:
       case MiniProgramPlatform.TAOBAO:
-        this.api = globalThis.my;
+        this.api = my;
         break;
       case MiniProgramPlatform.DINGDING:
-        this.api = globalThis.dd;
+        this.api = dd;
         break;
       case MiniProgramPlatform.KUAISHOU:
-        this.api = globalThis.ks;
+        this.api = ks;
         break;
       case MiniProgramPlatform.QIHOO:
       case MiniGamePlatform.QIHOO:
-        this.api = globalThis.qh;
+        this.api = qh;
         break;
       case MiniProgramPlatform.JINGDONG:
-        this.api = globalThis.jd;
+        this.api = jd;
         break;
       case MiniGamePlatform.BILIBILI:
-        this.api = globalThis.bl;
+        this.api = bl;
       default:
         throw new Error('Unsupported platform');
     }
@@ -109,10 +109,17 @@ export class MiniShim implements Shim {
 
   getSystemInfo(): SystemInfo {
     const sys = this.api.getSystemInfoSync();
+    const [osName, osVersion] = sys.system.split(' ');
     return {
-      height: sys.windowHeight || sys.screenHeight,
-      width: sys.windowWidth || sys.screenWidth,
+      height: sys.screenHeight,
+      width: sys.screenWidth,
       language: sys.language,
+      device: { brand: sys.brand, model: sys.model },
+      os: { name: osName, version: osVersion },
+      platform: { name: this.platform, version: sys.version },
+      viewport: { height: sys.windowHeight, width: sys.windowWidth },
+      // TODO:
+      title: '',
       appId: sys.host.appId,
     };
   }
@@ -120,12 +127,18 @@ export class MiniShim implements Shim {
   getUserAgent(): string {
     const sys = this.api.getSystemInfoSync();
     // `设备品牌及型号; 操作系统及版本; 平台及版本号`
-    return `${sys.brand} ${sys.model}; ${sys.system}; ${this.platform.split('_')[0]} ${sys.version}`;
+    return `${sys.brand} ${sys.model}; ${sys.system}; ${this.platform} ${sys.version}`;
   }
 
   getReferrer(): string {
     const pages = this.api.getCurrentPages();
     if (!pages?.length) return '';
-    return pages[pages.length - 2].route;
+    return decodeURI(pages[pages.length - 2].route);
+  }
+
+  getUrl(): string {
+    const pages = this.api.getCurrentPages();
+    if (!pages?.length) return '';
+    return decodeURI(pages[pages.length - 1].route);
   }
 }

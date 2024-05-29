@@ -1,3 +1,5 @@
+// @ts-ignore TODO:
+import { UAParser } from '@/node_modules/ua-parser-js';
 import { TaskQueue } from '../TaskQueue';
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
@@ -16,7 +18,7 @@ class WebRequest {
   }
 
   private async requestByBeacon({ url, data }: RequestOptions): Promise<void> {
-    if (!(typeof globalThis.navigator?.sendBeacon === 'function')) {
+    if (!(typeof navigator?.sendBeacon === 'function')) {
       this.supports.beacon = false;
       return Promise.reject(new Error('sendBeacon is not supported'));
     }
@@ -26,16 +28,16 @@ class WebRequest {
   }
 
   private useXHR() {
-    if (globalThis.XMLHttpRequest) {
-      return new globalThis.XMLHttpRequest();
-    } else if (globalThis.XDomainRequest) {
-      const xhr = new globalThis.XDomainRequest();
+    if (XMLHttpRequest) {
+      return new XMLHttpRequest();
+    } else if (XDomainRequest) {
+      const xhr = new XDomainRequest();
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       return xhr;
-    } else if (globalThis.ActiveXObject) {
+    } else if (ActiveXObject) {
       return TaskQueue.tryExecute([
-        () => new globalThis.ActiveXObject!('Msxml2.XMLHTTP'),
-        () => new globalThis.ActiveXObject!('Microsoft.XMLHTTP'),
+        () => new ActiveXObject!('Msxml2.XMLHTTP'),
+        () => new ActiveXObject!('Microsoft.XMLHTTP'),
       ]);
     }
     this.supports.xhr = false;
@@ -70,7 +72,7 @@ class WebRequest {
   }
 
   private async requestByImage(options: RequestOptions): Promise<void> {
-    if (!(typeof globalThis.Image === 'function')) {
+    if (!(typeof Image === 'function')) {
       this.supports.image = false;
       return Promise.reject(new Error('Image is not supported'));
     }
@@ -103,18 +105,31 @@ export class WebShim extends WebRequest implements Shim {
   }
 
   getUserAgent(): string {
-    return globalThis.navigator.userAgent;
+    return navigator.userAgent;
   }
 
   getSystemInfo(): SystemInfo {
+    const { device, os, browser } = UAParser();
     return {
       height: globalThis.innerHeight,
       width: globalThis.innerWidth,
-      language: globalThis.navigator.language,
+      language: navigator.language,
+      device: { brand: device.vendor, model: device.model },
+      os,
+      platform: browser,
+      viewport: {
+        height: document.documentElement.clientHeight || document.body?.clientHeight || 0,
+        width: document.documentElement.clientWidth || document.body?.clientWidth || 0,
+      },
+      title: document.title,
     };
   }
 
   getReferrer(): string {
-    return globalThis.document.referrer;
+    return decodeURI(document.referrer);
+  }
+
+  getUrl(): string {
+    return decodeURI(location.href);
   }
 }

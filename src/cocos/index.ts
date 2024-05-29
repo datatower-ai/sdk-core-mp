@@ -10,9 +10,9 @@ import { CocosIOS } from './IOS';
  */
 const Cocos: AnalysisDataTower =
   {
-    [globalThis.cc.sys.Platform.ANDROID]: CocosAndroid,
-    [globalThis.cc.sys.Platform.IOS]: CocosIOS,
-  }[globalThis.cc.sys.platform] || Web;
+    [cc.sys.Platform.ANDROID]: CocosAndroid,
+    [cc.sys.Platform.IOS]: CocosIOS,
+  }[cc.sys.platform] || Web;
 
 export { Cocos as DataTower };
 export default Cocos;

@@ -21,7 +21,7 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {
-    return globalThis.jsb.reflection.callStaticMethod(IOSClass, method, ...args);
+    return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
   }
 
   async initSDK(config: Config) {

@@ -15,11 +15,16 @@ const DEFAULT_CONFIG: Options = {
   },
 };
 
-type Platform = 'cocos';
+type Platform = 'cocos' | 'web';
 
 const ConfigMap: Record<Platform, Options> = {
   cocos: {
     entry: { cocos: 'src/cocos/index.ts' },
+    outDir: 'dist',
+    format: ['esm'],
+  },
+  web: {
+    entry: { web: 'src/sandbox/index.ts' },
     outDir: 'dist',
     format: ['esm'],
   },

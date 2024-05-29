@@ -31,7 +31,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   private static callStaticMethod(method: string, parameters: [type: JavaType, value: any][], retType: JavaType): any {
     const signature = `(${parameters.map(([type]) => this.typeMap[type]).join('')})${this.typeMap[retType]}`;
     const values = parameters.map(([, value]) => value);
-    return globalThis.jsb.reflection.callStaticMethod(AndroidClass, method, signature, ...values);
+    return jsb.reflection.callStaticMethod(AndroidClass, method, signature, ...values);
   }
 
   async initSDK(config: Config): Promise<void> {

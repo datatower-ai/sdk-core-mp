@@ -1,3 +1,4 @@
+import parseUrl from '@/node_modules/parse-url';
 import { version } from '@/package.json';
 import type { DataTower } from '@/src/StaticDataTower';
 import { DEFAULT_CONFIG } from '@/src/constant';
@@ -21,12 +22,38 @@ export class Sandbox implements DataTower {
     '#dt_id': '',
   };
 
-  private presetProperties = { '#sdk_type': 'javascript', '#sdk_version_name': version } as const;
-
   private staticProperties: Record<string, any> = {};
 
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
+  private get presetProperties() {
+    const { height, width, os, platform, viewport, title } = this.shim.getSystemInfo();
+    const referrer = this.shim.getReferrer();
+    return {
+      '#sdk_type': 'javascript',
+      '#sdk_version_name': version,
+
+      '#screen_height': height,
+      '#screen_width': width,
+      '#timezone_offset': 0 - new Date().getTimezoneOffset() / 60,
+      '#is_first_day': Number(this.settings['#dt_id'].split('-')[0]) + 24 * 60 * 60 * 1000 <= new Date().getTime(),
+      '#title': title,
+      '#url': this.shim.getUrl(),
+      '#viewport_height': viewport.height,
+      '#viewport_width': viewport.width,
+      '#platform': platform.name,
+      '#platform_version': platform.version,
+      '#os': os.name,
+      '#os_version': os.version,
+
+      '#latest_referrer': referrer,
+      '#latest_referrer_host': parseUrl(referrer).resource,
+    } as const;
+  }
+
+  /**
+   * @param shim - 平台适配器，用于获取系统信息、存储、网络请求等，抹平不同平台的差异
+   */
   constructor(protected shim: Shim) {}
 
   private report() {
@@ -40,6 +67,7 @@ export class Sandbox implements DataTower {
   }
 
   async initSDK(config: Config) {
+    Logger.debug('<initSDK>', this.config, this.settings, this.presetProperties);
     this.shim.getSystemInfo();
     this.config = { ...DEFAULT_CONFIG, ...config };
     // 设置日志等级
@@ -55,35 +83,27 @@ export class Sandbox implements DataTower {
     this.settings['#dt_id'] = (await this.shim.getStorage<string>('#dt_id'))!;
 
     this.settings['#app_id'] = this.config.appId ?? this.shim.getSystemInfo().appId;
-
-    Logger.debug('<initSDK>', this.config, this.settings);
   }
 
   private async initializeNewUser() {
     const dt_id = this.generateDataTowerId();
+    const { language } = this.shim.getSystemInfo();
     this.userSetOnce({
       '#first_visit_time': new Date().getTime(),
       '#first_referrer': this.shim.getReferrer(),
-      '#first_browser_language': navigator.language.toLowerCase(),
+      '#first_browser_language': language.toLowerCase(),
     });
     await this.shim.setStorage('#dt_id', dt_id);
   }
 
   track(eventName: string, properties: Record<string, string | boolean | number>): void {
-    const data = {
-      ...this.settings,
-      '#event_time': new Date().getTime(),
-      '#event_name': eventName,
-      '#event_type': 'track',
-      properties: {
-        ...properties,
-        ...this.staticProperties,
-        ...this.dynamicProperties?.(),
-        ...this.presetProperties,
-      },
-    };
-    this.taskQueue.enqueue(() => data);
-    Logger.debug('<track>', data);
+    Logger.debug('<track>', eventName, properties);
+    this.createTask(eventName, 'track', {
+      ...properties,
+      ...this.staticProperties,
+      ...this.dynamicProperties?.(),
+      ...this.presetProperties,
+    });
   }
   enableUpload(): void {
     if (this.config.manualEnableUpload) this.report();
