@@ -17,6 +17,7 @@
   },
   "scripts": {
     "prepublishOnly": "npm run build",
+    "test": "vitest run",
     "build": "tsc -p tsconfig.node.json && node scripts/dist/build.prod.js",
     "dev": "tsc -p tsconfig.node.json && node scripts/dist/build.dev.js"
   },
@@ -32,7 +33,8 @@
     "inquirer": "^9.2.20",
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "vitest": "^1.6.0"
   },
   "engines": {
     "node": ">=16.0.0"

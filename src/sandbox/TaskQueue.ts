@@ -64,21 +64,20 @@ export class TaskQueue<T, S extends boolean | unknown = unknown> {
    * execute all tasks at the same time, and clear the queue
    * don't call onDequeueCallback
    */
-  flush(): S extends true ? T[] : S extends false ? Promise<T[]> : Promise<T[]> | T[] {
-    let isAllSync = true;
+  flush(): S extends true ? T[] : S extends false ? Promise<T>[] : Promise<T>[] | T[] {
     const tasks = this.queue.map((task) => {
-      if (task instanceof Promise) {
-        isAllSync = false;
-        return task.catch((error) => this.onErrorCallback?.(task, error));
-      }
       try {
-        return task();
+        const result = task();
+        if (result instanceof Promise) {
+          return result.catch((error) => (this.onErrorCallback?.(task, error), Promise.reject(error)));
+        }
+        return result;
       } catch (error: any) {
         this.onErrorCallback?.(task, error);
       }
     });
     this.queue = [];
-    return isAllSync ? (tasks as T) : (Promise.all(tasks) as any);
+    return tasks as any;
   }
 
   /**
@@ -115,7 +114,7 @@ export class TaskQueue<T, S extends boolean | unknown = unknown> {
       const task = tasks[0]();
       if (task instanceof Promise) {
         return task.catch(() => {
-          if (tasks.length === 1) return Promise.reject();
+          if (tasks.length === 1) return;
           return TaskQueue.tryExecute(tasks.slice(1) as AsyncTask<T | void>[]);
         });
       }
