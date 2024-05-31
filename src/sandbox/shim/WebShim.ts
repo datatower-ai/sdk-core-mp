@@ -1,5 +1,5 @@
 // @ts-ignore TODO:
-import { UAParser } from '@/node_modules/ua-parser-js';
+import { UAParser } from '$/ua-parser-js';
 import { TaskQueue } from '../TaskQueue';
 import type { RequestOptions, Shim, SystemInfo } from './type';
 

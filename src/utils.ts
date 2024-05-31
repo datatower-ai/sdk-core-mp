@@ -1,12 +1,13 @@
 // TODO: tsup打包时需要显式引入，才能将三方库源码打包进去
-import CryptoES from '@/node_modules/crypto-es';
+import { MD5 } from '$/crypto-es/lib/md5';
+import { SHA256 } from '$/crypto-es/lib/sha256';
 
 export function md5(data: string): string {
-  return CryptoES.MD5(data).toString();
+  return MD5(data).toString();
 }
 
 export function sha256(data: string): string {
-  return CryptoES.SHA256(data).toString();
+  return SHA256(data).toString();
 }
 
 // 序列化

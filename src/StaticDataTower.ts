@@ -6,7 +6,7 @@ import type {
   Properties,
   PublicKey,
   ReportSuccessOptions,
-} from '@/src/type';
+} from '@/type';
 import { Logger } from './sandbox';
 
 export class StaticDataTower {

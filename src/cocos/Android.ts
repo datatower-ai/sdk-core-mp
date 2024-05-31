@@ -1,6 +1,6 @@
-import { version } from '@/package.json';
-import { AnalysisDataTower, AnalysisStaticDataTower } from '@/src/StaticDataTower';
-import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/src/constant';
+import { version } from '~/package.json';
+import { AnalysisDataTower, AnalysisStaticDataTower } from '@/StaticDataTower';
+import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/constant';
 import type {
   BaseReportOptions,
   BaseReportPaidOptions,
@@ -8,8 +8,8 @@ import type {
   Config,
   PublicKey,
   ReportSuccessOptions,
-} from '@/src/type';
-import { fmt, globalNativeCallback } from '@/src/utils';
+} from '@/type';
+import { fmt, globalNativeCallback } from '@/utils';
 
 type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
 
@@ -397,4 +397,3 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
 }
 
 export { CocosAndroid as AnalysisStaticDataTower };
-export default CocosAndroid;

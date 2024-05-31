@@ -1,4 +1,4 @@
-import { Config, LogLevel, type InitialNativeConfig } from '@/src/type';
+import { Config, LogLevel, type InitialNativeConfig } from '@/type';
 
 export const DEFAULT_INITIAL_CONFIG: Required<Omit<InitialNativeConfig, 'properties'>> = {
   appId: '',

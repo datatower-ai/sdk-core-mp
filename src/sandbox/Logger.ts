@@ -1,4 +1,4 @@
-import { LogLevel } from '@/src/type';
+import { LogLevel } from '@/type';
 
 /**
  * console log by level

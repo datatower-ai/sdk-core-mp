@@ -1,6 +1,6 @@
-import { version } from '@/package.json';
-import { AnalysisDataTower, AnalysisStaticDataTower } from '@/src/StaticDataTower';
-import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/src/constant';
+import { version } from '~/package.json';
+import { AnalysisDataTower, AnalysisStaticDataTower } from '@/StaticDataTower';
+import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/constant';
 import type {
   BaseReportOptions,
   BaseReportPaidOptions,
@@ -9,8 +9,8 @@ import type {
   Properties,
   PublicKey,
   ReportSuccessOptions,
-} from '@/src/type';
-import { fmt, globalNativeCallback } from '@/src/utils';
+} from '@/type';
+import { fmt, globalNativeCallback } from '@/utils';
 
 /**
  * cocos CocosIOS bridge
@@ -158,4 +158,3 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
 }
 
 export { CocosIOS as DataTower };
-export default CocosIOS;

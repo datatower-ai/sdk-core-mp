@@ -1,7 +1,7 @@
-import { StaticDataTower } from '@/src/StaticDataTower';
+import { StaticDataTower } from '@/StaticDataTower';
 import { Sandbox } from './Sandbox';
 import { WebShim } from './shim/WebShim';
-export { Config, LogLevel, Properties, PublicKey } from '@/src/type';
+export { Config, LogLevel, Properties, PublicKey } from '@/type';
 export { Logger } from './Logger';
 
 export class Web extends StaticDataTower {

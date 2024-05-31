@@ -1,6 +1,6 @@
-export * from '@/src/type';
-import type { AnalysisDataTower } from '@/src/StaticDataTower';
-import { Web } from '@/src/sandbox/index';
+export * from '@/type';
+import type { AnalysisDataTower } from '@/StaticDataTower';
+import { Web } from '@/sandbox/index';
 import { CocosAndroid } from './Android';
 import { CocosIOS } from './IOS';
 
@@ -15,4 +15,3 @@ const Cocos: AnalysisDataTower =
   }[cc.sys.platform] || Web;
 
 export { Cocos as DataTower };
-export default Cocos;

@@ -1,9 +1,9 @@
-import parseUrl from '@/node_modules/parse-url';
-import { version } from '@/package.json';
-import type { DataTower } from '@/src/StaticDataTower';
-import { DEFAULT_CONFIG } from '@/src/constant';
-import type { Config, PublicKey } from '@/src/type';
-import { debounce, md5, sha256 } from '@/src/utils';
+import parseUrl from '$/parse-url';
+import type { DataTower } from '@/StaticDataTower';
+import { DEFAULT_CONFIG } from '@/constant';
+import type { Config, PublicKey } from '@/type';
+import { debounce, md5, sha256 } from '@/utils';
+import { version } from '~/package.json';
 import { Logger } from './Logger';
 import { TaskQueue } from './TaskQueue';
 import type { Shim } from './shim/type';
