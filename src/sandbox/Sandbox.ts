@@ -47,7 +47,7 @@ export class Sandbox implements DataTower {
       '#os_version': os.version,
 
       '#latest_referrer': referrer,
-      '#latest_referrer_host': parseUrl(referrer).resource,
+      '#latest_referrer_host': referrer && parseUrl(referrer).resource,
     } as const;
   }
 
@@ -62,12 +62,12 @@ export class Sandbox implements DataTower {
     const data = JSON.stringify(tasks);
     const base64 = btoa(data);
     const check = md5(base64 + '@datatower').toString();
-    const params = new URLSearchParams({ data, check }).toString();
+    const params = new URLSearchParams({ data: base64, check }).toString();
     return this.shim.request({ url: this.config.serverUrl, data: params });
   }
 
   async initSDK(config: Config) {
-    Logger.debug('<initSDK>', this.config, this.settings, this.presetProperties);
+    Logger.debug('<initSDK>', this);
     this.shim.getSystemInfo();
     this.config = { ...DEFAULT_CONFIG, ...config };
     // 设置日志等级
