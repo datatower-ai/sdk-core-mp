@@ -396,4 +396,4 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   }
 }
 
-export { CocosAndroid as AnalysisStaticDataTower };
+export { CocosAndroid as DataTower };

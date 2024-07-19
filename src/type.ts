@@ -1,52 +1,28 @@
-/**
- * 广告类型
- */
+/** 广告类型 */
 export enum AdType {
-  /**
-   * 未知类型
-   */
+  /** 未知类型 */
   UNKNOWN = -1,
-  /**
-   * 横幅广告
-   */
+  /** 横幅广告 */
   BANNER = 0,
-  /**
-   * 插屏广告
-   */
+  /** 插屏广告 */
   INTERSTITIAL = 1,
-  /**
-   * 原生广告
-   */
+  /** 原生广告 */
   NATIVE = 2,
-  /**
-   * 激励视频广告
-   */
+  /** 激励视频广告 */
   REWARDED = 3,
-  /**
-   * 插屏激励视频广告
-   */
+  /** 插屏激励视频广告 */
   REWARDED_INTERSTITIAL = 4,
-  /**
-   * 开屏广告
-   */
+  /** 开屏广告 */
   APP_OPEN = 5,
-  /**
-   * 中等矩形广告
-   */
+  /** 中等矩形广告 */
   MREC = 6,
 }
 
-/**
- * 广告平台
- */
+/** 广告平台 */
 export enum AdPlatform {
-  /**
-   * 未授权平台
-   */
+  /** 未授权平台 */
   UNDISCLOSED = -2,
-  /**
-   * 未知平台
-   */
+  /** 未知平台 */
   UNKNOWN = -1,
   ADMOB = 0,
   MOPUB = 1,
@@ -86,13 +62,9 @@ export enum AdPlatform {
   REKLAMUP = 35,
 }
 
-/**
- * 聚合广告平台
- */
+/** 聚合广告平台 */
 export enum AdMediation {
-  /**
-   * 无聚合平台
-   */
+  /** 无聚合平台 */
   IDLE = -1,
   MOPUB = 0,
   MAX = 1,
@@ -103,9 +75,7 @@ export enum AdMediation {
   TOBID = 6,
 }
 
-/**
- * 日志级别
- */
+/** 日志级别 */
 export enum LogLevel {
   VERBOSE = 1,
   ASSERT = 2,
@@ -115,46 +85,28 @@ export enum LogLevel {
   ERROR = 6,
 }
 
-/**
- * 传给 native 的初始化配置
- */
+/** 传给 native 的初始化配置 */
 export interface InitialNativeConfig {
-  /**
-   * 项目唯一标识，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取
-   */
+  /** 项目唯一标识，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
   appId: string;
-  /**
-   * 数据上报地址，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取
-   */
+  /** 数据上报地址，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
   serverUrl: string;
-  /**
-   * 渠道，打多渠道包时需要用到，可使用 SDK 内部提供的实现， 默认为“”
-   */
+  /** 渠道，打多渠道包时需要用到，可使用 SDK 内部提供的实现， 默认为“” */
   channel?: string;
-  /**
-   * 是否打开调试，调试模式下将打印 log， 默认为 false，log 标签为 StaticDataTower
-   */
+  /** 是否打开调试，调试模式下将打印 log， 默认为 false，log 标签为 DataTower */
   isDebug?: boolean;
-  /**
-   * log 的级别，默认为 VERBOSE，仅在 isDebug = true 有效
-   */
+  /** log 的级别，默认为 VERBOSE，仅在 isDebug = true 有效 */
   logLevel?: LogLevel;
-  /**
-   * 是否由接入方手动启动上报
-   */
+  /** 是否由接入方手动启动上报 */
   manualEnableUpload?: boolean;
-  /**
-   * 需要传对应的 SDK type 和 version name
-   */
+  /** 需要传对应的 SDK type 和 version name */
   properties?: {
     '#sdk_type': string;
     '#sdk_version_name': string;
   };
 }
 
-/**
- * SDK 内部配置
- */
+/** SDK 内部配置 */
 export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
   /**
    * track 时的 debounce 等待时间，默认为 10000ms
