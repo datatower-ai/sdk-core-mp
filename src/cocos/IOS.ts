@@ -2,6 +2,7 @@ import { version } from '~/package.json';
 import { AnalysisDataTower, AnalysisStaticDataTower } from '@/StaticDataTower';
 import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/constant';
 import type {
+  ArrayProperties,
   BaseReportOptions,
   BaseReportPaidOptions,
   CommonReportOptions,
@@ -18,7 +19,7 @@ import { fmt, globalNativeCallback } from '@/utils';
 export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTower {
   protected static createInstance = () => new CocosIOS();
   private presetProperties = { '#sdk_type': 'cocos_ios', '#sdk_version_name': version } as const;
-  private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
+  private dynamicProperties: null | (<K extends string>() => Properties<K>) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {
     return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
@@ -30,17 +31,17 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
     const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
     CocosIOS.callStaticMethod('initSDK:', fmt(nativeConfig));
   }
-  track(eventName: string, properties: Record<string, string | boolean | number>): void {
+  track<K extends string>(eventName: string, properties: Properties<K>): void {
     properties = { ...properties, ...this.dynamicProperties?.() };
     CocosIOS.callStaticMethod('track:properties:', eventName, fmt(properties));
   }
   enableUpload(): void {
     CocosIOS.callStaticMethod('enableUpload');
   }
-  userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  userSet<K extends string>(properties: Properties<K>): void {
     CocosIOS.callStaticMethod('userSet:', fmt(properties));
   }
-  userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  userSetOnce<K extends string>(properties: Properties<K>): void {
     CocosIOS.callStaticMethod('userSetOnce:', fmt(properties));
   }
   userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
@@ -53,10 +54,10 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
   userDelete(): void {
     CocosIOS.callStaticMethod('userDelete');
   }
-  userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
+  userAppend<K extends string>(properties: ArrayProperties<K>): void {
     CocosIOS.callStaticMethod('userAppend:', fmt(properties));
   }
-  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
+  userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
     CocosIOS.callStaticMethod('userUniqAppend:', fmt(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;
@@ -80,13 +81,13 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
   setAdjustId(id: string): void {
     CocosIOS.callStaticMethod('setAdjustId:', id);
   }
-  setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
     CocosIOS.callStaticMethod('setStaticCommonProperties:', fmt(properties));
   }
   clearStaticCommonProperties(): void {
     CocosIOS.callStaticMethod('clearStaticCommonProperties');
   }
-  setCommonProperties(callback: () => Record<string, string | boolean | number>): void {
+  setCommonProperties(callback: <K extends string>() => Properties<K>): void {
     this.dynamicProperties = callback;
   }
   clearCommonProperties(): void {

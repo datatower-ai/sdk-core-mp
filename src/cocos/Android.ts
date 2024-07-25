@@ -2,10 +2,12 @@ import { version } from '~/package.json';
 import { AnalysisDataTower, AnalysisStaticDataTower } from '@/StaticDataTower';
 import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/constant';
 import type {
+  ArrayProperties,
   BaseReportOptions,
   BaseReportPaidOptions,
   CommonReportOptions,
   Config,
+  Properties,
   PublicKey,
   ReportSuccessOptions,
 } from '@/type';
@@ -19,7 +21,7 @@ type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
 export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDataTower {
   protected static createInstance = () => new CocosAndroid();
   private presetProperties = { '#sdk_type': 'cocos_android', '#sdk_version_name': version } as const;
-  private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
+  private dynamicProperties: null | (<K extends string>() => Properties<K>) = null;
 
   private static typeMap: Record<JavaType, string> = {
     void: 'V',
@@ -40,7 +42,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
     const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
     CocosAndroid.callStaticMethod('initSDK', [['String', fmt(nativeConfig)]], 'void');
   }
-  track(eventName: string, properties: Record<string, string | boolean | number>): void {
+  track<K extends string>(eventName: string, properties: Properties<K>): void {
     CocosAndroid.callStaticMethod(
       'track',
       [
@@ -53,10 +55,10 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   enableUpload(): void {
     CocosAndroid.callStaticMethod('enableUpload', [], 'void');
   }
-  userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  userSet<K extends string>(properties: Properties<K>): void {
     CocosAndroid.callStaticMethod('userSet', [['String', fmt(properties)]], 'void');
   }
-  userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  userSetOnce<K extends string>(properties: Properties<K>): void {
     CocosAndroid.callStaticMethod('userSetOnce', [['String', fmt(properties)]], 'void');
   }
   userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
@@ -68,10 +70,10 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   userDelete(): void {
     CocosAndroid.callStaticMethod('userDelete', [], 'void');
   }
-  userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
+  userAppend<K extends string>(properties: ArrayProperties<K>): void {
     CocosAndroid.callStaticMethod('userAppend', [['String', fmt(properties)]], 'void');
   }
-  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
+  userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
     CocosAndroid.callStaticMethod('userUniqAppend', [['String', fmt(properties)]], 'void');
   }
   getDataTowerId(callback: (id: string) => void): void;
@@ -95,13 +97,13 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   setAdjustId(id: string): void {
     CocosAndroid.callStaticMethod('setAdjustId', [['String', id]], 'void');
   }
-  setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
     CocosAndroid.callStaticMethod('setStaticCommonProperties', [['String', fmt(properties)]], 'void');
   }
   clearStaticCommonProperties(): void {
     CocosAndroid.callStaticMethod('clearStaticCommonProperties', [], 'void');
   }
-  setCommonProperties(callback: () => Record<string, string | boolean | number>): void {
+  setCommonProperties(callback: <K extends string>() => Properties<K>): void {
     this.dynamicProperties = callback;
   }
   clearCommonProperties(): void {
@@ -117,10 +119,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   trackTimerResume(eventName: string): void {
     CocosAndroid.callStaticMethod('trackTimerResume', [['String', eventName]], 'void');
   }
-  trackTimerEnd<K extends string>(
-    eventName: string,
-    properties: Record<PublicKey<K>, string | boolean | number>,
-  ): void {
+  trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
     CocosAndroid.callStaticMethod(
       'trackTimerEnd',
       [

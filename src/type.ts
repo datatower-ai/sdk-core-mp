@@ -87,6 +87,8 @@ export enum LogLevel {
 
 /** 传给 native 的初始化配置 */
 export interface InitialNativeConfig {
+  /** js sdk上报的token */
+  token: string;
   /** 项目唯一标识，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
   app_id: string;
   /** 数据上报地址，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
@@ -108,9 +110,8 @@ export interface InitialNativeConfig {
 
 /** SDK 内部配置，暴露到外部，由 init 传入 */
 export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
-  token?: string;
   /**
-   * track 时的 debounce 等待时间，默认为 10000ms
+   * 防抖延迟时间，默认1000ms，作用是将连续触发上报的多个事件合并到一个请求中
    * 手动启动上报时，该值无效
    */
   debounceWait?: number;
@@ -126,6 +127,8 @@ export type PrivateKey = `#${string}` | `$${string}`;
 export type PublicKey<T extends string> = T extends PrivateKey ? never : T;
 
 export type Properties<K extends string> = Record<PublicKey<K>, string | boolean | number>;
+
+export type ArrayProperties<K extends string> = Record<PublicKey<K>, (string | boolean | number)[]>;
 
 export interface BaseReportOptions<K extends string> {
   id: string;

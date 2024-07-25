@@ -1,7 +1,7 @@
 import parseUrl from '$/parse-url';
 import type { DataTower } from '@/StaticDataTower';
 import { DEFAULT_CONFIG } from '@/constant';
-import type { Config, PublicKey } from '@/type';
+import type { ArrayProperties, Config, Properties, PublicKey } from '@/type';
 import { debounce, md5, sha256 } from '@/utils';
 import { version } from '~/package.json';
 import { Logger } from './Logger';
@@ -24,7 +24,7 @@ export class Sandbox implements DataTower {
 
   private staticProperties: Record<string, any> = {};
 
-  private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
+  private dynamicProperties: null | (<K extends string>() => Properties<K>) = null;
 
   private get presetProperties() {
     const { height, width, os, platform, viewport, title } = this.shim.systemInfo;
@@ -104,7 +104,7 @@ export class Sandbox implements DataTower {
     await this.shim.setStorage('#dt_id', dt_id);
   }
 
-  track(eventName: string, properties: Record<string, string | boolean | number>): void {
+  track<K extends string>(eventName: string, properties: Properties<K>): void {
     Logger.debug('<track>', eventName, properties);
     this.createTask(eventName, 'track', {
       ...properties,
@@ -130,11 +130,11 @@ export class Sandbox implements DataTower {
     Logger.debug('<createTask>', data);
   }
   /* user */
-  userSet<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  userSet<K extends string>(properties: Properties<K>): void {
     Logger.debug('<userSet>', properties);
     this.createTask('#user_set', 'user', properties);
   }
-  userSetOnce<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  userSetOnce<K extends string>(properties: Properties<K>): void {
     Logger.debug('<userSetOnce>', properties);
     this.createTask('#user_set_once', 'user', properties);
   }
@@ -150,11 +150,11 @@ export class Sandbox implements DataTower {
     Logger.debug('<userDelete>');
     this.createTask('#user_delete', 'user', {});
   }
-  userAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
+  userAppend<K extends string>(properties: ArrayProperties<K>): void {
     Logger.debug('<userAppend>', properties);
     this.createTask('#user_append', 'user', properties);
   }
-  userUniqAppend<K extends string>(properties: Record<PublicKey<K>, (string | boolean | number)[]>): void {
+  userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
     Logger.debug('<userUniqAppend>', properties);
     this.createTask('#user_uniq_append', 'user', properties);
   }
@@ -182,25 +182,25 @@ export class Sandbox implements DataTower {
     this.settings['#acid'] = id;
     Logger.debug('<setAccountId>', id);
   }
-  setFirebaseAppInstanceId(id: string): void {
-    Logger.debug('<setFirebaseAppInstanceId>', id);
-    this.createTask('#user_set', 'user', { '#latest_firebase_iid': id });
-  }
-  setAppsFlyerId(id: string): void {
-    Logger.debug('<setAppsFlyerId>', id);
-    this.createTask('#user_set', 'user', { '#latest_appsflyer_id': id });
-  }
-  setKochavaId(id: string): void {
-    Logger.debug('<setKochavaId>', id);
-    this.createTask('#user_set', 'user', { '#latest_kochava_id': id });
-  }
-  setAdjustId(id: string): void {
-    Logger.debug('<setAdjustId>', id);
-    this.createTask('#user_set', 'user', { '#latest_adjust_id': id });
-  }
+  // setFirebaseAppInstanceId(id: string): void {
+  //   Logger.debug('<setFirebaseAppInstanceId>', id);
+  //   this.createTask('#user_set', 'user', { '#latest_firebase_id': id });
+  // }
+  // setAppsFlyerId(id: string): void {
+  //   Logger.debug('<setAppsFlyerId>', id);
+  //   this.createTask('#user_set', 'user', { '#latest_appsflyer_id': id });
+  // }
+  // setKochavaId(id: string): void {
+  //   Logger.debug('<setKochavaId>', id);
+  //   this.createTask('#user_set', 'user', { '#latest_kochava_id': id });
+  // }
+  // setAdjustId(id: string): void {
+  //   Logger.debug('<setAdjustId>', id);
+  //   this.createTask('#user_set', 'user', { '#latest_adjust_id': id });
+  // }
 
   /* properties */
-  setStaticCommonProperties<K extends string>(properties: Record<PublicKey<K>, string | boolean | number>): void {
+  setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
     this.staticProperties = { ...this.staticProperties, ...properties };
     Logger.debug('<setStaticCommonProperties>', properties);
   }
@@ -208,7 +208,7 @@ export class Sandbox implements DataTower {
     this.staticProperties = {};
     Logger.debug('<clearStaticCommonProperties>');
   }
-  setCommonProperties(callback: () => Record<string, string | boolean | number>): void {
+  setCommonProperties(callback: <K extends string>() => Properties<K>): void {
     this.dynamicProperties = callback;
     Logger.debug('<setCommonProperties>', callback);
   }

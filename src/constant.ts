@@ -1,6 +1,7 @@
 import { Config, LogLevel, type InitialNativeConfig } from '@/type';
 
 export const DEFAULT_INITIAL_CONFIG: Required<Omit<InitialNativeConfig, 'properties'>> = {
+  token: '',
   app_id: '',
   server_url: '',
   channel: '',
@@ -11,7 +12,6 @@ export const DEFAULT_INITIAL_CONFIG: Required<Omit<InitialNativeConfig, 'propert
 
 export const DEFAULT_CONFIG: Required<Config> = {
   ...DEFAULT_INITIAL_CONFIG,
-  token: '',
   maxQueueSize: 10,
   debounceWait: 1000,
 };

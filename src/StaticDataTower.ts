@@ -1,4 +1,5 @@
 import type {
+  ArrayProperties,
   BaseReportOptions,
   BaseReportPaidOptions,
   CommonReportOptions,
@@ -38,7 +39,7 @@ export class StaticDataTower {
   static enableUpload(app_id?: string): void {
     return this.getInstance(app_id)?.enableUpload();
   }
-  static track(eventName: string, properties: Record<string, string | boolean | number>, app_id?: string): void {
+  static track<K extends string>(eventName: string, properties: Properties<K>, app_id?: string): void {
     return this.getInstance(app_id)?.track(eventName, properties);
   }
   static userSet<K extends string>(properties: Properties<K>, app_id?: string): void {
@@ -56,16 +57,10 @@ export class StaticDataTower {
   static userDelete(app_id?: string): void {
     return this.getInstance(app_id)?.userDelete();
   }
-  static userAppend<K extends string>(
-    properties: Record<PublicKey<K>, (string | boolean | number)[]>,
-    app_id?: string,
-  ): void {
+  static userAppend<K extends string>(properties: ArrayProperties<K>, app_id?: string): void {
     return this.getInstance(app_id)?.userAppend(properties);
   }
-  static userUniqAppend<K extends string>(
-    properties: Record<PublicKey<K>, (string | boolean | number)[]>,
-    app_id?: string,
-  ): void {
+  static userUniqAppend<K extends string>(properties: ArrayProperties<K>, app_id?: string): void {
     return this.getInstance(app_id)?.userUniqAppend(properties);
   }
   static getDataTowerId(callback: (id: string) => void, app_id?: string): void;
@@ -78,25 +73,13 @@ export class StaticDataTower {
   static setAccountId(id: string, app_id?: string): void {
     return this.getInstance(app_id)?.setAccountId(id);
   }
-  static setFirebaseAppInstanceId(id: string, app_id?: string): void {
-    return this.getInstance(app_id)?.setFirebaseAppInstanceId(id);
-  }
-  static setAppsFlyerId(id: string, app_id?: string): void {
-    return this.getInstance(app_id)?.setAppsFlyerId(id);
-  }
-  static setKochavaId(id: string, app_id?: string): void {
-    return this.getInstance(app_id)?.setKochavaId(id);
-  }
-  static setAdjustId(id: string, app_id?: string): void {
-    return this.getInstance(app_id)?.setAdjustId(id);
-  }
   static setStaticCommonProperties<K extends string>(properties: Properties<K>, app_id?: string): void {
     return this.getInstance(app_id)?.setStaticCommonProperties(properties);
   }
   static clearStaticCommonProperties(app_id?: string): void {
     return this.getInstance(app_id)?.clearStaticCommonProperties();
   }
-  static setCommonProperties(callback: () => Record<string, string | boolean | number>, app_id?: string): void {
+  static setCommonProperties(callback: <K extends string>() => Properties<K>, app_id?: string): void {
     return this.getInstance(app_id)?.setCommonProperties(callback);
   }
   static clearCommonProperties(app_id?: string): void {
@@ -111,6 +94,20 @@ export class AnalysisStaticDataTower extends StaticDataTower {
   }
   protected static getInstance(app_id: string = 'default'): AnalysisDataTower {
     return this.getInstance(app_id);
+  }
+
+  // id
+  static setFirebaseAppInstanceId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setFirebaseAppInstanceId(id);
+  }
+  static setAppsFlyerId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setAppsFlyerId(id);
+  }
+  static setKochavaId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setKochavaId(id);
+  }
+  static setAdjustId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setAdjustId(id);
   }
 
   // Timer
