@@ -32,7 +32,7 @@ export function globalNativeCallback<T>(callNative: (callbackName: string) => vo
 }
 
 export function debounce<T extends (...args: any[]) => any>(callback: T, delay: number): T {
-  let timer: number | null = null;
+  let timer: NodeJS.Timeout | null = null;
   return function (this: any, ...args: any[]) {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {

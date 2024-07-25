@@ -26,7 +26,9 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
 
   async initSDK(config: Config) {
     config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
-    CocosIOS.callStaticMethod('initSDK:', fmt(config));
+    const { app_id, server_url, ...otherConfig } = config;
+    const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
+    CocosIOS.callStaticMethod('initSDK:', fmt(nativeConfig));
   }
   track(eventName: string, properties: Record<string, string | boolean | number>): void {
     properties = { ...properties, ...this.dynamicProperties?.() };

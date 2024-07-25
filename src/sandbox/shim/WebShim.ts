@@ -17,13 +17,13 @@ class WebRequest {
     return TaskQueue.tryExecute(tasks);
   }
 
-  private async requestByBeacon({ url, data }: RequestOptions): Promise<void> {
+  private async requestByBeacon({ url, params }: RequestOptions): Promise<void> {
     if (!(typeof navigator?.sendBeacon === 'function')) {
       this.supports.beacon = false;
       return Promise.reject(new Error('sendBeacon is not supported'));
     }
 
-    const response = navigator.sendBeacon(url, data);
+    const response = navigator.sendBeacon(url, params);
     return response ? Promise.resolve() : Promise.reject(new Error('Request failed'));
   }
 
@@ -47,7 +47,7 @@ class WebRequest {
     const xhr = this.useXHR();
     if (!xhr) return Promise.reject(new Error('XHR is not supported'));
 
-    const { url, data } = options;
+    const { url, params } = options;
     return new Promise((resolve, reject) => {
       xhr.open('POST', url, true);
       xhr.onload = () => {
@@ -67,7 +67,7 @@ class WebRequest {
       };
 
       xhr.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
-      xhr.send(data);
+      xhr.send(params);
     });
   }
 
@@ -76,12 +76,12 @@ class WebRequest {
       this.supports.image = false;
       return Promise.reject(new Error('Image is not supported'));
     }
-    const { url, data } = options;
+    const { url, params } = options;
     return new Promise((resolve, reject) => {
       const img = new Image(1, 1);
       img.onload = () => resolve();
       img.onerror = () => reject(new Error('Request failed'));
-      img.src = url.includes('?') ? `${url}&${data}` : `${url}?${data}`;
+      img.src = url.includes('?') ? `${url}&${params}` : `${url}?${params}`;
     });
   }
 }
@@ -104,11 +104,11 @@ export class WebShim extends WebRequest implements Shim {
     localStorage.removeItem(name);
   }
 
-  getUserAgent(): string {
+  get userAgent(): string {
     return navigator.userAgent;
   }
 
-  getSystemInfo(): SystemInfo {
+  get systemInfo(): SystemInfo {
     const { device, os, browser } = UAParser();
     return {
       height: globalThis.innerHeight,
@@ -125,11 +125,11 @@ export class WebShim extends WebRequest implements Shim {
     };
   }
 
-  getReferrer(): string {
+  get referrer(): string {
     return decodeURI(document.referrer);
   }
 
-  getUrl(): string {
+  get href(): string {
     return decodeURI(location.href);
   }
 }

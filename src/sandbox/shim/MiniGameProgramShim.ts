@@ -1,31 +1,31 @@
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
 export enum MiniProgramPlatform {
-  WECHAT = 'WECHAT APP',
-  QQ = 'QQ APP',
-  BAIDU = 'BAIDU APP',
-  TOUTIAO = 'TOUTIAO APP',
-  ALIPAY = 'ALIPAY APP',
-  DINGDING = 'DINGDING APP',
-  KUAISHOU = 'KUAISHOU APP',
-  QIHOO = 'QIHOO APP',
-  TAOBAO = 'TAOBAO APP',
-  JINGDONG = 'JINGDONG APP',
+  WECHAT = 'wechat_app',
+  QQ = 'qq_app',
+  BAIDU = 'baidu_app',
+  TOUTIAO = 'toutiao_app',
+  ALIPAY = 'alipay_app',
+  DINGDING = 'dingding_app',
+  KUAISHOU = 'kuaishou_app',
+  QIHOO = 'qihoo_app',
+  TAOBAO = 'taobao_app',
+  JINGDONG = 'jingdong_app',
 }
 
 export enum MiniGamePlatform {
-  WECHAT = 'WECHAT GAME',
-  QQ = 'QQ GAME',
-  BAIDU = 'BAIDU GAME',
-  TOUTIAO = 'TOUTIAO GAME',
-  ALIPAY = 'ALIPAY GAME',
-  BILIBILI = 'BILIBILI GAME',
-  QIHOO = 'QIHOO GAME',
+  WECHAT = 'wechat_game',
+  QQ = 'qq_game',
+  BAIDU = 'baidu_game',
+  TOUTIAO = 'toutiao_game',
+  ALIPAY = 'alipay_game',
+  BILIBILI = 'bilibili_game',
+  QIHOO = 'qihoo_game',
 }
 
 /**
  * TODO:
- * mini program/mini game shim
+ * mini program/mini_GAME shim
  */
 export class MiniShim implements Shim {
   private api: Record<string, any>;
@@ -94,20 +94,20 @@ export class MiniShim implements Shim {
 
   request(options: RequestOptions): Promise<void> {
     return new Promise<void>((success, fail) => {
-      const { url, data } = options;
+      const { url, params } = options;
 
       switch (this.platform) {
         case MiniProgramPlatform.TAOBAO:
-          this.api.tb.request({ url, method: 'POST', body: JSON.stringify(JSON.stringify(data)), success, fail });
+          this.api.tb.request({ url, method: 'POST', body: JSON.stringify(JSON.stringify(params)), success, fail });
           break;
         default:
-          this.api.request({ url, data: JSON.stringify(data), success, fail });
+          this.api.request({ url, data: JSON.stringify(params), success, fail });
           break;
       }
     });
   }
 
-  getSystemInfo(): SystemInfo {
+  get systemInfo(): SystemInfo {
     const sys = this.api.getSystemInfoSync();
     const [osName, osVersion] = sys.system.split(' ');
     return {
@@ -124,19 +124,19 @@ export class MiniShim implements Shim {
     };
   }
 
-  getUserAgent(): string {
+  get userAgent(): string {
     const sys = this.api.getSystemInfoSync();
     // `设备品牌及型号; 操作系统及版本; 平台及版本号`
     return `${sys.brand} ${sys.model}; ${sys.system}; ${this.platform} ${sys.version}`;
   }
 
-  getReferrer(): string {
+  get referrer(): string {
     const pages = this.api.getCurrentPages();
     if (!pages?.length) return '';
     return decodeURI(pages[pages.length - 2].route);
   }
 
-  getUrl(): string {
+  get href(): string {
     const pages = this.api.getCurrentPages();
     if (!pages?.length) return '';
     return decodeURI(pages[pages.length - 1].route);

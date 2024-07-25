@@ -8,7 +8,7 @@ import { command } from './command.js';
 const version = process.env.npm_package_version;
 const root = process.cwd();
 
-type Platform = 'cocos' | 'web';
+type Platform = 'cocos' | 'sandbox';
 type Config = Omit<Options, 'format'> & { format: Format[]; native?: string };
 
 const ConfigMap: Record<Platform, Config[]> = {
@@ -20,14 +20,14 @@ const ConfigMap: Record<Platform, Config[]> = {
       native: 'src/native/cc',
     },
   ],
-  web: [
+  sandbox: [
     {
-      entry: { web: 'src/sandbox/index.ts' },
+      entry: { sandbox: 'src/sandbox/index.ts' },
       outDir: 'dist',
       format: ['esm', 'cjs'],
     },
     {
-      entry: { web: 'src/sandbox/index.ts' },
+      entry: { sandbox: 'src/sandbox/index.ts' },
       outDir: 'dist',
       format: ['iife'],
       globalName: 'DataTower',

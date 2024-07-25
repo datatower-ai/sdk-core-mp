@@ -88,9 +88,9 @@ export enum LogLevel {
 /** 传给 native 的初始化配置 */
 export interface InitialNativeConfig {
   /** 项目唯一标识，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
-  appId: string;
+  app_id: string;
   /** 数据上报地址，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
-  serverUrl: string;
+  server_url: string;
   /** 渠道，打多渠道包时需要用到，可使用 SDK 内部提供的实现， 默认为“” */
   channel?: string;
   /** 是否打开调试，调试模式下将打印 log， 默认为 false，log 标签为 DataTower */
@@ -106,8 +106,9 @@ export interface InitialNativeConfig {
   };
 }
 
-/** SDK 内部配置 */
+/** SDK 内部配置，暴露到外部，由 init 传入 */
 export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
+  token?: string;
   /**
    * track 时的 debounce 等待时间，默认为 10000ms
    * 手动启动上报时，该值无效

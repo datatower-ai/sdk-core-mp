@@ -1,11 +1,11 @@
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
 export enum QuickGamePlatform {
-  OPPO = 'OPPO_QUICK_GAME',
-  VIVO = 'VIVO_QUICK_GAME',
-  HUAWEI = 'HUAWEI_QUICK_GAME',
-  XIAOMI = 'XIAOMI_QUICK_GAME',
-  MEIZU = 'MEIZU_QUICK_GAME',
+  OPPO = 'oppo_quick_game',
+  VIVO = 'vivo_quick_game',
+  HUAWEI = 'huawei_quick_game',
+  XIAOMI = 'xiaomi_quick_game',
+  MEIZU = 'meizu_quick_game',
 }
 /**
  * TODO:
@@ -13,7 +13,10 @@ export enum QuickGamePlatform {
  */
 export class QuickGameShim implements Shim {
   constructor(private platform: QuickGamePlatform) {}
-  getReferrer(): string {
+  get referrer(): string {
+    throw new Error('Method not implemented.');
+  }
+  get href(): string {
     throw new Error('Method not implemented.');
   }
   getStorage<T = unknown>(key: string): Promise<T | null> {
@@ -25,10 +28,10 @@ export class QuickGameShim implements Shim {
   removeStorage(name: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  getSystemInfo(): SystemInfo {
+  get systemInfo(): SystemInfo {
     throw new Error('Method not implemented.');
   }
-  getUserAgent(): string {
+  get userAgent(): string {
     throw new Error('Method not implemented.');
   }
   async request(options: RequestOptions): Promise<void> {

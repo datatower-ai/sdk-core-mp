@@ -36,7 +36,9 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
 
   async initSDK(config: Config): Promise<void> {
     config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
-    CocosAndroid.callStaticMethod('initSDK', [['String', fmt(config)]], 'void');
+    const { app_id, server_url, ...otherConfig } = config;
+    const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
+    CocosAndroid.callStaticMethod('initSDK', [['String', fmt(nativeConfig)]], 'void');
   }
   track(eventName: string, properties: Record<string, string | boolean | number>): void {
     CocosAndroid.callStaticMethod(

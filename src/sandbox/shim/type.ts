@@ -3,10 +3,10 @@ export interface Shim {
   setStorage<T>(key: string, value: T): Promise<void>;
   removeStorage(name: string): Promise<void>;
   request(options: RequestOptions): Promise<void>;
-  getSystemInfo(): SystemInfo;
-  getUserAgent(): string;
-  getReferrer(): string;
-  getUrl(): string;
+  systemInfo: SystemInfo;
+  userAgent: string;
+  referrer: string;
+  href: string;
   getNetworkStatus?(): void;
   onNetworkStatusChange?(callback: () => void): void;
 }
@@ -16,7 +16,7 @@ export interface Shim {
  */
 export interface RequestOptions {
   url: string;
-  data: string;
+  params: `data=${string}&check=${string}`;
 }
 
 export interface SystemInfo {

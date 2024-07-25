@@ -5,7 +5,10 @@ import type { RequestOptions, Shim, SystemInfo } from './type';
  * quick app shim
  */
 export class QuickAppShim implements Shim {
-  getReferrer(): string {
+  get referrer(): string {
+    throw new Error('Method not implemented.');
+  }
+  get href(): string {
     throw new Error('Method not implemented.');
   }
   getStorage<T = unknown>(key: string): Promise<T | null> {
@@ -17,10 +20,10 @@ export class QuickAppShim implements Shim {
   removeStorage(name: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  getSystemInfo(): SystemInfo {
+  get systemInfo(): SystemInfo {
     throw new Error('Method not implemented.');
   }
-  getUserAgent(): string {
+  get userAgent(): string {
     throw new Error('Method not implemented.');
   }
   async request(options: RequestOptions): Promise<void> {

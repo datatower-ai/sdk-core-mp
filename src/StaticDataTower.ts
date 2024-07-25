@@ -14,9 +14,9 @@ export class StaticDataTower {
   protected static createInstance(): DataTower {
     return StaticDataTower;
   }
-  protected static getInstance(appId: string = 'default'): DataTower {
+  protected static getInstance(app_id: string = 'default'): DataTower {
     return (
-      this.instances[appId] || Logger.error('DataTower', `instance '${appId}' not found, please initialize SDK first`)
+      this.instances[app_id] || Logger.error('DataTower', `instance '${app_id}' not found, please initialize SDK first`)
     );
   }
 
@@ -24,10 +24,10 @@ export class StaticDataTower {
     const instance = this.createInstance();
     if (!this.instances.default) {
       this.instances.default = instance;
-    } else if (!this.instances[config.appId]) {
-      this.instances[config.appId] = instance;
+    } else if (!this.instances[config.app_id]) {
+      this.instances[config.app_id] = instance;
     } else {
-      Logger.warn('DataTower', `instance '${config.appId}' already exists, will be replaced`);
+      Logger.warn('DataTower', `instance '${config.app_id}' already exists, will be replaced`);
       return;
     }
     return instance.initSDK(config);
@@ -35,72 +35,72 @@ export class StaticDataTower {
   /**
    * manually start the report (if the manualEnableUpload is true)
    */
-  static enableUpload(appId?: string): void {
-    return this.getInstance(appId)?.enableUpload();
+  static enableUpload(app_id?: string): void {
+    return this.getInstance(app_id)?.enableUpload();
   }
-  static track(eventName: string, properties: Record<string, string | boolean | number>, appId?: string): void {
-    return this.getInstance(appId)?.track(eventName, properties);
+  static track(eventName: string, properties: Record<string, string | boolean | number>, app_id?: string): void {
+    return this.getInstance(app_id)?.track(eventName, properties);
   }
-  static userSet<K extends string>(properties: Properties<K>, appId?: string): void {
-    return this.getInstance(appId)?.userSet(properties);
+  static userSet<K extends string>(properties: Properties<K>, app_id?: string): void {
+    return this.getInstance(app_id)?.userSet(properties);
   }
-  static userSetOnce<K extends string>(properties: Properties<K>, appId?: string): void {
-    return this.getInstance(appId)?.userSetOnce(properties);
+  static userSetOnce<K extends string>(properties: Properties<K>, app_id?: string): void {
+    return this.getInstance(app_id)?.userSetOnce(properties);
   }
-  static userAdd<K extends string>(properties: Record<PublicKey<K>, number>, appId?: string): void {
-    return this.getInstance(appId)?.userAdd(properties);
+  static userAdd<K extends string>(properties: Record<PublicKey<K>, number>, app_id?: string): void {
+    return this.getInstance(app_id)?.userAdd(properties);
   }
-  static userUnset(properties: string[], appId?: string): void {
-    return this.getInstance(appId)?.userUnset(properties);
+  static userUnset(properties: string[], app_id?: string): void {
+    return this.getInstance(app_id)?.userUnset(properties);
   }
-  static userDelete(appId?: string): void {
-    return this.getInstance(appId)?.userDelete();
+  static userDelete(app_id?: string): void {
+    return this.getInstance(app_id)?.userDelete();
   }
   static userAppend<K extends string>(
     properties: Record<PublicKey<K>, (string | boolean | number)[]>,
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.userAppend(properties);
+    return this.getInstance(app_id)?.userAppend(properties);
   }
   static userUniqAppend<K extends string>(
     properties: Record<PublicKey<K>, (string | boolean | number)[]>,
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.userUniqAppend(properties);
+    return this.getInstance(app_id)?.userUniqAppend(properties);
   }
-  static getDataTowerId(callback: (id: string) => void, appId?: string): void;
-  static getDataTowerId(appId?: string): Promise<string>;
-  static getDataTowerId(callbackOrAppId?: ((id: string) => void) | string, appId?: string): void | Promise<string> {
-    return typeof callbackOrAppId === 'string'
-      ? this.getInstance(callbackOrAppId)?.getDataTowerId()
-      : this.getInstance(appId)?.getDataTowerId(callbackOrAppId!);
+  static getDataTowerId(callback: (id: string) => void, app_id?: string): void;
+  static getDataTowerId(app_id?: string): Promise<string>;
+  static getDataTowerId(callbackOrapp_id?: ((id: string) => void) | string, app_id?: string): void | Promise<string> {
+    return typeof callbackOrapp_id === 'string'
+      ? this.getInstance(callbackOrapp_id)?.getDataTowerId()
+      : this.getInstance(app_id)?.getDataTowerId(callbackOrapp_id!);
   }
-  static setAccountId(id: string, appId?: string): void {
-    return this.getInstance(appId)?.setAccountId(id);
+  static setAccountId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setAccountId(id);
   }
-  static setFirebaseAppInstanceId(id: string, appId?: string): void {
-    return this.getInstance(appId)?.setFirebaseAppInstanceId(id);
+  static setFirebaseAppInstanceId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setFirebaseAppInstanceId(id);
   }
-  static setAppsFlyerId(id: string, appId?: string): void {
-    return this.getInstance(appId)?.setAppsFlyerId(id);
+  static setAppsFlyerId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setAppsFlyerId(id);
   }
-  static setKochavaId(id: string, appId?: string): void {
-    return this.getInstance(appId)?.setKochavaId(id);
+  static setKochavaId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setKochavaId(id);
   }
-  static setAdjustId(id: string, appId?: string): void {
-    return this.getInstance(appId)?.setAdjustId(id);
+  static setAdjustId(id: string, app_id?: string): void {
+    return this.getInstance(app_id)?.setAdjustId(id);
   }
-  static setStaticCommonProperties<K extends string>(properties: Properties<K>, appId?: string): void {
-    return this.getInstance(appId)?.setStaticCommonProperties(properties);
+  static setStaticCommonProperties<K extends string>(properties: Properties<K>, app_id?: string): void {
+    return this.getInstance(app_id)?.setStaticCommonProperties(properties);
   }
-  static clearStaticCommonProperties(appId?: string): void {
-    return this.getInstance(appId)?.clearStaticCommonProperties();
+  static clearStaticCommonProperties(app_id?: string): void {
+    return this.getInstance(app_id)?.clearStaticCommonProperties();
   }
-  static setCommonProperties(callback: () => Record<string, string | boolean | number>, appId?: string): void {
-    return this.getInstance(appId)?.setCommonProperties(callback);
+  static setCommonProperties(callback: () => Record<string, string | boolean | number>, app_id?: string): void {
+    return this.getInstance(app_id)?.setCommonProperties(callback);
   }
-  static clearCommonProperties(appId?: string): void {
-    return this.getInstance(appId)?.clearCommonProperties();
+  static clearCommonProperties(app_id?: string): void {
+    return this.getInstance(app_id)?.clearCommonProperties();
   }
 }
 
@@ -109,99 +109,99 @@ export class AnalysisStaticDataTower extends StaticDataTower {
   protected static createInstance(): AnalysisDataTower {
     return AnalysisStaticDataTower;
   }
-  protected static getInstance(appId: string = 'default'): AnalysisDataTower {
-    return this.getInstance(appId);
+  protected static getInstance(app_id: string = 'default'): AnalysisDataTower {
+    return this.getInstance(app_id);
   }
 
   // Timer
-  static trackTimerStart(eventName: string, appId?: string): void {
-    return this.getInstance(appId)?.trackTimerStart(eventName);
+  static trackTimerStart(eventName: string, app_id?: string): void {
+    return this.getInstance(app_id)?.trackTimerStart(eventName);
   }
-  static trackTimerPause(eventName: string, appId?: string): void {
-    return this.getInstance(appId)?.trackTimerPause(eventName);
+  static trackTimerPause(eventName: string, app_id?: string): void {
+    return this.getInstance(app_id)?.trackTimerPause(eventName);
   }
-  static trackTimerResume(eventName: string, appId?: string): void {
-    return this.getInstance(appId)?.trackTimerResume(eventName);
+  static trackTimerResume(eventName: string, app_id?: string): void {
+    return this.getInstance(app_id)?.trackTimerResume(eventName);
   }
-  static trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>, appId?: string): void {
-    return this.getInstance(appId)?.trackTimerEnd(eventName, properties);
+  static trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>, app_id?: string): void {
+    return this.getInstance(app_id)?.trackTimerEnd(eventName, properties);
   }
 
   // Ad
-  static reportLoadBegin<K extends string>(opts: BaseReportOptions<K>, appId?: string): void {
-    return this.getInstance(appId)?.reportLoadBegin(opts);
+  static reportLoadBegin<K extends string>(opts: BaseReportOptions<K>, app_id?: string): void {
+    return this.getInstance(app_id)?.reportLoadBegin(opts);
   }
   static reportLoadEnd<K extends string>(
     opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportLoadEnd(opts);
+    return this.getInstance(app_id)?.reportLoadEnd(opts);
   }
-  static reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportToShow(opts);
+  static reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, app_id?: string): void {
+    return this.getInstance(app_id)?.reportToShow(opts);
   }
-  static reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportShow(opts);
+  static reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, app_id?: string): void {
+    return this.getInstance(app_id)?.reportShow(opts);
   }
   static reportShowFailed<K extends string>(
     opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportShowFailed(opts);
+    return this.getInstance(app_id)?.reportShowFailed(opts);
   }
-  static reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportClose(opts);
+  static reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, app_id?: string): void {
+    return this.getInstance(app_id)?.reportClose(opts);
   }
-  static reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportClick(opts);
+  static reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, app_id?: string): void {
+    return this.getInstance(app_id)?.reportClick(opts);
   }
-  static reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, appId?: string): void {
-    return this.getInstance(appId)?.reportRewarded(opts);
+  static reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions, app_id?: string): void {
+    return this.getInstance(app_id)?.reportRewarded(opts);
   }
   static reportConversionByClick<K extends string>(
     opts: BaseReportOptions<K> & CommonReportOptions,
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportConversionByClick(opts);
+    return this.getInstance(app_id)?.reportConversionByClick(opts);
   }
   static reportConversionByLeftApp<K extends string>(
     opts: BaseReportOptions<K> & CommonReportOptions,
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportConversionByLeftApp(opts);
+    return this.getInstance(app_id)?.reportConversionByLeftApp(opts);
   }
   static reportConversionByRewarded<K extends string>(
     opts: BaseReportOptions<K> & CommonReportOptions,
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportConversionByRewarded(opts);
+    return this.getInstance(app_id)?.reportConversionByRewarded(opts);
   }
-  static reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }, appId?: string): void;
+  static reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }, app_id?: string): void;
   static reportPaid<K extends string>(
     opts: BaseReportPaidOptions<K> & { currency: string; entrance: string },
-    appId?: string,
+    app_id?: string,
   ): void;
   static reportPaid<K extends string>(
     opts: BaseReportPaidOptions<K> & ({ country: string } & { currency: string; entrance: string }),
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportPaid(opts);
+    return this.getInstance(app_id)?.reportPaid(opts);
   }
 
   // IAP
   static reportPurchaseSuccess<K extends string>(
     opts: ReportSuccessOptions<K> & { order: string },
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportPurchaseSuccess(opts);
+    return this.getInstance(app_id)?.reportPurchaseSuccess(opts);
   }
 
   // IAS
   static reportSubscribeSuccess<K extends string>(
     opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
-    appId?: string,
+    app_id?: string,
   ): void {
-    return this.getInstance(appId)?.reportSubscribeSuccess(opts);
+    return this.getInstance(app_id)?.reportSubscribeSuccess(opts);
   }
 }
 

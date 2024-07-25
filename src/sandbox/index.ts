@@ -1,7 +1,7 @@
 import { StaticDataTower } from '@/StaticDataTower';
-import { Sandbox } from './Sandbox';
+import { Sandbox } from './main';
 import { WebShim } from './shim/WebShim';
-export { Config, LogLevel, Properties, PublicKey } from '@/type';
+export { LogLevel, type Config, type Properties, type PublicKey } from '@/type';
 export { Logger } from './Logger';
 
 export class Web extends StaticDataTower {
@@ -18,5 +18,5 @@ export class Web extends StaticDataTower {
 // }
 
 // export class WechatMimiGame extends StaticDataTower {
-//   protected static createInstance = () => new Sandbox(new MiniShim(MiniGamePlatform.WECHAT));
+//   protected static createInstance = () => new Sandbox(new MiniGameProgramShim(MiniGamePlatform.WECHAT));
 // }

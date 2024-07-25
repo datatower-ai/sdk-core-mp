@@ -6,7 +6,7 @@ import { debounce, md5, sha256 } from '@/utils';
 import { version } from '~/package.json';
 import { Logger } from './Logger';
 import { TaskQueue } from './TaskQueue';
-import type { Shim } from './shim/type';
+import type { RequestOptions, Shim } from './shim/type';
 
 /**
  * Sandbox
@@ -27,8 +27,8 @@ export class Sandbox implements DataTower {
   private dynamicProperties: null | (() => Record<string, string | boolean | number>) = null;
 
   private get presetProperties() {
-    const { height, width, os, platform, viewport, title } = this.shim.getSystemInfo();
-    const referrer = this.shim.getReferrer();
+    const { height, width, os, platform, viewport, title } = this.shim.systemInfo;
+    const referrer = this.shim.referrer;
     return {
       '#sdk_type': 'javascript',
       '#sdk_version_name': version,
@@ -38,7 +38,7 @@ export class Sandbox implements DataTower {
       '#timezone_offset': 0 - new Date().getTimezoneOffset() / 60,
       '#is_first_day': Number(this.settings['#dt_id'].split('-')[0]) + 24 * 60 * 60 * 1000 <= new Date().getTime(),
       '#title': title,
-      '#url': this.shim.getUrl(),
+      '#url': this.shim.href,
       '#viewport_height': viewport.height,
       '#viewport_width': viewport.width,
       '#platform': platform.name,
@@ -56,19 +56,27 @@ export class Sandbox implements DataTower {
    */
   constructor(protected shim: Shim) {}
 
+  private get url() {
+    const { token, app_id, server_url } = this.config;
+    const url = new URL(server_url);
+    token && url.searchParams.set('token', token);
+    app_id && url.searchParams.set('app_id', app_id);
+    return url.toString();
+  }
+
   private report() {
     const tasks = this.taskQueue.flush();
     if (!tasks.length) return;
-    const data = JSON.stringify(tasks);
-    const base64 = btoa(data);
+    const dataStr = JSON.stringify(tasks);
+    const base64 = btoa(dataStr);
     const check = md5(base64 + '@datatower').toString();
-    const params = new URLSearchParams({ data: base64, check }).toString();
-    return this.shim.request({ url: this.config.serverUrl, data: params });
+    const params = new URLSearchParams({ data: base64, check }).toString() as RequestOptions['params'];
+    return this.shim.request({ url: this.url, params });
   }
 
   async initSDK(config: Config) {
     Logger.debug('<initSDK>', this);
-    this.shim.getSystemInfo();
+    this.shim.systemInfo;
     this.config = { ...DEFAULT_CONFIG, ...config };
     // 设置日志等级
     Logger.level = this.config.logLevel;
@@ -82,15 +90,15 @@ export class Sandbox implements DataTower {
     if (!(await this.shim.getStorage('#dt_id'))) await this.initializeNewUser();
     this.settings['#dt_id'] = (await this.shim.getStorage<string>('#dt_id'))!;
 
-    this.settings['#app_id'] = this.config.appId ?? this.shim.getSystemInfo().appId;
+    this.settings['#app_id'] = this.config.app_id;
   }
 
   private async initializeNewUser() {
     const dt_id = this.generateDataTowerId();
-    const { language } = this.shim.getSystemInfo();
+    const { language } = this.shim.systemInfo;
     this.userSetOnce({
       '#first_visit_time': new Date().getTime(),
-      '#first_referrer': this.shim.getReferrer(),
+      '#first_referrer': this.shim.referrer,
       '#first_browser_language': language.toLowerCase(),
     });
     await this.shim.setStorage('#dt_id', dt_id);
@@ -153,11 +161,11 @@ export class Sandbox implements DataTower {
 
   /* id */
   private generateDataTowerId() {
-    const sys = this.shim.getSystemInfo();
+    const sys = this.shim.systemInfo;
     const fingerprint = [
       new Date().getTime(),
       Math.random().toString(16).replace('.', ''),
-      sha256(this.shim.getUserAgent()),
+      sha256(this.shim.userAgent),
       sha256(`${sys.width} ${sys.height} ${sys.language}`),
       new Date().getTime(),
     ];
