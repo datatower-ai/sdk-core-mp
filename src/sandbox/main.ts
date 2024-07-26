@@ -104,7 +104,20 @@ export class Sandbox implements DataTower {
     await this.shim.setStorage('#dt_id', dt_id);
   }
 
+  private validatePropertiesKey(properties: Record<string, any>) {
+    const errors: string[] = [];
+    for (const key in properties) {
+      for (const k of ['#', '$']) {
+        if (!key.startsWith(k)) continue;
+        errors.push(`The key "${key}" is invalid, it can't start with "${k}"`);
+      }
+    }
+    errors.forEach((e) => Logger.error(e));
+    return !errors.length;
+  }
+
   track<K extends string>(eventName: string, properties: Properties<K>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<track>', eventName, properties);
     this.createTask(eventName, 'track', {
       ...properties,
@@ -131,14 +144,17 @@ export class Sandbox implements DataTower {
   }
   /* user */
   userSet<K extends string>(properties: Properties<K>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userSet>', properties);
     this.createTask('#user_set', 'user', properties);
   }
   userSetOnce<K extends string>(properties: Properties<K>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userSetOnce>', properties);
     this.createTask('#user_set_once', 'user', properties);
   }
   userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userAdd>', properties);
     this.createTask('#user_add', 'user', properties);
   }
@@ -151,10 +167,12 @@ export class Sandbox implements DataTower {
     this.createTask('#user_delete', 'user', {});
   }
   userAppend<K extends string>(properties: ArrayProperties<K>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userAppend>', properties);
     this.createTask('#user_append', 'user', properties);
   }
   userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userUniqAppend>', properties);
     this.createTask('#user_uniq_append', 'user', properties);
   }
@@ -201,6 +219,7 @@ export class Sandbox implements DataTower {
 
   /* properties */
   setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
+    if (!this.validatePropertiesKey(properties)) return;
     this.staticProperties = { ...this.staticProperties, ...properties };
     Logger.debug('<setStaticCommonProperties>', properties);
   }
@@ -209,6 +228,7 @@ export class Sandbox implements DataTower {
     Logger.debug('<clearStaticCommonProperties>');
   }
   setCommonProperties(callback: <K extends string>() => Properties<K>): void {
+    if (!this.validatePropertiesKey(callback())) return;
     this.dynamicProperties = callback;
     Logger.debug('<setCommonProperties>', callback);
   }
