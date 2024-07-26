@@ -16,6 +16,7 @@
     }
   },
   "scripts": {
+    "prettier": "prettier -c --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
     "build": "tsc -p tsconfig.node.json && node scripts/dist/build.prod.js",

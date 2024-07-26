@@ -1,5 +1,4 @@
-import { version } from '~/package.json';
-import { AnalysisDataTower, AnalysisStaticDataTower } from '@/StaticDataTower';
+import { AnalysisDataTower } from '@/StaticDataTower';
 import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/constant';
 import type {
   ArrayProperties,
@@ -8,18 +7,17 @@ import type {
   CommonReportOptions,
   Config,
   Properties,
-  PublicKey,
   ReportSuccessOptions,
 } from '@/type';
 import { fmt, globalNativeCallback } from '@/utils';
+import { version } from '~/package.json';
 
 /**
  * cocos CocosIOS bridge
  */
-export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTower {
-  protected static createInstance = () => new CocosIOS();
+export class CocosIOS implements AnalysisDataTower {
   private presetProperties = { '#sdk_type': 'cocos_ios', '#sdk_version_name': version } as const;
-  private dynamicProperties: null | (<K extends string>() => Properties<K>) = null;
+  private dynamicProperties: null | (() => Properties) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {
     return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
@@ -31,20 +29,20 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
     const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
     CocosIOS.callStaticMethod('initSDK:', fmt(nativeConfig));
   }
-  track<K extends string>(eventName: string, properties: Properties<K>): void {
+  track(eventName: string, properties: Properties): void {
     properties = { ...properties, ...this.dynamicProperties?.() };
     CocosIOS.callStaticMethod('track:properties:', eventName, fmt(properties));
   }
   enableUpload(): void {
     CocosIOS.callStaticMethod('enableUpload');
   }
-  userSet<K extends string>(properties: Properties<K>): void {
+  userSet(properties: Properties): void {
     CocosIOS.callStaticMethod('userSet:', fmt(properties));
   }
-  userSetOnce<K extends string>(properties: Properties<K>): void {
+  userSetOnce(properties: Properties): void {
     CocosIOS.callStaticMethod('userSetOnce:', fmt(properties));
   }
-  userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
+  userAdd(properties: Record<string, number>): void {
     CocosIOS.callStaticMethod('userAdd:', fmt(properties));
   }
   userUnset(properties: string[]): void {
@@ -54,10 +52,10 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
   userDelete(): void {
     CocosIOS.callStaticMethod('userDelete');
   }
-  userAppend<K extends string>(properties: ArrayProperties<K>): void {
+  userAppend(properties: ArrayProperties): void {
     CocosIOS.callStaticMethod('userAppend:', fmt(properties));
   }
-  userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
+  userUniqAppend(properties: ArrayProperties): void {
     CocosIOS.callStaticMethod('userUniqAppend:', fmt(properties));
   }
   getDataTowerId(callback: (id: string) => void): void;
@@ -81,16 +79,16 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
   setAdjustId(id: string): void {
     CocosIOS.callStaticMethod('setAdjustId:', id);
   }
-  setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
+  setStaticCommonProperties(properties: Properties): void {
     CocosIOS.callStaticMethod('setStaticCommonProperties:', fmt(properties));
   }
   clearStaticCommonProperties(): void {
     CocosIOS.callStaticMethod('clearStaticCommonProperties');
   }
-  setCommonProperties(callback: <K extends string>() => Properties<K>): void {
+  setDynamicCommonProperties(callback: () => Properties): void {
     this.dynamicProperties = callback;
   }
-  clearCommonProperties(): void {
+  clearDynamicCommonProperties(): void {
     this.dynamicProperties = null;
   }
 
@@ -103,61 +101,53 @@ export class CocosIOS extends AnalysisStaticDataTower implements AnalysisDataTow
   trackTimerResume(eventName: string): void {
     CocosIOS.callStaticMethod('trackTimerResume:', eventName);
   }
-  trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
+  trackTimerEnd(eventName: string, properties: Properties): void {
     CocosIOS.callStaticMethod('trackTimerEnd:properties:', eventName, fmt(properties));
   }
-  reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
+  reportLoadBegin(opts: BaseReportOptions): void {
     CocosIOS.callStaticMethod('reportLoadBegin:', fmt(opts));
   }
-  reportLoadEnd<K extends string>(
-    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+  reportLoadEnd(
+    opts: BaseReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
     CocosIOS.callStaticMethod('reportLoadEnd:', fmt(opts));
   }
-  reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportToShow(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportToShow:', fmt(opts));
   }
-  reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportShow(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportShow:', fmt(opts));
   }
-  reportShowFailed<K extends string>(
-    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
-  ): void {
+  reportShowFailed(opts: BaseReportOptions & CommonReportOptions & { errorCode: number; errorMessage: string }): void {
     CocosIOS.callStaticMethod('reportShowFailed:', fmt(opts));
   }
-  reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportClose(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportClose:', fmt(opts));
   }
-  reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportClick(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportClick:', fmt(opts));
   }
-  reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportRewarded(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportRewarded:', fmt(opts));
   }
-  reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByClick(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportConversionByClick:', fmt(opts));
   }
-  reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByLeftApp(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportConversionByLeftApp:', fmt(opts));
   }
-  reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByRewarded(opts: BaseReportOptions & CommonReportOptions): void {
     CocosIOS.callStaticMethod('reportConversionByRewarded:', fmt(opts));
   }
-  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
-  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
-  reportPaid<K extends string>(
-    opts: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
-  ): void {
+  reportPaid(opts: BaseReportPaidOptions & { country: string }): void;
+  reportPaid(opts: BaseReportPaidOptions & { currency: string; entrance: string }): void;
+  reportPaid(opts: BaseReportPaidOptions & ({ country: string } | { currency: string; entrance: string })): void {
     CocosIOS.callStaticMethod('reportPaid:', fmt(opts));
   }
-  reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
+  reportPurchaseSuccess(opts: ReportSuccessOptions & { order: string }): void {
     CocosIOS.callStaticMethod('reportPurchaseSuccess:', fmt(opts));
   }
-  reportSubscribeSuccess<K extends string>(
-    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
-  ): void {
+  reportSubscribeSuccess(opts: ReportSuccessOptions & { originalOrderId: string; orderId: string }): void {
     CocosIOS.callStaticMethod('reportSubscribeSuccess:', fmt(opts));
   }
 }
-
-export { CocosIOS as DataTower };

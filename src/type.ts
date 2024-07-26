@@ -122,22 +122,18 @@ export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>
   maxQueueSize?: number;
 }
 
-export type PrivateKey = `#${string}` | `$${string}`;
+export type Properties = Record<string, string | boolean | number>;
 
-export type PublicKey<T extends string> = T extends PrivateKey ? never : T;
+export type ArrayProperties = Record<string, (string | boolean | number)[]>;
 
-export type Properties<K extends string> = Record<PublicKey<K>, string | boolean | number>;
-
-export type ArrayProperties<K extends string> = Record<PublicKey<K>, (string | boolean | number)[]>;
-
-export interface BaseReportOptions<K extends string> {
+export interface BaseReportOptions {
   id: string;
   type: AdType;
   platform: AdPlatform;
   mediation: AdMediation;
   mediationId: string;
   seq: string;
-  properties: Record<PublicKey<K>, any>;
+  properties: Properties;
 }
 
 export interface CommonReportOptions {
@@ -145,14 +141,14 @@ export interface CommonReportOptions {
   entrance: string;
 }
 
-export interface ReportSuccessOptions<K extends string> {
+export interface ReportSuccessOptions {
   sku: string;
   price: number;
   currency: string;
-  properties: Record<PublicKey<K>, any>;
+  properties: Properties;
 }
 
-export interface BaseReportPaidOptions<K extends string> extends BaseReportOptions<K> {
+export interface BaseReportPaidOptions extends BaseReportOptions {
   value: number;
   precision: string;
   location: string;

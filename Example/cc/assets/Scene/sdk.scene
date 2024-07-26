@@ -12874,7 +12874,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "setCommonProperties",
+    "_name": "setDynamicCommonProperties",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -13487,7 +13487,7 @@
       "b": 0,
       "a": 255
     },
-    "_string": "submit setCommonProperties",
+    "_string": "submit setDynamicCommonProperties",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -13690,7 +13690,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "clearCommonProperties",
+    "_name": "clearDynamicCommonProperties",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -13836,7 +13836,7 @@
       "b": 0,
       "a": 255
     },
-    "_string": "clearCommonProperties",
+    "_string": "clearDynamicCommonProperties",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,

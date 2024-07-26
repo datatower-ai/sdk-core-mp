@@ -3,8 +3,8 @@ import { DataTower } from "@datatower-ai/sdk-core-js/dist/cocos.mjs";
 
 const { ccclass } = _decorator;
 
-@ccclass("setCommonProperties")
-export class setCommonProperties extends Component {
+@ccclass("setDynamicCommonProperties")
+export class setDynamicCommonProperties extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
@@ -15,7 +15,7 @@ export class setCommonProperties extends Component {
     };
 
     const submit = () => {
-      DataTower.setCommonProperties(callback);
+      DataTower.setDynamicCommonProperties(callback);
     };
     const button = this.node.getComponentInChildren(Button);
     button.node.on("click", submit, this);

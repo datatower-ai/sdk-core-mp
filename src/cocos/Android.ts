@@ -1,5 +1,4 @@
-import { version } from '~/package.json';
-import { AnalysisDataTower, AnalysisStaticDataTower } from '@/StaticDataTower';
+import { AnalysisDataTower } from '@/StaticDataTower';
 import { AndroidClass, DEFAULT_INITIAL_CONFIG } from '@/constant';
 import type {
   ArrayProperties,
@@ -8,20 +7,19 @@ import type {
   CommonReportOptions,
   Config,
   Properties,
-  PublicKey,
   ReportSuccessOptions,
 } from '@/type';
 import { fmt, globalNativeCallback } from '@/utils';
+import { version } from '~/package.json';
 
 type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
 
 /**
  * cocos CocosAndroid bridge
  */
-export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDataTower {
-  protected static createInstance = () => new CocosAndroid();
+export class CocosAndroid implements AnalysisDataTower {
   private presetProperties = { '#sdk_type': 'cocos_android', '#sdk_version_name': version } as const;
-  private dynamicProperties: null | (<K extends string>() => Properties<K>) = null;
+  private dynamicProperties: null | (() => Properties) = null;
 
   private static typeMap: Record<JavaType, string> = {
     void: 'V',
@@ -42,7 +40,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
     const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
     CocosAndroid.callStaticMethod('initSDK', [['String', fmt(nativeConfig)]], 'void');
   }
-  track<K extends string>(eventName: string, properties: Properties<K>): void {
+  track(eventName: string, properties: Properties): void {
     CocosAndroid.callStaticMethod(
       'track',
       [
@@ -55,13 +53,13 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   enableUpload(): void {
     CocosAndroid.callStaticMethod('enableUpload', [], 'void');
   }
-  userSet<K extends string>(properties: Properties<K>): void {
+  userSet(properties: Properties): void {
     CocosAndroid.callStaticMethod('userSet', [['String', fmt(properties)]], 'void');
   }
-  userSetOnce<K extends string>(properties: Properties<K>): void {
+  userSetOnce(properties: Properties): void {
     CocosAndroid.callStaticMethod('userSetOnce', [['String', fmt(properties)]], 'void');
   }
-  userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
+  userAdd(properties: Record<string, number>): void {
     CocosAndroid.callStaticMethod('userAdd', [['String', fmt(properties)]], 'void');
   }
   userUnset(properties: string[]): void {
@@ -70,10 +68,10 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   userDelete(): void {
     CocosAndroid.callStaticMethod('userDelete', [], 'void');
   }
-  userAppend<K extends string>(properties: ArrayProperties<K>): void {
+  userAppend(properties: ArrayProperties): void {
     CocosAndroid.callStaticMethod('userAppend', [['String', fmt(properties)]], 'void');
   }
-  userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
+  userUniqAppend(properties: ArrayProperties): void {
     CocosAndroid.callStaticMethod('userUniqAppend', [['String', fmt(properties)]], 'void');
   }
   getDataTowerId(callback: (id: string) => void): void;
@@ -97,16 +95,16 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   setAdjustId(id: string): void {
     CocosAndroid.callStaticMethod('setAdjustId', [['String', id]], 'void');
   }
-  setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
+  setStaticCommonProperties(properties: Properties): void {
     CocosAndroid.callStaticMethod('setStaticCommonProperties', [['String', fmt(properties)]], 'void');
   }
   clearStaticCommonProperties(): void {
     CocosAndroid.callStaticMethod('clearStaticCommonProperties', [], 'void');
   }
-  setCommonProperties(callback: <K extends string>() => Properties<K>): void {
+  setDynamicCommonProperties(callback: () => Properties): void {
     this.dynamicProperties = callback;
   }
-  clearCommonProperties(): void {
+  clearDynamicCommonProperties(): void {
     this.dynamicProperties = null;
   }
 
@@ -119,7 +117,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
   trackTimerResume(eventName: string): void {
     CocosAndroid.callStaticMethod('trackTimerResume', [['String', eventName]], 'void');
   }
-  trackTimerEnd<K extends string>(eventName: string, properties: Properties<K>): void {
+  trackTimerEnd(eventName: string, properties: Properties): void {
     CocosAndroid.callStaticMethod(
       'trackTimerEnd',
       [
@@ -129,7 +127,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportLoadBegin<K extends string>(opts: BaseReportOptions<K>): void {
+  reportLoadBegin(opts: BaseReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportLoadBegin',
       [
@@ -144,8 +142,8 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportLoadEnd<K extends string>(
-    opts: BaseReportOptions<K> & { duration: number; result: boolean; errorCode: number; errorMessage: string },
+  reportLoadEnd(
+    opts: BaseReportOptions & { duration: number; result: boolean; errorCode: number; errorMessage: string },
   ): void {
     CocosAndroid.callStaticMethod(
       'reportLoadEnd',
@@ -165,7 +163,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportToShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportToShow(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportToShow',
       [
@@ -182,7 +180,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportShow<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportShow(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportShow',
       [
@@ -199,9 +197,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportShowFailed<K extends string>(
-    opts: BaseReportOptions<K> & CommonReportOptions & { errorCode: number; errorMessage: string },
-  ): void {
+  reportShowFailed(opts: BaseReportOptions & CommonReportOptions & { errorCode: number; errorMessage: string }): void {
     CocosAndroid.callStaticMethod(
       'reportShowFailed',
       [
@@ -220,7 +216,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportClose<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportClose(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportClose',
       [
@@ -237,7 +233,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportClick(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportClick',
       [
@@ -254,7 +250,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportRewarded(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportRewarded',
       [
@@ -271,7 +267,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportConversionByClick<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByClick(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportConversionByClick',
       [
@@ -288,7 +284,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportConversionByLeftApp<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByLeftApp(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportConversionByLeftApp',
       [
@@ -305,7 +301,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportConversionByRewarded<K extends string>(opts: BaseReportOptions<K> & CommonReportOptions): void {
+  reportConversionByRewarded(opts: BaseReportOptions & CommonReportOptions): void {
     CocosAndroid.callStaticMethod(
       'reportConversionByRewarded',
       [
@@ -322,11 +318,9 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { country: string }): void;
-  reportPaid<K extends string>(opts: BaseReportPaidOptions<K> & { currency: string; entrance: string }): void;
-  reportPaid<K extends string>(
-    opts: BaseReportPaidOptions<K> & ({ country: string } | { currency: string; entrance: string }),
-  ): void {
+  reportPaid(opts: BaseReportPaidOptions & { country: string }): void;
+  reportPaid(opts: BaseReportPaidOptions & { currency: string; entrance: string }): void;
+  reportPaid(opts: BaseReportPaidOptions & ({ country: string } | { currency: string; entrance: string })): void {
     if ('country' in opts) {
       CocosAndroid.callStaticMethod(
         'reportPaid',
@@ -366,7 +360,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       );
     }
   }
-  reportPurchaseSuccess<K extends string>(opts: ReportSuccessOptions<K> & { order: string }): void {
+  reportPurchaseSuccess(opts: ReportSuccessOptions & { order: string }): void {
     CocosAndroid.callStaticMethod(
       'reportPurchaseSuccess',
       [
@@ -379,9 +373,7 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
       'void',
     );
   }
-  reportSubscribeSuccess<K extends string>(
-    opts: ReportSuccessOptions<K> & { originalOrderId: string; orderId: string },
-  ): void {
+  reportSubscribeSuccess(opts: ReportSuccessOptions & { originalOrderId: string; orderId: string }): void {
     CocosAndroid.callStaticMethod(
       'reportSubscribeSuccess',
       [
@@ -396,5 +388,3 @@ export class CocosAndroid extends AnalysisStaticDataTower implements AnalysisDat
     );
   }
 }
-
-export { CocosAndroid as DataTower };

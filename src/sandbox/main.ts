@@ -1,7 +1,7 @@
 import parseUrl from '$/parse-url';
 import type { DataTower } from '@/StaticDataTower';
 import { DEFAULT_CONFIG } from '@/constant';
-import type { ArrayProperties, Config, Properties, PublicKey } from '@/type';
+import type { ArrayProperties, Config, Properties } from '@/type';
 import { debounce, md5, sha256 } from '@/utils';
 import { version } from '~/package.json';
 import { Logger } from './Logger';
@@ -24,7 +24,7 @@ export class Sandbox implements DataTower {
 
   private staticProperties: Record<string, any> = {};
 
-  private dynamicProperties: null | (<K extends string>() => Properties<K>) = null;
+  private dynamicProperties: null | (() => Properties) = null;
 
   private get presetProperties() {
     const { height, width, os, platform, viewport, title } = this.shim.systemInfo;
@@ -116,7 +116,7 @@ export class Sandbox implements DataTower {
     return !errors.length;
   }
 
-  track<K extends string>(eventName: string, properties: Properties<K>): void {
+  track(eventName: string, properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<track>', eventName, properties);
     this.createTask(eventName, 'track', {
@@ -143,17 +143,17 @@ export class Sandbox implements DataTower {
     Logger.debug('<createTask>', data);
   }
   /* user */
-  userSet<K extends string>(properties: Properties<K>): void {
+  userSet(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userSet>', properties);
     this.createTask('#user_set', 'user', properties);
   }
-  userSetOnce<K extends string>(properties: Properties<K>): void {
+  userSetOnce(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userSetOnce>', properties);
     this.createTask('#user_set_once', 'user', properties);
   }
-  userAdd<K extends string>(properties: Record<PublicKey<K>, number>): void {
+  userAdd(properties: Record<string, number>): void {
     if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userAdd>', properties);
     this.createTask('#user_add', 'user', properties);
@@ -166,12 +166,12 @@ export class Sandbox implements DataTower {
     Logger.debug('<userDelete>');
     this.createTask('#user_delete', 'user', {});
   }
-  userAppend<K extends string>(properties: ArrayProperties<K>): void {
+  userAppend(properties: ArrayProperties): void {
     if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userAppend>', properties);
     this.createTask('#user_append', 'user', properties);
   }
-  userUniqAppend<K extends string>(properties: ArrayProperties<K>): void {
+  userUniqAppend(properties: ArrayProperties): void {
     if (!this.validatePropertiesKey(properties)) return;
     Logger.debug('<userUniqAppend>', properties);
     this.createTask('#user_uniq_append', 'user', properties);
@@ -218,7 +218,7 @@ export class Sandbox implements DataTower {
   // }
 
   /* properties */
-  setStaticCommonProperties<K extends string>(properties: Properties<K>): void {
+  setStaticCommonProperties(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
     this.staticProperties = { ...this.staticProperties, ...properties };
     Logger.debug('<setStaticCommonProperties>', properties);
@@ -227,13 +227,13 @@ export class Sandbox implements DataTower {
     this.staticProperties = {};
     Logger.debug('<clearStaticCommonProperties>');
   }
-  setCommonProperties(callback: <K extends string>() => Properties<K>): void {
+  setDynamicCommonProperties(callback: () => Properties): void {
     if (!this.validatePropertiesKey(callback())) return;
     this.dynamicProperties = callback;
-    Logger.debug('<setCommonProperties>', callback);
+    Logger.debug('<setDynamicCommonProperties>', callback);
   }
-  clearCommonProperties(): void {
+  clearDynamicCommonProperties(): void {
     this.dynamicProperties = null;
-    Logger.debug('<clearCommonProperties>');
+    Logger.debug('<clearDynamicCommonProperties>');
   }
 }
