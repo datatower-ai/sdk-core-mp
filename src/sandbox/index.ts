@@ -6,7 +6,7 @@ export { LogLevel, type Config, type Properties } from '@/type';
 export { Logger } from './Logger';
 
 export class Web extends StaticDataTower {
-  protected static instances = new MultipleInstanceManager<DataTower>(() => new Sandbox(new WebShim()));
+  protected static readonly instances = new MultipleInstanceManager<DataTower>(() => new Sandbox(new WebShim()));
 }
 
 // TODO: more platform

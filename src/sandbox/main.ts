@@ -14,7 +14,7 @@ import type { RequestOptions, Shim } from './shim/type';
  */
 export class Sandbox implements DataTower {
   private config: Required<Config> = DEFAULT_CONFIG;
-  private taskQueue: TaskQueue<Record<string, any>, true> = new TaskQueue();
+  private readonly taskQueue: TaskQueue<Record<string, any>, true> = new TaskQueue();
 
   private settings = {
     '#acid': '',
@@ -54,7 +54,7 @@ export class Sandbox implements DataTower {
   /**
    * @param shim - 平台适配器，用于获取系统信息、存储、网络请求等，抹平不同平台的差异
    */
-  constructor(protected shim: Shim) {}
+  constructor(protected readonly shim: Shim) {}
 
   private get url() {
     const { token, app_id, server_url } = this.config;

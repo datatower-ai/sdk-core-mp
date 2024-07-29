@@ -28,9 +28,9 @@ export enum MiniGamePlatform {
  * mini program/mini_GAME shim
  */
 export class MiniShim implements Shim {
-  private api: Record<string, any>;
+  private readonly api: Record<string, any>;
 
-  constructor(private platform: MiniGamePlatform | MiniProgramPlatform) {
+  constructor(private readonly platform: MiniGamePlatform | MiniProgramPlatform) {
     switch (platform) {
       case MiniProgramPlatform.WECHAT:
       case MiniGamePlatform.WECHAT:

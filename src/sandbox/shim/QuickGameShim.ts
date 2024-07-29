@@ -12,7 +12,7 @@ export enum QuickGamePlatform {
  * quick game shim
  */
 export class QuickGameShim implements Shim {
-  constructor(private platform: QuickGamePlatform) {}
+  constructor(private readonly platform: QuickGamePlatform) {}
   get referrer(): string {
     throw new Error('Method not implemented.');
   }

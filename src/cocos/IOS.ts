@@ -16,7 +16,7 @@ import { version } from '~/package.json';
  * cocos CocosIOS bridge
  */
 export class CocosIOS implements AnalysisDataTower {
-  private presetProperties = { '#sdk_type': 'cocos_ios', '#sdk_version_name': version } as const;
+  private readonly presetProperties = { '#sdk_type': 'cocos_ios', '#sdk_version_name': version };
   private dynamicProperties: null | (() => Properties) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {

@@ -10,7 +10,7 @@ import type {
 import { MultipleInstanceManager } from './MultipleInstanceManager';
 
 export class StaticDataTower {
-  protected static instances: MultipleInstanceManager<DataTower>;
+  protected static readonly instances: MultipleInstanceManager<DataTower>;
 
   static async initSDK(config: Config): Promise<void> {
     const instance = this.instances.add(config.app_id);
@@ -71,7 +71,7 @@ export class StaticDataTower {
 }
 
 export class StaticAnalysisDataTower extends StaticDataTower {
-  protected static instances: MultipleInstanceManager<AnalysisDataTower>;
+  protected static readonly instances: MultipleInstanceManager<AnalysisDataTower>;
 
   // id
   static setFirebaseAppInstanceId(id: string, app_id?: string): void {

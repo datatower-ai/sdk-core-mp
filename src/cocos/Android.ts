@@ -12,16 +12,16 @@ import type {
 import { fmt, globalNativeCallback } from '@/utils';
 import { version } from '~/package.json';
 
-type JavaType = 'void' | 'int' | 'float' | 'boolean' | 'String';
+type JavaType = keyof (typeof CocosAndroid)['typeMap'];
 
 /**
  * cocos CocosAndroid bridge
  */
 export class CocosAndroid implements AnalysisDataTower {
-  private presetProperties = { '#sdk_type': 'cocos_android', '#sdk_version_name': version } as const;
+  private readonly presetProperties = { '#sdk_type': 'cocos_android', '#sdk_version_name': version };
   private dynamicProperties: null | (() => Properties) = null;
 
-  private static typeMap: Record<JavaType, string> = {
+  private static readonly typeMap = {
     void: 'V',
     int: 'I',
     float: 'F',

@@ -1,8 +1,8 @@
 import { Logger } from './sandbox';
 
 export class MultipleInstanceManager<T = Object> {
-  constructor(private create: () => T) {}
-  private instances: Record<string, T> = {};
+  constructor(private readonly create: () => T) {}
+  private readonly instances: Record<string, T> = {};
   add(id: string) {
     const instance = this.create();
     if (!this.instances.default) {
