@@ -27,7 +27,7 @@ export enum MiniGamePlatform {
  * TODO:
  * mini program/mini_GAME shim
  */
-export class MiniShim implements Shim {
+export class MiniGameProgramShim implements Shim {
   private readonly api: Record<string, any>;
 
   constructor(private readonly platform: MiniGamePlatform | MiniProgramPlatform) {
