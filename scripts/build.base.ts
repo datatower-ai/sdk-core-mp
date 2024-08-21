@@ -1,14 +1,18 @@
 import Zip from 'adm-zip';
-import { readdirSync, rename, watchFile } from 'fs';
+import ConditionalAnnotationBabelPlugin from 'babel-plugin-conditional-annotation';
+import pluginBabel from 'esbuild-plugin-babel';
 import { intersection } from 'lodash-es';
-import path from 'path';
-import tsup, { type Format, type Options } from 'tsup';
+import fs from 'node:fs';
+import path from 'node:path/posix';
+import type { Format, Options } from 'tsup';
+import tsup from 'tsup';
 import { command } from './command.js';
 
 const version = process.env.npm_package_version;
 const root = process.cwd();
+const sandbox = <const>['web', 'wechat-mimi-game', 'wechat-mimi-program'];
 
-type Platform = 'cocos' | 'sandbox';
+type Platform = 'cocos' | (typeof sandbox)[number];
 type Config = Omit<Options, 'format'> & { format: Format[]; native?: string };
 
 const ConfigMap: Record<Platform, Config[]> = {
@@ -20,20 +24,37 @@ const ConfigMap: Record<Platform, Config[]> = {
       native: 'src/native/cc',
     },
   ],
-  sandbox: [
-    {
-      entry: { sandbox: 'src/sandbox/index.ts' },
-      outDir: 'dist',
-      format: ['esm', 'cjs'],
-    },
-    {
-      entry: { sandbox: 'src/sandbox/index.ts' },
-      outDir: 'dist',
-      format: ['iife'],
-      globalName: 'DataTower',
-    },
-  ],
+  ...(Object.fromEntries(
+    sandbox.map((platform) => [
+      platform,
+      ['esm', 'cjs', platform === 'web' && 'iife'].filter(Boolean).map((format) => ({
+        entry: { [platform]: 'src/sandbox/index.ts' },
+        outDir: 'dist',
+        format: [format],
+        globalName: 'DataTower',
+        plugins: [ConditionalAnnotationPlugin({ platform, format })],
+      })),
+    ]),
+  ) as Record<(typeof sandbox)[number], Config[]>),
 };
+
+function ConditionalAnnotationPlugin(
+  env: Record<string, string | number | boolean>,
+): NonNullable<Options['plugins']>[number] {
+  return {
+    name: 'conditional-annotation',
+    buildStart() {
+      (this.options.esbuildPlugins ??= []).push(
+        pluginBabel({
+          filter: /\.(js|ts)$/,
+          config: {
+            plugins: ['@babel/plugin-transform-typescript', [ConditionalAnnotationBabelPlugin, env]],
+          },
+        }),
+      );
+    },
+  };
+}
 
 async function buildSingle(config: Config, formats: Format[], defaultConfig: Options) {
   const targetFormat = intersection(config.format, formats);
@@ -43,8 +64,8 @@ async function buildSingle(config: Config, formats: Format[], defaultConfig: Opt
     Object.keys(config.entry as object).map((entry) => {
       const filename = `${config.outDir}/${entry}`;
       const [source, target] = [`${filename}.d.ts`, `${filename}.d.mts`];
-      if (config.watch) watchFile(source, (curr) => curr && rename(source, target, () => {}));
-      return new Promise((resolve) => rename(`${filename}.d.ts`, `${filename}.d.mts`, resolve));
+      if (config.watch) fs.watchFile(source, (curr) => curr && fs.rename(source, target, () => {}));
+      return new Promise((resolve) => fs.rename(`${filename}.d.ts`, `${filename}.d.mts`, resolve));
     }),
   );
 }
@@ -54,22 +75,21 @@ async function build(platforms: Platform[], formats: Format[], defaultConfig: Op
     platforms.map(async (platform) => {
       const configs = ConfigMap[platform];
       await Promise.all(configs.map(async (config) => buildSingle(config, formats, defaultConfig)));
-      if (defaultConfig.minify) pack(platform, configs.map((config) => config.native).filter(Boolean) as string[]);
+      if (defaultConfig.minify) bundle(platform, configs.map((config) => config.native).filter(Boolean) as string[]);
     }),
   );
 }
 
-function pack(platform: Platform, native?: string[]) {
+function bundle(platform: Platform, native?: string[]) {
   const zip = new Zip();
-  readdirSync(path.posix.join(root, 'dist')).forEach((file) => {
+  fs.readdirSync(path.join(root, 'dist')).forEach((file) => {
     if (!file.startsWith(platform)) return;
-    zip.addLocalFile(path.posix.join(root, 'dist', file));
+    zip.addLocalFile(path.join(root, 'dist', file));
   });
-  native?.forEach((file) => zip.addLocalFolder(path.posix.join(root, file)));
-  zip.writeZip(path.posix.join(root, 'pack', `${platform}-${version}.zip`));
+  native?.forEach((file) => zip.addLocalFolder(path.join(root, file)));
+  zip.writeZip(path.join(root, 'bundle', `${platform}-${version}.zip`));
 }
 
-// selectableAll
 export async function start(defaultConfig: Options, selectableAll: boolean) {
   const options = Object.fromEntries(
     Object.entries(ConfigMap).map(([platform, configs]) => {

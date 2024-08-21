@@ -11,6 +11,7 @@
     "strict": true,
     "noImplicitThis": true,
     "moduleResolution": "Node",
+    "types": ["./scripts/types.d.ts"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true

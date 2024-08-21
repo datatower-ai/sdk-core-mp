@@ -3,30 +3,38 @@ import { MultipleInstanceManager } from '../MultipleInstanceManager';
 import { Sandbox } from './main';
 import { MiniGamePlatform, MiniGameProgramShim, MiniProgramPlatform } from './shim/MiniGameProgramShim';
 import { WebShim } from './shim/WebShim';
-export { LogLevel, type Config, type Properties } from '@/type';
-export { Logger } from './Logger';
 
-export class Web extends StaticDataTower {
+class Web extends StaticDataTower {
   protected static readonly instances = new MultipleInstanceManager<DataTower>(() => new Sandbox(new WebShim()));
 }
 
-export class WechatMimiGame extends StaticDataTower {
+class WechatMimiGame extends StaticDataTower {
   protected static readonly instances = new MultipleInstanceManager<DataTower>(
     () => new Sandbox(new MiniGameProgramShim(MiniGamePlatform.WECHAT)),
   );
 }
 
-export class WechatMimiProgram extends StaticDataTower {
+class WechatMimiProgram extends StaticDataTower {
   protected static readonly instances = new MultipleInstanceManager<DataTower>(
     () => new Sandbox(new MiniGameProgramShim(MiniProgramPlatform.WECHAT)),
   );
 }
 
-// TODO: more platform
-// export class QuickApp extends StaticDataTower {
-//   protected static createInstance = () => new Sandbox(new QuickAppShim());
-// }
+var _default_: DataTower;
+// #if platform === 'web'
+_default_ = Web;
+// #elseif platform === 'wechat-mimi-game'
+_default_ = WechatMimiGame;
+// #elseif platform === 'wechat-mimi-program'
+_default_ = WechatMimiProgram;
+// #else
+_default_ = Web;
+// #endif
 
-// export class HuaweiQuickGame extends StaticDataTower {
-//   protected static createInstance = () => new Sandbox(new QuickGameShim(QuickGamePlatform.HUAWEI));
-// }
+// #if format === 'iife'
+export default _default_;
+// #else
+export { LogLevel, type Config, type Properties } from '@/type';
+export { Logger } from './Logger';
+export { _default_ as DataTower };
+// #endif
