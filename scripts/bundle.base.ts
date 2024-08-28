@@ -10,6 +10,8 @@ import { command } from './command.js';
 
 const version = process.env.npm_package_version;
 const root = process.cwd();
+const bundlePath = path.join(root, 'bundle');
+const distPath = path.join(root, 'bundle/dist');
 const sandbox = <const>['web', 'wechat-mimi-game', 'wechat-mimi-program'];
 
 type Platform = 'cocos' | (typeof sandbox)[number];
@@ -19,7 +21,7 @@ const ConfigMap: Record<Platform, Config[]> = {
   cocos: [
     {
       entry: { cocos: 'src/cocos/index.ts' },
-      outDir: 'dist',
+      outDir: distPath,
       format: ['esm', 'cjs'],
       native: 'src/native/cc',
     },
@@ -29,7 +31,7 @@ const ConfigMap: Record<Platform, Config[]> = {
       platform,
       ['esm', 'cjs', platform === 'web' && 'iife'].filter(Boolean).map((format) => ({
         entry: { [platform]: 'src/sandbox/index.ts' },
-        outDir: 'dist',
+        outDir: distPath,
         format: [format],
         globalName: 'DataTower',
         plugins: [ConditionalAnnotationPlugin({ platform, format })],
@@ -82,12 +84,12 @@ async function build(platforms: Platform[], formats: Format[], defaultConfig: Op
 
 function bundle(platform: Platform, native?: string[]) {
   const zip = new Zip();
-  fs.readdirSync(path.join(root, 'dist')).forEach((file) => {
+  fs.readdirSync(distPath).forEach((file) => {
     if (!file.startsWith(platform)) return;
-    zip.addLocalFile(path.join(root, 'dist', file));
+    zip.addLocalFile(path.join(distPath, file));
   });
   native?.forEach((file) => zip.addLocalFolder(path.join(root, file)));
-  zip.writeZip(path.join(root, 'bundle', `${platform}-${version}.zip`));
+  zip.writeZip(path.join(bundlePath, `${platform}-${version}.zip`));
 }
 
 export async function start(defaultConfig: Options, selectableAll: boolean) {

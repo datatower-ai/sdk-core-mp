@@ -1,5 +1,6 @@
 import { Logger } from '@/Logger';
-import { type DataTower } from '@/StaticDataTower';
+import { MultipleInstanceManager } from '@/MultipleInstanceManager';
+import { StaticDataTower, type DataTower } from '@/StaticDataTower';
 import { TaskQueue } from '@/TaskQueue';
 import { DEFAULT_CONFIG } from '@/constant';
 import type { ArrayProperties, Config, Properties } from '@/type';
@@ -235,4 +236,11 @@ export class Sandbox implements DataTower {
     this.dynamicProperties = null;
     Logger.debug('<clearDynamicCommonProperties>');
   }
+}
+
+/** structure static Sandbox DataTower class with shim */
+export function structure(shim: Shim): DataTower {
+  return class extends StaticDataTower {
+    protected static readonly instances = new MultipleInstanceManager<DataTower>(() => new Sandbox(shim));
+  };
 }

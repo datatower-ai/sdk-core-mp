@@ -1,13 +1,11 @@
 import { type Options } from 'tsup';
-import { start } from './build.base.js';
+import { start } from './bundle.base.js';
 
 const DEFAULT_CONFIG: Options = {
-  minify: true,
-  clean: true,
+  watch: true,
   dts: true,
   treeshake: true,
-  target: 'es5',
-  skipNodeModulesBundle: false,
+  target: 'esnext',
   outExtension: ({ format }) => {
     return {
       cjs: { js: `.cjs`, dts: `.d.cts` },
@@ -17,4 +15,4 @@ const DEFAULT_CONFIG: Options = {
   },
 };
 
-start(DEFAULT_CONFIG, true);
+start(DEFAULT_CONFIG, false);
