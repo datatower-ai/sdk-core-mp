@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { TaskQueue } from '../src/sandbox/TaskQueue';
+import { TaskQueue } from '../src/TaskQueue';
 
 test('TaskQueue tryExecute', async () => {
   const res1 = await TaskQueue.tryExecute([() => Promise.reject(), () => Promise.resolve(2), () => Promise.reject()]);

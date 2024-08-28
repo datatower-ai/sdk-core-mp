@@ -1,4 +1,12 @@
-import { LogLevel } from '@/type';
+/** 日志级别 */
+export const enum LogLevel {
+  VERBOSE = 1,
+  ASSERT = 2,
+  DEBUG = 3,
+  INFO = 4,
+  WARN = 5,
+  ERROR = 6,
+}
 
 /**
  * console log by level

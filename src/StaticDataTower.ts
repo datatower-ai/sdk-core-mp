@@ -7,7 +7,7 @@ import type {
   Properties,
   ReportSuccessOptions,
 } from '@/type';
-import { MultipleInstanceManager } from './MultipleInstanceManager';
+import type { MultipleInstanceManager } from '@/MultipleInstanceManager';
 
 export class StaticDataTower {
   protected static readonly instances: MultipleInstanceManager<DataTower>;

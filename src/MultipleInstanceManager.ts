@@ -1,4 +1,4 @@
-import { Logger } from './sandbox/Logger';
+import { Logger } from '@/Logger';
 
 export class MultipleInstanceManager<T = Object> {
   constructor(private readonly create: () => T) {}

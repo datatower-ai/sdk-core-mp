@@ -1,6 +1,5 @@
-// @ts-ignore TODO:
-import { UAParser } from '$/ua-parser-js';
-import { TaskQueue } from '../TaskQueue';
+import { parseUserAgent } from '@/utils';
+import { TaskQueue } from '@/TaskQueue';
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
 class WebRequest {
@@ -109,7 +108,7 @@ export class WebShim extends WebRequest implements Shim {
   }
 
   get systemInfo(): SystemInfo {
-    const { device, os, browser } = UAParser();
+    const { device, os, browser } = parseUserAgent();
     return {
       height: globalThis.innerHeight,
       width: globalThis.innerWidth,

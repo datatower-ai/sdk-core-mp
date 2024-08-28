@@ -1,9 +1,8 @@
-export * from '@/type';
+import { Logger } from '@/Logger';
+import { MultipleInstanceManager } from '@/MultipleInstanceManager';
+import { Sandbox } from '@/sandbox/main';
+import { WebShim } from '@/sandbox/shim/WebShim';
 import { StaticAnalysisDataTower, type AnalysisDataTower } from '@/StaticDataTower';
-import { MultipleInstanceManager } from '../MultipleInstanceManager';
-import { Logger } from '../sandbox/Logger';
-import { Sandbox } from '../sandbox/main';
-import { WebShim } from '../sandbox/shim/WebShim';
 import { CocosAndroid } from './Android';
 import { CocosIOS } from './IOS';
 
@@ -28,4 +27,5 @@ class Cocos extends StaticAnalysisDataTower {
   });
 }
 
+export type * from '@/type';
 export { Cocos as DataTower };
