@@ -13,6 +13,7 @@ import { fmt, globalNativeCallback } from '@/utils';
 import { version } from '~/package.json';
 
 type JavaType = keyof (typeof CocosAndroid)['typeMap'];
+type Parameter = ['int', number] | ['float', number] | ['boolean', boolean] | ['String', string];
 
 /**
  * cocos CocosAndroid bridge
@@ -28,11 +29,7 @@ export class CocosAndroid implements AnalysisDataTower {
     boolean: 'Z',
     String: 'Ljava/lang/String;',
   };
-  private static callStaticMethod(
-    method: string,
-    retType: JavaType,
-    ...parameters: [type: JavaType, value: any][]
-  ): any {
+  private static callStaticMethod(method: string, retType: JavaType, ...parameters: Parameter[]): any {
     const signature = `(${parameters.map(([type]) => this.typeMap[type]).join('')})${this.typeMap[retType]}`;
     const values = parameters.map(([, value]) => value);
     return jsb.reflection.callStaticMethod('ai/datatower/bridge/DTCocosCreatorProxyApi', method, signature, ...values);
