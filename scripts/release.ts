@@ -12,8 +12,8 @@ import yargs from 'yargs/yargs';
 
 const version = process.env.npm_package_version;
 const root = process.cwd();
-const bundlePath = path.join(root, 'bundle');
-const distPath = path.join(root, 'bundle/dist');
+const releasePath = path.join(root, 'release');
+const distPath = path.join(root, 'bundle');
 const sandbox = <const>['web', 'wechat-mimi-game', 'wechat-mimi-program'];
 
 type Platform = 'cocos' | (typeof sandbox)[number];
@@ -146,7 +146,7 @@ function bundle(platform: Platform, native?: string[]) {
     zip.addLocalFile(path.join(distPath, file));
   });
   native?.forEach((file) => zip.addLocalFolder(path.join(root, file)));
-  zip.writeZip(path.join(bundlePath, `${platform}-${version}.zip`));
+  zip.writeZip(path.join(releasePath, `${platform}-${version}.zip`));
 }
 
 async function main() {

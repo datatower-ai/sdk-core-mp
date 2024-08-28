@@ -27,8 +27,8 @@
     "test": "vitest run",
     "build": "tsup src/index.ts --minify --dts --treeshake --format=cjs,esm --clean",
     "dev": "tsup src/index.ts --dts --format=cjs,esm --watch",
-    "bundle": "tsc -p tsconfig.node.json && node scripts/dist/bundle.js --mode=production",
-    "bundle:dev": "tsc -p tsconfig.node.json && node scripts/dist/bundle.js --mode=development"
+    "release": "tsc -p tsconfig.node.json && node scripts/dist/release.js --mode=production",
+    "release:watch": "tsc -p tsconfig.node.json && node scripts/dist/release.js --mode=development"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
