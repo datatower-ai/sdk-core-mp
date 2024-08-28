@@ -27,8 +27,8 @@
     "test": "vitest run",
     "build": "tsup src/index.ts --minify --dts --treeshake --format=cjs,esm --clean",
     "dev": "tsup src/index.ts --dts --format=cjs,esm --watch",
-    "bundle": "tsc -p tsconfig.node.json && node scripts/dist/bundle.prod.js",
-    "bundle:dev": "tsc -p tsconfig.node.json && node scripts/dist/bundle.dev.js"
+    "bundle": "tsc -p tsconfig.node.json && node scripts/dist/bundle.js --mode=production",
+    "bundle:dev": "tsc -p tsconfig.node.json && node scripts/dist/bundle.js --mode=development"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -40,6 +40,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.11.30",
     "@types/ua-parser-js": "^0.7.39",
+    "@types/yargs": "^17.0.33",
     "adm-zip": "^0.5.12",
     "babel-plugin-conditional-annotation": "^1.0.4",
     "esbuild-plugin-babel": "^0.2.3",
@@ -48,7 +49,8 @@
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "yargs": "^17.7.2"
   },
   "engines": {
     "node": ">=18.12.0"

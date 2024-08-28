@@ -1,10 +1,8 @@
-// TODO: tsup打包时需要显式引入，才能将三方库源码打包进去
-import { Utf8 } from '~/node_modules/crypto-es/lib/core';
-import { Base64 } from '~/node_modules/crypto-es/lib/enc-base64';
-import { MD5 } from '~/node_modules/crypto-es/lib/md5';
-import { SHA256 } from '~/node_modules/crypto-es/lib/sha256';
-// @ts-ignore
-import { UAParser } from '~/node_modules/ua-parser-js';
+import { Utf8 } from 'crypto-es/lib/core';
+import { Base64 } from 'crypto-es/lib/enc-base64';
+import { MD5 } from 'crypto-es/lib/md5';
+import { SHA256 } from 'crypto-es/lib/sha256';
+import { UAParser } from 'ua-parser-js';
 
 export function encodeBase64(data: string): string {
   return Base64.stringify(Utf8.parse(data));
