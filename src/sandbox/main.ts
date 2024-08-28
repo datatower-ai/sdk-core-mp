@@ -1,12 +1,11 @@
-import parseUrl from '$/parse-url';
-import type { DataTower } from '@/StaticDataTower';
+import { Logger } from '@/Logger';
+import { type DataTower } from '@/StaticDataTower';
+import { TaskQueue } from '@/TaskQueue';
 import { DEFAULT_CONFIG } from '@/constant';
 import type { ArrayProperties, Config, Properties } from '@/type';
-import { debounce, md5, sha256 } from '@/utils';
+import { debounce, encodeBase64, md5, parseUrl, sha256, stringifyUrl } from '@/utils';
 import { version } from '~/package.json';
-import { Logger } from './Logger';
-import { TaskQueue } from './TaskQueue';
-import type { RequestOptions, Shim } from './shim/type';
+import type { Shim } from './shim/type';
 
 /**
  * Sandbox
@@ -29,7 +28,7 @@ export class Sandbox implements DataTower {
   private get presetProperties() {
     const { height, width, os, platform, viewport, title } = this.shim.systemInfo;
     const referrer = this.shim.referrer;
-    return {
+    return <const>{
       '#sdk_type': 'javascript',
       '#sdk_version_name': version,
 
@@ -47,8 +46,8 @@ export class Sandbox implements DataTower {
       '#os_version': os.version,
 
       '#latest_referrer': referrer,
-      '#latest_referrer_host': referrer && parseUrl(referrer).resource,
-    } as const;
+      '#latest_referrer_host': referrer && stringifyUrl(parseUrl(referrer), 'host'),
+    };
   }
 
   /**
@@ -58,19 +57,19 @@ export class Sandbox implements DataTower {
 
   private get url() {
     const { token, app_id, server_url } = this.config;
-    const url = new URL(server_url);
-    token && url.searchParams.set('token', token);
-    app_id && url.searchParams.set('app_id', app_id);
-    return url.toString();
+    const urlOpts = parseUrl(server_url);
+    token && (urlOpts.query.token = token);
+    app_id && (urlOpts.query.app_id = app_id);
+    return stringifyUrl(urlOpts);
   }
 
   private report() {
     const tasks = this.taskQueue.flush();
     if (!tasks.length) return;
     const dataStr = JSON.stringify(tasks);
-    const base64 = btoa(dataStr);
-    const check = md5(base64 + '@datatower').toString();
-    const params = new URLSearchParams({ data: base64, check }).toString() as RequestOptions['params'];
+    const base64 = encodeBase64(dataStr);
+    const check = md5(base64 + '@datatower');
+    const params = <const>`data=${base64}&check=${check}`;
     return this.shim.request({ url: this.url, params });
   }
 

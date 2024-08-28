@@ -1,6 +1,14 @@
 // TODO: tsup打包时需要显式引入，才能将三方库源码打包进去
-import { MD5 } from '$/crypto-es/lib/md5';
-import { SHA256 } from '$/crypto-es/lib/sha256';
+import { Utf8 } from '~/node_modules/crypto-es/lib/core';
+import { Base64 } from '~/node_modules/crypto-es/lib/enc-base64';
+import { MD5 } from '~/node_modules/crypto-es/lib/md5';
+import { SHA256 } from '~/node_modules/crypto-es/lib/sha256';
+// @ts-ignore
+import { UAParser } from '~/node_modules/ua-parser-js';
+
+export function encodeBase64(data: string): string {
+  return Base64.stringify(Utf8.parse(data));
+}
 
 export function md5(data: string): string {
   return MD5(data).toString();
@@ -8,6 +16,10 @@ export function md5(data: string): string {
 
 export function sha256(data: string): string {
   return SHA256(data).toString();
+}
+
+export function parseUserAgent(ua?: string) {
+  return UAParser(ua);
 }
 
 // 序列化
@@ -40,4 +52,52 @@ export function debounce<T extends (...args: any[]) => any>(callback: T, delay: 
       timer = null;
     }, delay);
   } as T;
+}
+
+export function splitOnce(str: string, separator: string, reverse?: boolean): [string, string] {
+  const index = str.indexOf(separator);
+  return index > 0 ? [str.slice(0, index), str.slice(index + separator.length)] : !reverse ? [str, ''] : ['', str];
+}
+
+export function trimEnd(str: string, char: string): string {
+  return str.endsWith(char) ? str.slice(0, -char.length) : str;
+}
+
+export function parseUrl(url: string) {
+  const [protocol, temp1] = splitOnce(url, '://', true);
+  const [auth, temp2] = splitOnce(temp1, '@', true);
+  const [temp3, hash] = splitOnce(temp2, '#');
+  const [temp4, search] = splitOnce(temp3, '?');
+  const [temp5, pathname] = splitOnce(temp4, '/');
+  const [hostname, port] = splitOnce(temp5, ':');
+  const [username, password] = splitOnce(auth, ':', true);
+  const query = search ? Object.fromEntries(search.split('&').map((it) => it.split('='))) : void 0;
+
+  return { protocol, username, password, hostname, port: port ? +port : void 0, pathname, query, hash };
+}
+
+export type PartialWithout<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
+export type ParseURLOptions = PartialWithout<ReturnType<typeof parseUrl>, 'hostname'>;
+
+export function stringifyUrl(opts: ParseURLOptions, level: 'href' | 'origin' | 'host' = 'href') {
+  const { protocol = 'http', username, password, hostname, port = '', pathname = '', query = '', hash = '' } = opts;
+  const auth = username && password ? `${username}:${password}@` : '';
+  const _hostname = trimEnd(hostname, '/');
+  const _port = port ? `:${port}` : '';
+  const _pathname = pathname && (pathname.startsWith('/') ? pathname : `/${pathname}`);
+  const search =
+    query &&
+    `?${Object.entries(query)
+      .map((kv) => kv.join('='))
+      .join('&')}`;
+  const _hash = hash && `#${hash}`;
+
+  switch (level) {
+    case 'href':
+      return `${protocol}://${auth}${_hostname}${_port}${_pathname}${search}${_hash}`;
+    case 'origin':
+      return `${protocol}://${_hostname}${_port}`;
+    case 'host':
+      return `${_hostname}${_port}`;
+  }
 }

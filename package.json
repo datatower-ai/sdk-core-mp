@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "crypto-es": "^2.1.0",
-    "parse-url": "^9.2.0",
     "ua-parser-js": "^1.0.38"
   }
 }
