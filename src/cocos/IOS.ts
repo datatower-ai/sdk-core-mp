@@ -1,5 +1,5 @@
 import { AnalysisDataTower } from '@/StaticDataTower';
-import { DEFAULT_INITIAL_CONFIG, IOSClass } from '@/constant';
+import { DEFAULT_INITIAL_CONFIG } from '@/constant';
 import type {
   ArrayProperties,
   BaseReportOptions,
@@ -20,7 +20,7 @@ export class CocosIOS implements AnalysisDataTower {
   private dynamicProperties: null | (() => Properties) = null;
 
   private static callStaticMethod(method: string, ...args: any[]): any {
-    return jsb.reflection.callStaticMethod(IOSClass, method, ...args);
+    return jsb.reflection.callStaticMethod('DTCocosCreatorProxyApi', method, ...args);
   }
 
   async initSDK(config: Config) {
