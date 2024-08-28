@@ -55,12 +55,14 @@ export function debounce<T extends (...args: any[]) => any>(callback: T, delay: 
 }
 
 export function splitOnce(str: string, separator: string, reverse?: boolean): [string, string] {
-  const index = str.indexOf(separator);
+  const index = !reverse ? str.indexOf(separator) : str.lastIndexOf(separator);
   return index > 0 ? [str.slice(0, index), str.slice(index + separator.length)] : !reverse ? [str, ''] : ['', str];
 }
 
 export function trimEnd(str: string, char: string): string {
-  return str.endsWith(char) ? str.slice(0, -char.length) : str;
+  let i = str.length - 1;
+  while (str[i] === char) i--;
+  return str.slice(0, i + 1);
 }
 
 export function parseUrl(url: string) {
@@ -80,7 +82,8 @@ export type PartialWithout<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T,
 export type ParseURLOptions = PartialWithout<ReturnType<typeof parseUrl>, 'hostname'>;
 
 export function stringifyUrl(opts: ParseURLOptions, level: 'href' | 'origin' | 'host' = 'href') {
-  const { protocol = 'http', username, password, hostname, port = '', pathname = '', query = '', hash = '' } = opts;
+  const { protocol = '', username, password, hostname, port = '', pathname = '', query = '', hash = '' } = opts;
+  const _protocol = protocol && `${protocol}://`;
   const auth = username && password ? `${username}:${password}@` : '';
   const _hostname = trimEnd(hostname, '/');
   const _port = port ? `:${port}` : '';
@@ -94,9 +97,9 @@ export function stringifyUrl(opts: ParseURLOptions, level: 'href' | 'origin' | '
 
   switch (level) {
     case 'href':
-      return `${protocol}://${auth}${_hostname}${_port}${_pathname}${search}${_hash}`;
+      return `${_protocol}${auth}${_hostname}${_port}${_pathname}${search}${_hash}`;
     case 'origin':
-      return `${protocol}://${_hostname}${_port}`;
+      return `${_protocol}${_hostname}${_port}`;
     case 'host':
       return `${_hostname}${_port}`;
   }
