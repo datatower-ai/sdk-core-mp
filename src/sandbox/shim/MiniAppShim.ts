@@ -24,7 +24,7 @@ export enum MiniGamePlatform {
 }
 
 /**
- * mini program/mini_GAME shim
+ * mini program/game shim
  */
 export class MiniAppShim implements Shim {
   private readonly api: Record<string, any>;

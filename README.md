@@ -2,6 +2,8 @@
 
 ## 1. 开始使用
 
+### 1.1 从三方库引入
+
 - 1. 安装依赖
 ```bash
 npm i @datatower-ai/sdk-core-js
@@ -10,8 +12,30 @@ npm i @datatower-ai/sdk-core-js
 - 2. 引入并使用
 
 ```typescript
-// cocos creator
-import { DataTower } from '@datatower-ai/sdk-core-js/dist/cocos.mjs'
+import { Cocos /* Web, Uniapp, WechatMiniProgram, WechatMiniGame, ... */ } from '@datatower-ai/sdk-core-js';
+Cocos.initSDK({/* ... */})
+```
+
+### 1.2 从本地引入
+
+- 1. 下载对应平台的压缩包，解压到项目目录下，例如平台解压到`libs`目录下，以`cocos`为例目录结构如下：
+
+```
+assets/
+  libs/
+    cocos.cjs
+    cocos.d.cts
+    cocos.mjs
+    cocos.d.mts
+  scripts/
+    example.ts
+```
+
+- 2. 引入并使用
+
+```typescript
+// example.ts
+import { DataTower } from '@/libs/cocos.mjs';
 DataTower.initSDK({/* ... */})
 ```
 
@@ -29,7 +53,7 @@ sh scripts/install.sh
 ```bash
 # 在根目录下执行命令:
 pnpm install
-pnpm dev
+pnpm release:watch
 ```
 
 - 3. 打开运行`Example`目录下的项目，打包到不同平台。
@@ -45,8 +69,8 @@ npm i
 ```bash
 # 在项目根目录下运行 `install.sh` 脚本
 sh scripts/install.sh
-# 编译打包，选择对应的平台，生成的文件在 `dist` 目录下，压缩包在 `pack` 目录下
-pnpm build
+# 编译打包，选择对应的平台，生成的文件在 `bundle` 目录下，压缩包在 `release` 目录下
+pnpm release
 ```
 
 ## 4. mini app/mini game development documentation

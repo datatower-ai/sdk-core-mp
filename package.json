@@ -30,6 +30,9 @@
     "release": "tsc -p tsconfig.node.json && node scripts/dist/release.js --mode=production",
     "release:watch": "tsc -p tsconfig.node.json && node scripts/dist/release.js --mode=development"
   },
+  "engines": {
+    "node": ">=18.12.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-typescript": "^7.25.2",
@@ -51,9 +54,6 @@
     "typescript": "^5.2.2",
     "vitest": "^1.6.0",
     "yargs": "^17.7.2"
-  },
-  "engines": {
-    "node": ">=18.12.0"
   },
   "dependencies": {
     "crypto-es": "^2.1.0",
