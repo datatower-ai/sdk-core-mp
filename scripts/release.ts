@@ -24,6 +24,7 @@ type Config = Omit<Options, 'entry' | 'format'> & {
 };
 
 const BaseConfig: Options = {
+  tsconfig: 'tsconfig.app.json',
   outExtension: ({ format }) => {
     return {
       cjs: { js: `.cjs`, dts: `.d.cts` },
@@ -45,7 +46,6 @@ const ModeConfigMap: Record<'production' | 'development', Options> = {
     watch: true,
     dts: true,
     treeshake: false,
-    target: 'esnext',
   },
 };
 const PlatformConfigs: Config[] = [
@@ -66,6 +66,7 @@ const PlatformConfigs: Config[] = [
     outDir: distPath,
     format: ['iife'],
     globalName: 'DataTower',
+    target: 'es5',
     plugins: [ConditionalAnnotationPlugin({ platform: 'web', format: 'iife' })],
   },
 ];
@@ -116,15 +117,16 @@ async function command<P extends string, F extends string>(
 }
 
 async function buildSingle(config: Config, formats: Format[], defaultConfig: Options) {
-  const targetFormat = intersection(config.format, formats);
-  if (!targetFormat.length) return;
-  await tsup.build({ ...defaultConfig, ...config, format: targetFormat });
+  const format = intersection(config.format, formats);
+  if (!format.length) return;
+  const options = { ...defaultConfig, ...config, format };
+  await tsup.build(options);
   await Promise.all(
-    Object.keys(config.entry as object).map((entry) => {
-      const filename = `${config.outDir}/${entry}`;
+    Object.keys(options.entry as object).map((entry) => {
+      const filename = `${options.outDir}/${entry}`;
       const [source, target] = [`${filename}.d.ts`, `${filename}.d.mts`];
-      if (config.watch) fs.watchFile(source, (curr) => curr && fs.rename(source, target, () => {}));
-      return new Promise((resolve) => fs.rename(`${filename}.d.ts`, `${filename}.d.mts`, resolve));
+      if (options.watch) fs.watchFile(source, (curr) => curr && fs.rename(source, target, () => {}));
+      return new Promise((resolve) => fs.rename(source, target, resolve));
     }),
   );
 }
