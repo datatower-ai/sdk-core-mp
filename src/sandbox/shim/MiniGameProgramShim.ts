@@ -1,30 +1,29 @@
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
 export enum MiniProgramPlatform {
-  WECHAT = 'wechat_app',
-  QQ = 'qq_app',
-  BAIDU = 'baidu_app',
-  TOUTIAO = 'toutiao_app',
-  ALIPAY = 'alipay_app',
-  DINGDING = 'dingding_app',
-  KUAISHOU = 'kuaishou_app',
-  QIHOO = 'qihoo_app',
-  TAOBAO = 'taobao_app',
-  JINGDONG = 'jingdong_app',
+  WECHAT = 'wechat-mini-program',
+  QQ = 'qq-mini-program',
+  BAIDU = 'baidu-mini-program',
+  TOUTIAO = 'toutiao-mini-program',
+  ALIPAY = 'alipay-mini-program',
+  DINGDING = 'dingding-mini-program',
+  KUAISHOU = 'kuaishou-mini-program',
+  QIHOO = 'qihoo-mini-program',
+  TAOBAO = 'taobao-mini-program',
+  JINGDONG = 'jingdong-mini-program',
 }
 
 export enum MiniGamePlatform {
-  WECHAT = 'wechat_game',
-  QQ = 'qq_game',
-  BAIDU = 'baidu_game',
-  TOUTIAO = 'toutiao_game',
-  ALIPAY = 'alipay_game',
-  BILIBILI = 'bilibili_game',
-  QIHOO = 'qihoo_game',
+  WECHAT = 'wechat-mini-game',
+  QQ = 'qq-mini-game',
+  BAIDU = 'baidu-mini-game',
+  TOUTIAO = 'toutiao-mini-game',
+  ALIPAY = 'alipay-mini-game',
+  BILIBILI = 'bilibili-mini-game',
+  QIHOO = 'qihoo-mini-game',
 }
 
 /**
- * TODO:
  * mini program/mini_GAME shim
  */
 export class MiniGameProgramShim implements Shim {
