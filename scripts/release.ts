@@ -14,7 +14,7 @@ const version = process.env.npm_package_version;
 const root = process.cwd();
 const releasePath = path.join(root, 'release');
 const distPath = path.join(root, 'bundle');
-const sandbox = <const>['web', 'wechat-mimi-game', 'wechat-mimi-program'];
+const sandbox = <const>['web', 'uniapp', 'wechat-mimi-game', 'wechat-mimi-program'];
 
 type Platform = 'cocos' | (typeof sandbox)[number];
 type Config = Omit<Options, 'entry' | 'format'> & {

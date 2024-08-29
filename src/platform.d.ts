@@ -25,6 +25,7 @@ interface JSB {
 declare var cc: CC;
 declare var jsb: JSB;
 
+declare var uni: any;
 declare var wx: any;
 declare var qq: any;
 declare var swan: any;

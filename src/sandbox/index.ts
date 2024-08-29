@@ -4,6 +4,9 @@ var _default_: DataTower;
 /* #if platform === 'web' */
 import { Web } from './exports';
 _default_ = Web;
+/* #elseif platform === 'uniapp' */
+import { Uniapp } from './exports';
+_default_ = Uniapp;
 /* #elseif platform === 'wechat-mimi-game' */
 import { WechatMimiGame } from './exports';
 _default_ = WechatMimiGame;

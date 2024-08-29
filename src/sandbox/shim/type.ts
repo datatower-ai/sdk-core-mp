@@ -28,7 +28,6 @@ export interface SystemInfo {
   platform: Platform;
   viewport: Viewport;
   title: string;
-  appId?: string;
 }
 
 export interface Device {

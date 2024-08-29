@@ -26,11 +26,14 @@ export enum MiniGamePlatform {
 /**
  * mini program/mini_GAME shim
  */
-export class MiniGameProgramShim implements Shim {
+export class MiniAppShim implements Shim {
   private readonly api: Record<string, any>;
 
-  constructor(private readonly platform: MiniGamePlatform | MiniProgramPlatform) {
+  constructor(private readonly platform: MiniGamePlatform | MiniProgramPlatform | 'uniapp') {
     switch (platform) {
+      case 'uniapp':
+        this.api = uni;
+        break;
       case MiniProgramPlatform.WECHAT:
       case MiniGamePlatform.WECHAT:
         this.api = wx;
@@ -119,7 +122,6 @@ export class MiniGameProgramShim implements Shim {
       viewport: { height: sys.windowHeight, width: sys.windowWidth },
       // TODO:
       title: '',
-      appId: sys.host.appId,
     };
   }
 
