@@ -2,7 +2,7 @@ import type { AdMediation, AdPlatform, AdType } from './constant';
 import type { LogLevel } from './Logger';
 
 /** 传给 native 的初始化配置 */
-export interface InitialNativeConfig {
+export type InitialNativeConfig = {
   /** js sdk上报的token */
   token: string;
   /** 项目唯一标识，创建项目后 DataTower 后台自动分配，请在【项目设置-项目详情】中获取 */
@@ -22,27 +22,32 @@ export interface InitialNativeConfig {
     '#sdk_type': string;
     '#sdk_version_name': string;
   };
-}
+};
 
 /** SDK 内部配置，暴露到外部，由 init 传入 */
-export interface Config extends Required<Omit<InitialNativeConfig, 'properties'>> {
+export type Config = Omit<InitialNativeConfig, 'properties'> & {
   /**
-   * 防抖延迟时间，默认1000ms，作用是将连续触发上报的多个事件合并到一个请求中
+   * 防抖延迟时间，默认1000ms，作用是将连续触发上报的多个事件合并到一个请求中。
    * 手动启动上报时，该值无效
    */
   debounceWait?: number;
   /**
-   * 上报队列最大长度，默认为 10
+   * 上报队列最大长度，默认为 10。
    * 手动启动上报时，该值无效
    */
   maxQueueSize?: number;
-}
+};
 
 export type Properties = Record<string, string | boolean | number>;
 
 export type ArrayProperties = Record<string, (string | boolean | number)[]>;
 
-export interface BaseReportOptions {
+/* key 以 '#'或'$' 开头，则返回 never */
+export type ExcludePrivateKey<T extends Record<string, any>> = {
+  [K in keyof T]: K extends `#${string}` | `$${string}` ? never : T[K];
+};
+
+export type BaseReportOptions = {
   id: string;
   type: AdType;
   platform: AdPlatform;
@@ -50,25 +55,25 @@ export interface BaseReportOptions {
   mediationId: string;
   seq: string;
   properties: Properties;
-}
+};
 
-export interface CommonReportOptions {
+export type CommonReportOptions = {
   location: string;
   entrance: string;
-}
+};
 
-export interface ReportSuccessOptions {
+export type ReportSuccessOptions = {
   sku: string;
   price: number;
   currency: string;
   properties: Properties;
-}
+};
 
-export interface BaseReportPaidOptions extends BaseReportOptions {
+export type BaseReportPaidOptions = BaseReportOptions & {
   value: number;
   precision: string;
   location: string;
-}
+};
 
 declare global {
   interface Window {

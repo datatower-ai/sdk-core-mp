@@ -4,6 +4,7 @@ import type {
   BaseReportPaidOptions,
   CommonReportOptions,
   Config,
+  ExcludePrivateKey,
   Properties,
   ReportSuccessOptions,
 } from '@/type';
@@ -22,16 +23,16 @@ export class StaticDataTower {
   static enableUpload(app_id?: string): void {
     return this.instances.get(app_id)?.enableUpload();
   }
-  static track(eventName: string, properties: Properties, app_id?: string): void {
+  static track<T extends Properties & ExcludePrivateKey<T>>(eventName: string, properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.track(eventName, properties);
   }
-  static userSet(properties: Properties, app_id?: string): void {
+  static userSet<T extends Properties & ExcludePrivateKey<T>>(properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.userSet(properties);
   }
-  static userSetOnce(properties: Properties, app_id?: string): void {
+  static userSetOnce<T extends Properties & ExcludePrivateKey<T>>(properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.userSetOnce(properties);
   }
-  static userAdd(properties: Record<string, number>, app_id?: string): void {
+  static userAdd<T extends Record<string, number> & ExcludePrivateKey<T>>(properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.userAdd(properties);
   }
   static userUnset(properties: string[], app_id?: string): void {
@@ -40,10 +41,10 @@ export class StaticDataTower {
   static userDelete(app_id?: string): void {
     return this.instances.get(app_id)?.userDelete();
   }
-  static userAppend(properties: ArrayProperties, app_id?: string): void {
+  static userAppend<T extends ArrayProperties & ExcludePrivateKey<T>>(properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.userAppend(properties);
   }
-  static userUniqAppend(properties: ArrayProperties, app_id?: string): void {
+  static userUniqAppend<T extends ArrayProperties & ExcludePrivateKey<T>>(properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.userUniqAppend(properties);
   }
   static getDataTowerId(callback: (id: string) => void, app_id?: string): void;
@@ -56,13 +57,16 @@ export class StaticDataTower {
   static setAccountId(id: string, app_id?: string): void {
     return this.instances.get(app_id)?.setAccountId(id);
   }
-  static setStaticCommonProperties(properties: Properties, app_id?: string): void {
+  static setStaticCommonProperties<T extends Properties & ExcludePrivateKey<T>>(properties: T, app_id?: string): void {
     return this.instances.get(app_id)?.setStaticCommonProperties(properties);
   }
   static clearStaticCommonProperties(app_id?: string): void {
     return this.instances.get(app_id)?.clearStaticCommonProperties();
   }
-  static setDynamicCommonProperties(callback: () => Properties, app_id?: string): void {
+  static setDynamicCommonProperties<T extends Properties & ExcludePrivateKey<T>>(
+    callback: () => T,
+    app_id?: string,
+  ): void {
     return this.instances.get(app_id)?.setDynamicCommonProperties(callback);
   }
   static clearDynamicCommonProperties(app_id?: string): void {
@@ -97,7 +101,11 @@ export class StaticAnalysisDataTower extends StaticDataTower {
   static trackTimerResume(eventName: string, app_id?: string): void {
     return this.instances.get(app_id)?.trackTimerResume(eventName);
   }
-  static trackTimerEnd(eventName: string, properties: Properties, app_id?: string): void {
+  static trackTimerEnd<T extends Properties & ExcludePrivateKey<T>>(
+    eventName: string,
+    properties: T,
+    app_id?: string,
+  ): void {
     return this.instances.get(app_id)?.trackTimerEnd(eventName, properties);
   }
 

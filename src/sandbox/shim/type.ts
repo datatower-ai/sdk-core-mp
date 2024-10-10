@@ -1,4 +1,4 @@
-export interface Shim {
+export type Shim = {
   getStorage<T = unknown>(key: string): Promise<T | null>;
   setStorage<T>(key: string, value: T): Promise<void>;
   removeStorage(name: string): Promise<void>;
@@ -9,17 +9,17 @@ export interface Shim {
   href: string;
   getNetworkStatus?(): void;
   onNetworkStatusChange?(callback: () => void): void;
-}
+};
 
 /**
  * 请求参数
  */
-export interface RequestOptions {
+export type RequestOptions = {
   url: string;
   params: `data=${string}&check=${string}`;
-}
+};
 
-export interface SystemInfo {
+export type SystemInfo = {
   height: number;
   width: number;
   language: string;
@@ -28,24 +28,24 @@ export interface SystemInfo {
   platform: Platform;
   viewport: Viewport;
   title: string;
-}
+};
 
-export interface Device {
+export type Device = {
   brand?: string;
   model?: string;
-}
+};
 
-export interface OS {
+export type OS = {
   name?: string;
   version?: string;
-}
+};
 
-export interface Platform {
+export type Platform = {
   name?: string;
   version?: string;
-}
+};
 
-export interface Viewport {
+export type Viewport = {
   height: number;
   width: number;
-}
+};
