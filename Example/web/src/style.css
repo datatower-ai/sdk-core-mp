@@ -57,7 +57,7 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #979cfe;
   }
 }
 
@@ -68,7 +68,7 @@ button:focus-visible {
 input {
   width: min(95vw, 800px);
   padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid #999;
   border-radius: 8px;
   background-color: transparent;
   color: inherit;
@@ -80,7 +80,7 @@ textarea {
   width: min(95vw, 800px);
   height: 20vh;
   padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid #999;
   border-radius: 8px;
   background-color: transparent;
   color: inherit;
@@ -97,5 +97,5 @@ textarea {
   gap: 8px;
   padding: 24px;
   width: min(95vw, 800px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid #999;
 }
