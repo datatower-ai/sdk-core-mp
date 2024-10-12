@@ -94,7 +94,7 @@ export class Sandbox implements DataTower {
     this.config = { ...DEFAULT_CONFIG, ...config };
     // 设置日志等级
     Logger.level = this.config.logLevel;
-    if (!this.validateConfig(this.config)) return;
+    if (!this.validateConfig(this.config)) return Promise.reject('config error');
     // 非手动启动上报时，监听任务队列事件
     if (!this.config.manualEnableUpload) {
       this.taskQueue.onMaxSize(() => this.report());

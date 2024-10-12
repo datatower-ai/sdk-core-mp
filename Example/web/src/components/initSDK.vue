@@ -17,8 +17,10 @@ const properties = ref(JSON.stringify(initial, null, 4));
 function confirm() {
   try {
     const data = JSON.parse(properties.value);
-    DataTower.initSDK(data as Properties);
-    emit('initialize');
+    DataTower.initSDK(data as Properties).then(
+      () => emit('initialize'),
+      () => window.alert('初始化失败，请检查参数'),
+    );
   } catch {
     window.alert('请输入合法的JSON字符串');
   }

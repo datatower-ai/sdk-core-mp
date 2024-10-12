@@ -20,3 +20,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+tsconfig.app.tsbuildinfo
+tsconfig.node.tsbuildinfo
+dist.tar.gz
