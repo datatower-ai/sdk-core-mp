@@ -14,7 +14,7 @@ export const DEFAULT_INITIAL_CONFIG: Required<Omit<InitialNativeConfig, 'propert
 export const DEFAULT_CONFIG: Required<Config> = {
   ...DEFAULT_INITIAL_CONFIG,
   maxQueueSize: 10,
-  debounceWait: 1000,
+  throttleWait: 1000,
 };
 
 /** 广告类型 */

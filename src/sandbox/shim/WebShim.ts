@@ -103,6 +103,10 @@ export class WebShim extends WebRequest implements Shim {
     localStorage.removeItem(name);
   }
 
+  onUnload(callback: () => void): void {
+    window.addEventListener('unload', callback);
+  }
+
   get userAgent(): string {
     return navigator.userAgent;
   }

@@ -41,10 +41,10 @@ export function globalNativeCallback<T>(callNative: (callbackName: string) => vo
   callNative(callbackName);
 }
 
-export function debounce<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+export function throttle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
   let timer: NodeJS.Timeout | null = null;
   return function (this: any, ...args: any[]) {
-    if (timer) clearTimeout(timer);
+    if (timer) return;
     timer = setTimeout(() => {
       callback.apply(this, args);
       timer = null;

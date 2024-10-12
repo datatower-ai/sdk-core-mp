@@ -20,6 +20,9 @@ export class QuickAppShim implements Shim {
   removeStorage(name: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
+  onUnload(callback: () => void): void {
+    throw new Error('Method not implemented.');
+  }
   get systemInfo(): SystemInfo {
     throw new Error('Method not implemented.');
   }

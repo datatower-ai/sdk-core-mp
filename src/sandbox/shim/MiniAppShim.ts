@@ -94,6 +94,10 @@ export class MiniAppShim implements Shim {
     });
   }
 
+  onUnload(callback: () => void): void {
+    this.api.onUnload(callback);
+  }
+
   request(options: RequestOptions): Promise<void> {
     return new Promise<void>((success, fail) => {
       const { url, params } = options;

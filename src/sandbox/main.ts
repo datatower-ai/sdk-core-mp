@@ -4,7 +4,7 @@ import { StaticDataTower, type DataTower } from '@/StaticDataTower';
 import { TaskQueue } from '@/TaskQueue';
 import { DEFAULT_CONFIG } from '@/constant';
 import type { ArrayProperties, Config, Properties } from '@/type';
-import { debounce, encodeBase64, md5, parseUrl, sha256, stringifyUrl } from '@/utils';
+import { encodeBase64, md5, parseUrl, sha256, stringifyUrl, throttle } from '@/utils';
 import { version } from '~/package.json';
 import type { Shim } from './shim/type';
 
@@ -22,9 +22,9 @@ export class Sandbox implements DataTower {
     '#dt_id': '',
   };
 
-  private staticProperties: Record<string, any> = {};
+  private staticCommonProperties: Record<string, any> = {};
 
-  private dynamicProperties: null | (() => Properties) = null;
+  private dynamicCommonProperties: null | (() => Properties) = null;
 
   private get presetProperties() {
     const { height, width, os, platform, viewport, title } = this.shim.systemInfo;
@@ -35,8 +35,8 @@ export class Sandbox implements DataTower {
 
       '#screen_height': height,
       '#screen_width': width,
-      '#timezone_offset': 0 - new Date().getTimezoneOffset() / 60,
-      '#is_first_day': Number(this.settings['#dt_id'].split('-')[0]) + 24 * 60 * 60 * 1000 <= new Date().getTime(),
+      // '#timezone_offset': 0 - new Date().getTimezoneOffset() / 60,
+      // '#is_first_day': Number(this.settings['#dt_id'].split('-')[0]) + 24 * 60 * 60 * 1000 >= new Date().getTime(),
       '#title': title,
       '#url': this.shim.href,
       '#viewport_height': viewport.height,
@@ -59,51 +59,70 @@ export class Sandbox implements DataTower {
   private get url() {
     const { token, app_id, server_url } = this.config;
     const urlOpts = parseUrl(server_url);
-    token && (urlOpts.query.token = token);
-    app_id && (urlOpts.query.app_id = app_id);
+    const { query } = urlOpts;
+    urlOpts.query = { ...query, token, app_id };
     return stringifyUrl(urlOpts);
   }
 
-  private report() {
+  private async report() {
     const tasks = this.taskQueue.flush();
     if (!tasks.length) return;
     const dataStr = JSON.stringify(tasks);
     const base64 = encodeBase64(dataStr);
     const check = md5(base64 + '@datatower');
     const params = <const>`data=${base64}&check=${check}`;
-    return this.shim.request({ url: this.url, params });
+    if (this.config.isDebug) return Logger.debug('<request>', params);
+    try {
+      return this.shim.request({ url: this.url, params });
+    } catch (e) {
+      // 请求出错时，缓存数据
+      this.cacheTaskQueue(tasks);
+      throw e;
+    }
+  }
+  private async cacheTaskQueue(list: Record<string, any>[]) {
+    const cache = (await this.shim.getStorage<Record<string, any>[]>(`task_queue@${this.config.app_id}`)) ?? [];
+    this.shim.setStorage(`task_queue@${this.config.app_id}`, [...cache, ...list]);
+  }
+  private async recoverTaskQueue() {
+    const cache = (await this.shim.getStorage<Record<string, any>[]>(`task_queue@${this.config.app_id}`)) ?? [];
+    cache.forEach((c) => this.taskQueue.enqueue(() => c));
+    await this.shim.setStorage(`task_queue@${this.config.app_id}`, []);
   }
 
   async initSDK(config: Config) {
-    Logger.debug('<initSDK>', this);
-    this.shim.systemInfo;
     this.config = { ...DEFAULT_CONFIG, ...config };
     // 设置日志等级
     Logger.level = this.config.logLevel;
+    if (!this.validateConfig(this.config)) return;
     // 非手动启动上报时，监听任务队列事件
     if (!this.config.manualEnableUpload) {
       this.taskQueue.onMaxSize(() => this.report());
-      this.taskQueue.onEnqueue(debounce(() => this.report(), this.config.debounceWait));
+      this.taskQueue.onEnqueue(throttle(() => this.report(), this.config.throttleWait));
       this.config.maxQueueSize && this.taskQueue.setMaxSize(this.config.maxQueueSize);
     }
-    // 通过 #dt_id 判断是否为新用户，如果是新用户则初始化
-    if (!(await this.shim.getStorage('#dt_id'))) await this.initializeNewUser();
-    this.settings['#dt_id'] = (await this.shim.getStorage<string>('#dt_id'))!;
+    // 监听页面卸载事件，缓存未上报的数据
+    this.shim.onUnload(() => this.cacheTaskQueue(this.taskQueue.flush()));
+    // 恢复数据
+    this.recoverTaskQueue();
 
     this.settings['#app_id'] = this.config.app_id;
+    this.settings['#acid'] = (await this.shim.getStorage<string>(`#acid@${this.config.app_id}`)) ?? '';
+    this.staticCommonProperties = (await this.shim.getStorage(`static_common_properties@${this.config.app_id}`)) ?? {};
+    // 通过 #dt_id 判断是否为新用户，如果是新用户则初始化
+    if (!(await this.shim.getStorage('#dt_id'))) {
+      const dt_id = this.generateDataTowerId();
+      this.settings['#dt_id'] = dt_id;
+      await this.shim.setStorage('#dt_id', dt_id);
+    } else this.settings['#dt_id'] = (await this.shim.getStorage<string>('#dt_id'))!;
   }
 
-  private async initializeNewUser() {
-    const dt_id = this.generateDataTowerId();
-    const { language } = this.shim.systemInfo;
-    this.userSetOnce({
-      '#first_visit_time': new Date().getTime(),
-      '#first_referrer': this.shim.referrer,
-      '#first_browser_language': language.toLowerCase(),
-    });
-    await this.shim.setStorage('#dt_id', dt_id);
+  private validateConfig(config: Config) {
+    const requiredKeys = <const>['token', 'app_id', 'server_url'];
+    const errorKeys = requiredKeys.filter((key) => !config[key]);
+    if (this.config.isDebug) errorKeys.forEach((e) => Logger.error(`${e} is required`));
+    return !errorKeys.length;
   }
-
   private validatePropertiesKey(properties: Record<string, any>) {
     const errors: string[] = [];
     for (const key in properties) {
@@ -112,23 +131,26 @@ export class Sandbox implements DataTower {
         errors.push(`The key "${key}" is invalid, it can't start with "${k}"`);
       }
     }
-    errors.forEach((e) => Logger.error(e));
+    if (this.config.isDebug) errors.forEach((e) => Logger.error(e));
     return !errors.length;
   }
 
   track(eventName: string, properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
-    Logger.debug('<track>', eventName, properties);
     this.createTask(eventName, 'track', {
       ...properties,
-      ...this.staticProperties,
-      ...this.dynamicProperties?.(),
+      ...this.staticCommonProperties,
+      ...this.dynamicCommonProperties?.(),
       ...this.presetProperties,
     });
   }
   enableUpload(): void {
-    if (this.config.manualEnableUpload) this.report();
-    Logger.debug('<enableUpload>');
+    if (!this.config.manualEnableUpload) {
+      if (this.config.isDebug) Logger.warn('manualEnableUpload is false');
+    } else {
+      if (this.config.isDebug) Logger.debug('<enableUpload>');
+      this.report();
+    }
   }
 
   private createTask(event_name: string, event_type: string, properties: Record<string, any>) {
@@ -140,40 +162,33 @@ export class Sandbox implements DataTower {
       properties,
     };
     this.taskQueue.enqueue(() => data);
-    Logger.debug('<createTask>', data);
+    if (this.config.isDebug) Logger.debug(data);
   }
   /* user */
   userSet(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
-    Logger.debug('<userSet>', properties);
     this.createTask('#user_set', 'user', properties);
   }
   userSetOnce(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
-    Logger.debug('<userSetOnce>', properties);
     this.createTask('#user_set_once', 'user', properties);
   }
   userAdd(properties: Record<string, number>): void {
     if (!this.validatePropertiesKey(properties)) return;
-    Logger.debug('<userAdd>', properties);
     this.createTask('#user_add', 'user', properties);
   }
   userUnset(properties: string[]): void {
-    Logger.debug('<userUnset>', properties);
     this.createTask('#user_unset', 'user', properties);
   }
   userDelete(): void {
-    Logger.debug('<userDelete>');
     this.createTask('#user_delete', 'user', {});
   }
   userAppend(properties: ArrayProperties): void {
     if (!this.validatePropertiesKey(properties)) return;
-    Logger.debug('<userAppend>', properties);
     this.createTask('#user_append', 'user', properties);
   }
   userUniqAppend(properties: ArrayProperties): void {
     if (!this.validatePropertiesKey(properties)) return;
-    Logger.debug('<userUniqAppend>', properties);
     this.createTask('#user_uniq_append', 'user', properties);
   }
 
@@ -194,47 +209,36 @@ export class Sandbox implements DataTower {
   getDataTowerId(callback?: (id: string) => void): void | Promise<string> {
     if (!callback) return new Promise((resolve) => this.getDataTowerId(resolve));
     callback(this.settings['#dt_id']);
-    Logger.debug('<getDataTowerId>', callback);
+    if (this.config.isDebug) Logger.debug('#dt_id:', this.settings['#dt_id']);
   }
   setAccountId(id: string): void {
     this.settings['#acid'] = id;
-    Logger.debug('<setAccountId>', id);
+    this.shim.setStorage(`#acid@${this.config.app_id}`, id);
+    if (this.config.isDebug) Logger.debug('#acid:', id);
   }
-  // setFirebaseAppInstanceId(id: string): void {
-  //   Logger.debug('<setFirebaseAppInstanceId>', id);
-  //   this.createTask('#user_set', 'user', { '#latest_firebase_id': id });
-  // }
-  // setAppsFlyerId(id: string): void {
-  //   Logger.debug('<setAppsFlyerId>', id);
-  //   this.createTask('#user_set', 'user', { '#latest_appsflyer_id': id });
-  // }
-  // setKochavaId(id: string): void {
-  //   Logger.debug('<setKochavaId>', id);
-  //   this.createTask('#user_set', 'user', { '#latest_kochava_id': id });
-  // }
-  // setAdjustId(id: string): void {
-  //   Logger.debug('<setAdjustId>', id);
-  //   this.createTask('#user_set', 'user', { '#latest_adjust_id': id });
-  // }
 
   /* properties */
   setStaticCommonProperties(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
-    this.staticProperties = { ...this.staticProperties, ...properties };
-    Logger.debug('<setStaticCommonProperties>', properties);
+    this.staticCommonProperties = { ...this.staticCommonProperties, ...properties };
+    this.shim.setStorage(`static_common_properties@${this.config.app_id}`, this.staticCommonProperties);
+    if (this.config.isDebug) Logger.debug('<staticCommonProperties>', this.staticCommonProperties);
   }
   clearStaticCommonProperties(): void {
-    this.staticProperties = {};
-    Logger.debug('<clearStaticCommonProperties>');
+    this.staticCommonProperties = {};
+    if (this.config.isDebug) Logger.debug('<clearStaticCommonProperties>');
   }
   setDynamicCommonProperties(callback: () => Properties): void {
-    if (!this.validatePropertiesKey(callback())) return;
-    this.dynamicProperties = callback;
-    Logger.debug('<setDynamicCommonProperties>', callback);
+    this.dynamicCommonProperties = () => {
+      const properties = callback();
+      if (!this.validatePropertiesKey(properties)) return {};
+      return properties;
+    };
+    if (this.config.isDebug) Logger.debug('<setDynamicCommonProperties>');
   }
   clearDynamicCommonProperties(): void {
-    this.dynamicProperties = null;
-    Logger.debug('<clearDynamicCommonProperties>');
+    this.dynamicCommonProperties = null;
+    if (this.config.isDebug) Logger.debug('<clearDynamicCommonProperties>');
   }
 }
 

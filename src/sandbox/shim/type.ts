@@ -9,6 +9,7 @@ export type Shim = {
   href: string;
   getNetworkStatus?(): void;
   onNetworkStatusChange?(callback: () => void): void;
+  onUnload(callback: () => void): void;
 };
 
 /**

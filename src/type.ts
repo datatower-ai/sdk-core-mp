@@ -27,10 +27,10 @@ export type InitialNativeConfig = {
 /** SDK 内部配置，暴露到外部，由 init 传入 */
 export type Config = Omit<InitialNativeConfig, 'properties'> & {
   /**
-   * 防抖延迟时间，默认1000ms，作用是将连续触发上报的多个事件合并到一个请求中。
+   * 节流延迟时间，默认1000ms，作用是将连续触发上报的多个事件合并到一个请求中。
    * 手动启动上报时，该值无效
    */
-  debounceWait?: number;
+  throttleWait?: number;
   /**
    * 上报队列最大长度，默认为 10。
    * 手动启动上报时，该值无效
