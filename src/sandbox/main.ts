@@ -195,13 +195,66 @@ export class Sandbox implements DataTower {
   /* id */
   private generateDataTowerId() {
     const sys = this.shim.systemInfo;
-    const fingerprint = [
-      new Date().getTime(),
-      Math.random().toString(16).replace('.', ''),
-      sha256(this.shim.userAgent),
-      sha256(`${sys.width} ${sys.height} ${sys.language}`),
-      new Date().getTime(),
-    ];
+    function getRandom() {
+      // @ts-ignore
+      const cryptoObj = window.crypto || window.msCrypto;
+      const array = new Uint32Array(1);
+      const integerLimit = Math.pow(2, 32);
+      const random = cryptoObj.getRandomValues(array)[0];
+      return random / integerLimit;
+    }
+    const getTime = () => {
+      const d = new Date().getTime();
+      let i = 0;
+      while (d == new Date().getTime()) {
+        i++;
+      }
+      return d.toString(16) + i.toString(16);
+    };
+    const getUAInfo = () => {
+      var ua = this.shim.userAgent,
+        i,
+        ch,
+        buffer: number[] = [],
+        ret = 0;
+
+      function xor(result: number, byte_array: number[]) {
+        var j,
+          tmp = 0;
+        for (j = 0; j < byte_array.length; j++) {
+          tmp |= buffer[j] << (j * 8);
+        }
+        return result ^ tmp;
+      }
+
+      for (i = 0; i < ua.length; i++) {
+        ch = ua.charCodeAt(i);
+        buffer.unshift(ch & 0xff);
+        if (buffer.length >= 4) {
+          ret = xor(ret, buffer);
+          buffer = [];
+        }
+      }
+
+      if (buffer.length > 0) {
+        ret = xor(ret, buffer);
+      }
+
+      return ret.toString(16);
+    };
+    const getScreenInfo = () => {
+      let se = String(screen.height * screen.width);
+      if (se && /\d{5,}/.test(se)) {
+        se = se.toString();
+      } else {
+        se = String(getRandom() * 31242)
+          .replace('.', '')
+          .slice(0, 8);
+      }
+
+      return se;
+    };
+    const fingerprint = [getTime(), getRandom().toString(16).replace('.', ''), getUAInfo(), getScreenInfo(), getTime()];
     return fingerprint.join('-');
   }
   getDataTowerId(callback: (id: string) => void): void;
