@@ -236,7 +236,7 @@ export class Sandbox implements DataTower {
       return ret.toString(16);
     };
     const getScreenInfo = () => {
-      let se = String(screen.height * screen.width);
+      let se = String(sys.height * sys.width);
       if (se && /\d{5,}/.test(se)) {
         se = se.toString();
       } else {

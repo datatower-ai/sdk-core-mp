@@ -1,7 +1,6 @@
 import { Utf8 } from 'crypto-es/lib/core';
 import { Base64 } from 'crypto-es/lib/enc-base64';
 import { MD5 } from 'crypto-es/lib/md5';
-import { SHA256 } from 'crypto-es/lib/sha256';
 import { UAParser } from 'ua-parser-js';
 
 export function encodeBase64(data: string): string {
@@ -10,10 +9,6 @@ export function encodeBase64(data: string): string {
 
 export function md5(data: string): string {
   return MD5(data).toString();
-}
-
-export function sha256(data: string): string {
-  return SHA256(data).toString();
 }
 
 export function parseUserAgent(ua?: string) {
