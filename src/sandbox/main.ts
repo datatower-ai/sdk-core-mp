@@ -94,7 +94,6 @@ export class Sandbox implements DataTower {
     this.config = { ...DEFAULT_CONFIG, ...config };
     // 设置日志等级
     Logger.level = this.config.logLevel;
-    if (!this.validateConfig(this.config)) return Promise.reject('config error');
     // 非手动启动上报时，监听任务队列事件
     if (!this.config.manualEnableUpload) {
       this.taskQueue.onMaxSize(() => this.report());
@@ -117,12 +116,6 @@ export class Sandbox implements DataTower {
     } else this.settings['#dt_id'] = (await this.shim.getStorage<string>('#dt_id'))!;
   }
 
-  private validateConfig(config: Config) {
-    const requiredKeys = <const>['token', 'app_id', 'server_url'];
-    const errorKeys = requiredKeys.filter((key) => !config[key]);
-    if (this.config.isDebug) errorKeys.forEach((e) => Logger.error(`${e} is required`));
-    return !errorKeys.length;
-  }
   private validatePropertiesKey(properties: Record<string, any>) {
     const errors: string[] = [];
     for (const key in properties) {

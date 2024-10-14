@@ -1,3 +1,4 @@
+import type { MultipleInstanceManager } from '@/MultipleInstanceManager';
 import type {
   ArrayProperties,
   BaseReportOptions,
@@ -8,12 +9,20 @@ import type {
   Properties,
   ReportSuccessOptions,
 } from '@/type';
-import type { MultipleInstanceManager } from '@/MultipleInstanceManager';
+import { Logger } from './Logger';
 
 export class StaticDataTower {
   protected static readonly instances: MultipleInstanceManager<DataTower>;
 
+  private static validateConfig(config: Config) {
+    const requiredKeys = <const>['token', 'app_id', 'server_url'];
+    const errorKeys = requiredKeys.filter((key) => !config[key]);
+    if (config.isDebug) errorKeys.forEach((e) => Logger.error(`${e} is required`));
+    return !errorKeys.length;
+  }
+
   static async initSDK(config: Config): Promise<void> {
+    if (!this.validateConfig(config)) return Promise.reject('config error');
     const instance = this.instances.add(config.app_id);
     return instance.initSDK(config);
   }
