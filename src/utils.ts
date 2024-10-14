@@ -105,3 +105,11 @@ export function stringifyUrl(opts: ParseURLOptions, level: 'href' | 'origin' | '
       return `${_hostname}${_port}`;
   }
 }
+
+export function gen8DigitHex() {
+  return Math.floor(Math.random() * 0xFFFFFFFF).toString(16).padStart(8, '0');
+}
+
+export function gen16DigitHex() {
+    return gen8DigitHex() + gen8DigitHex();
+}

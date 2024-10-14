@@ -4,7 +4,7 @@ import { StaticDataTower, type DataTower } from '@/StaticDataTower';
 import { TaskQueue } from '@/TaskQueue';
 import { DEFAULT_CONFIG } from '@/constant';
 import type { ArrayProperties, Config, Properties } from '@/type';
-import { encodeBase64, md5, parseUrl, stringifyUrl, throttle } from '@/utils';
+import { encodeBase64, gen16DigitHex, md5, parseUrl, stringifyUrl, throttle } from '@/utils';
 import { version } from '~/package.json';
 import type { Shim } from './shim/type';
 
@@ -150,6 +150,7 @@ export class Sandbox implements DataTower {
   private createTask(event_name: string, event_type: string, properties: Record<string, any>) {
     const data = {
       ...this.settings,
+      '#event_syn': gen16DigitHex(),
       '#event_name': event_name,
       '#event_type': event_type,
       '#event_time': new Date().getTime(),
