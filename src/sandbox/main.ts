@@ -4,7 +4,7 @@ import { StaticDataTower, type DataTower } from '@/StaticDataTower';
 import { TaskQueue } from '@/TaskQueue';
 import { DEFAULT_CONFIG } from '@/constant';
 import type { ArrayProperties, Config, Properties } from '@/type';
-import { encodeBase64, md5, parseUrl, sha256, stringifyUrl, throttle } from '@/utils';
+import { encodeBase64, md5, parseUrl, stringifyUrl, throttle } from '@/utils';
 import { version } from '~/package.json';
 import type { Shim } from './shim/type';
 
@@ -272,6 +272,7 @@ export class Sandbox implements DataTower {
   }
   clearStaticCommonProperties(): void {
     this.staticCommonProperties = {};
+    this.shim.setStorage(`static_common_properties@${this.config.app_id}`, {});
     if (this.config.isDebug) Logger.debug('<clearStaticCommonProperties>');
   }
   setDynamicCommonProperties(callback: () => Properties): void {
