@@ -1,11 +1,11 @@
 import { AnalysisDataTower } from '@/StaticDataTower';
-import { DEFAULT_INITIAL_CONFIG } from '@/constant';
+import { DEFAULT_NATIVE_CONFIG } from '@/constant';
 import type {
   ArrayProperties,
   BaseReportOptions,
   BaseReportPaidOptions,
   CommonReportOptions,
-  Config,
+  NativeConfig,
   Properties,
   ReportSuccessOptions,
 } from '@/type';
@@ -23,11 +23,9 @@ export class CocosIOS implements AnalysisDataTower {
     return jsb.reflection.callStaticMethod('DTCocosCreatorProxyApi', method, ...args);
   }
 
-  async initSDK(config: Config) {
-    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
-    const { app_id, server_url, ...otherConfig } = config;
-    const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
-    CocosIOS.callStaticMethod('initSDK:', fmt(nativeConfig));
+  async initSDK(config: NativeConfig) {
+    config = Object.assign({}, DEFAULT_NATIVE_CONFIG, config, { properties: this.presetProperties });
+    CocosIOS.callStaticMethod('initSDK:', fmt(config));
   }
   track(eventName: string, properties: Properties): void {
     properties = { ...properties, ...this.dynamicProperties?.() };

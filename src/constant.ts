@@ -1,18 +1,22 @@
-import type { Config, InitialNativeConfig } from '@/type';
+import type { Config, NativeConfig } from '@/type';
 import { LogLevel } from './Logger';
 
-export const DEFAULT_INITIAL_CONFIG: Required<Omit<InitialNativeConfig, 'properties'>> = {
-  token: '',
-  app_id: '',
-  server_url: '',
-  channel: '',
+export const DEFAULT_NATIVE_CONFIG: Required<NativeConfig> = {
+  appId: '',
+  serverUrl: '',
   isDebug: false,
   logLevel: LogLevel.VERBOSE,
   manualEnableUpload: false,
+  channel: '',
 };
 
 export const DEFAULT_CONFIG: Required<Config> = {
-  ...DEFAULT_INITIAL_CONFIG,
+  token: '',
+  appId: '',
+  serverUrl: '',
+  isDebug: false,
+  logLevel: LogLevel.VERBOSE,
+  manualEnableUpload: false,
   maxQueueSize: 10,
   throttleWait: 1000,
 };

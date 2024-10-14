@@ -57,10 +57,10 @@ export class Sandbox implements DataTower {
   constructor(protected readonly shim: Shim) {}
 
   private get url() {
-    const { token, app_id, server_url } = this.config;
-    const urlOpts = parseUrl(server_url);
+    const { token, appId, serverUrl } = this.config;
+    const urlOpts = parseUrl(serverUrl);
     const { query } = urlOpts;
-    urlOpts.query = { ...query, token, app_id };
+    urlOpts.query = { ...query, token, app_id: appId };
     return stringifyUrl(urlOpts);
   }
 
@@ -81,13 +81,13 @@ export class Sandbox implements DataTower {
     }
   }
   private async cacheTaskQueue(list: Record<string, any>[]) {
-    const cache = (await this.shim.getStorage<Record<string, any>[]>(`task_queue@${this.config.app_id}`)) ?? [];
-    this.shim.setStorage(`task_queue@${this.config.app_id}`, [...cache, ...list]);
+    const cache = (await this.shim.getStorage<Record<string, any>[]>(`task_queue@${this.config.appId}`)) ?? [];
+    this.shim.setStorage(`task_queue@${this.config.appId}`, [...cache, ...list]);
   }
   private async recoverTaskQueue() {
-    const cache = (await this.shim.getStorage<Record<string, any>[]>(`task_queue@${this.config.app_id}`)) ?? [];
+    const cache = (await this.shim.getStorage<Record<string, any>[]>(`task_queue@${this.config.appId}`)) ?? [];
     cache.forEach((c) => this.taskQueue.enqueue(() => c));
-    await this.shim.setStorage(`task_queue@${this.config.app_id}`, []);
+    await this.shim.setStorage(`task_queue@${this.config.appId}`, []);
   }
 
   async initSDK(config: Config) {
@@ -106,9 +106,9 @@ export class Sandbox implements DataTower {
     // 恢复数据
     this.recoverTaskQueue();
 
-    this.settings['#app_id'] = this.config.app_id;
-    this.settings['#acid'] = (await this.shim.getStorage<string>(`#acid@${this.config.app_id}`)) ?? '';
-    this.staticCommonProperties = (await this.shim.getStorage(`static_common_properties@${this.config.app_id}`)) ?? {};
+    this.settings['#app_id'] = this.config.appId;
+    this.settings['#acid'] = (await this.shim.getStorage<string>(`#acid@${this.config.appId}`)) ?? '';
+    this.staticCommonProperties = (await this.shim.getStorage(`static_common_properties@${this.config.appId}`)) ?? {};
     // 通过 #dt_id 判断是否为新用户，如果是新用户则初始化
     if (!(await this.shim.getStorage('#dt_id'))) {
       const dt_id = this.generateDataTowerId();
@@ -260,7 +260,7 @@ export class Sandbox implements DataTower {
   }
   setAccountId(id: string): void {
     this.settings['#acid'] = id;
-    this.shim.setStorage(`#acid@${this.config.app_id}`, id);
+    this.shim.setStorage(`#acid@${this.config.appId}`, id);
     if (this.config.isDebug) Logger.debug('#acid:', id);
   }
 
@@ -268,12 +268,12 @@ export class Sandbox implements DataTower {
   setStaticCommonProperties(properties: Properties): void {
     if (!this.validatePropertiesKey(properties)) return;
     this.staticCommonProperties = { ...this.staticCommonProperties, ...properties };
-    this.shim.setStorage(`static_common_properties@${this.config.app_id}`, this.staticCommonProperties);
+    this.shim.setStorage(`static_common_properties@${this.config.appId}`, this.staticCommonProperties);
     if (this.config.isDebug) Logger.debug('<staticCommonProperties>', this.staticCommonProperties);
   }
   clearStaticCommonProperties(): void {
     this.staticCommonProperties = {};
-    this.shim.setStorage(`static_common_properties@${this.config.app_id}`, {});
+    this.shim.setStorage(`static_common_properties@${this.config.appId}`, {});
     if (this.config.isDebug) Logger.debug('<clearStaticCommonProperties>');
   }
   setDynamicCommonProperties(callback: () => Properties): void {

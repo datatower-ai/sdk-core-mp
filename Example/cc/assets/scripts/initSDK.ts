@@ -8,7 +8,7 @@ export class initSDK extends Component {
   start() {
     const editBox = this.node.getComponentInChildren(EditBox);
     editBox.maxLength = -1;
-    editBox.string = `{"app_id":"dt_0e3fa14f6d26b302","server_url":"http://localhost:3000/report","channel":"","isDebug":true,"logLevel":1,"manualEnableUpload":false}`;
+    editBox.string = `{"appId":"dt_0e3fa14f6d26b302","serverUrl":"http://localhost:3000/report","channel":"","isDebug":true,"logLevel":1,"manualEnableUpload":false}`;
 
     const submit = () => {
       console.log(editBox.string);

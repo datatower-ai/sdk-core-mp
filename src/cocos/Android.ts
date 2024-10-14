@@ -1,11 +1,11 @@
 import { AnalysisDataTower } from '@/StaticDataTower';
-import { DEFAULT_INITIAL_CONFIG } from '@/constant';
+import { DEFAULT_NATIVE_CONFIG } from '@/constant';
 import type {
   ArrayProperties,
   BaseReportOptions,
   BaseReportPaidOptions,
   CommonReportOptions,
-  Config,
+  NativeConfig,
   Properties,
   ReportSuccessOptions,
 } from '@/type';
@@ -35,11 +35,9 @@ export class CocosAndroid implements AnalysisDataTower {
     return jsb.reflection.callStaticMethod('ai/datatower/bridge/DTCocosCreatorProxyApi', method, signature, ...values);
   }
 
-  async initSDK(config: Config): Promise<void> {
-    config = Object.assign({}, DEFAULT_INITIAL_CONFIG, config, { properties: this.presetProperties });
-    const { app_id, server_url, ...otherConfig } = config;
-    const nativeConfig = { ...otherConfig, appId: app_id, serverUrl: server_url };
-    CocosAndroid.callStaticMethod('initSDK', 'void', ['String', fmt(nativeConfig)]);
+  async initSDK(config: NativeConfig): Promise<void> {
+    config = Object.assign({}, DEFAULT_NATIVE_CONFIG, config, { properties: this.presetProperties });
+    CocosAndroid.callStaticMethod('initSDK', 'void', ['String', fmt(config)]);
   }
   track(eventName: string, properties: Properties): void {
     CocosAndroid.callStaticMethod(

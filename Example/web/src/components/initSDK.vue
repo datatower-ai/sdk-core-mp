@@ -7,8 +7,8 @@ const emit = defineEmits<{ (e: 'initialize'): void }>();
 type Properties = Parameters<typeof DataTower.initSDK>[0];
 const initial: Properties = {
   token: 'token',
-  app_id: 'app_id',
-  server_url: 'http://example.com/report',
+  appId: 'appId',
+  serverUrl: 'http://example.com/report',
   isDebug: true,
 };
 
