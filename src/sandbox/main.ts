@@ -73,7 +73,7 @@ export class Sandbox implements DataTower {
     const params = <const>`data=${base64}&check=${check}`;
     if (this.config.isDebug) return Logger.debug('<request>', params);
     try {
-      return this.shim.request({ url: this.url, params });
+      this.shim.request({ url: this.url, params });
     } catch (e) {
       // 请求出错时，缓存数据
       this.cacheTaskQueue(tasks);
@@ -96,8 +96,9 @@ export class Sandbox implements DataTower {
     Logger.level = this.config.logLevel;
     // 非手动启动上报时，监听任务队列事件
     if (!this.config.manualEnableUpload) {
-      this.taskQueue.onMaxSize(() => this.report());
-      this.taskQueue.onEnqueue(throttle(() => this.report(), this.config.throttleWait));
+      const { run, reset } = throttle(() => this.report(), this.config.throttleWait);
+      this.taskQueue.onMaxSize(() => (this.report(), reset()));
+      this.taskQueue.onEnqueue(run);
       this.config.maxQueueSize && this.taskQueue.setMaxSize(this.config.maxQueueSize);
     }
     // 监听页面卸载事件，缓存未上报的数据
@@ -154,8 +155,8 @@ export class Sandbox implements DataTower {
       '#event_time': new Date().getTime(),
       properties,
     };
-    this.taskQueue.enqueue(() => data);
     if (this.config.isDebug) Logger.debug(data);
+    this.taskQueue.enqueue(() => data);
   }
   /* user */
   userSet(properties: Properties): void {

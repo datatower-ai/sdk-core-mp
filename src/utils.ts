@@ -36,15 +36,23 @@ export function globalNativeCallback<T>(callNative: (callbackName: string) => vo
   callNative(callbackName);
 }
 
-export function throttle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+export function throttle<T extends (...args: any[]) => any>(callback: T, delay: number) {
   let timer: NodeJS.Timeout | null = null;
-  return function (this: any, ...args: any[]) {
-    if (timer) return;
-    timer = setTimeout(() => {
-      callback.apply(this, args);
-      timer = null;
-    }, delay);
-  } as T;
+  return {
+    run: function (this: any, ...args: any[]) {
+      if (timer) return;
+      timer = setTimeout(() => {
+        callback.apply(this, args);
+        timer = null;
+      }, delay);
+    } as T,
+    reset: function () {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    },
+  };
 }
 
 export function splitOnce(str: string, separator: string, reverse?: boolean): [string, string] {
