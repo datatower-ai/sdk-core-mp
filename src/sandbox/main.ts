@@ -99,7 +99,7 @@ export class Sandbox implements DataTower {
       const { run, reset } = throttle(() => this.report(), this.config.throttleWait);
       this.taskQueue.onMaxSize(() => (this.report(), reset()));
       this.taskQueue.onEnqueue(run);
-      this.config.maxQueueSize && this.taskQueue.setMaxSize(this.config.maxQueueSize);
+      this.taskQueue.setMaxSize(this.config.maxQueueSize);
     }
     // 监听页面卸载事件，缓存未上报的数据
     this.shim.onUnload(() => this.cacheTaskQueue(this.taskQueue.flush()));
@@ -172,7 +172,7 @@ export class Sandbox implements DataTower {
     this.createTask('#user_add', 'user', properties);
   }
   userUnset(properties: string[]): void {
-    this.createTask('#user_unset', 'user', properties);
+    this.createTask('#user_unset', 'user', Object.fromEntries(properties.map((k) => [k, null])));
   }
   userDelete(): void {
     this.createTask('#user_delete', 'user', {});
