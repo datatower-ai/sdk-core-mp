@@ -7,12 +7,9 @@ _default_ = Web;
 /* #elseif platform === 'uniapp' */
 import { Uniapp } from './exports';
 _default_ = Uniapp;
-/* #elseif platform === 'wechat-mimi-game' */
-import { WechatMimiGame } from './exports';
-_default_ = WechatMimiGame;
-/* #elseif platform === 'wechat-mimi-program' */
-import { WechatMimiProgram } from './exports';
-_default_ = WechatMimiProgram;
+/* #elseif platform === 'mini-program' */
+import { MiniProgram } from './exports';
+_default_ = MiniProgram;
 /* #endif */
 
 /* #if format === 'iife' */

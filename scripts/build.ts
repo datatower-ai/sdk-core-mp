@@ -14,7 +14,7 @@ const root = process.cwd();
 const releasePath = path.join(root, 'release');
 const publishPath = path.join(root, 'publish');
 const distPath = path.join(root, 'bundle');
-const sandbox = <const>['web', 'uniapp', 'wechat-mimi-game', 'wechat-mimi-program'];
+const sandbox = <const>['web', 'uniapp', 'mimi-program'];
 
 type Mode = 'development' | 'release' | 'publish';
 type Platform = 'cocos' | (typeof sandbox)[number];

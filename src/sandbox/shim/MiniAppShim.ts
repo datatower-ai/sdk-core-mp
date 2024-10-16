@@ -1,77 +1,48 @@
 import type { RequestOptions, Shim, SystemInfo } from './type';
 
-export enum MiniProgramPlatform {
-  WECHAT = 'wechat-mini-program',
-  QQ = 'qq-mini-program',
-  BAIDU = 'baidu-mini-program',
-  TOUTIAO = 'toutiao-mini-program',
-  ALIPAY = 'alipay-mini-program',
-  DINGDING = 'dingding-mini-program',
-  KUAISHOU = 'kuaishou-mini-program',
-  QIHOO = 'qihoo-mini-program',
-  TAOBAO = 'taobao-mini-program',
-  JINGDONG = 'jingdong-mini-program',
-}
-
-export enum MiniGamePlatform {
-  WECHAT = 'wechat-mini-game',
-  QQ = 'qq-mini-game',
-  BAIDU = 'baidu-mini-game',
-  TOUTIAO = 'toutiao-mini-game',
-  ALIPAY = 'alipay-mini-game',
-  BILIBILI = 'bilibili-mini-game',
-  QIHOO = 'qihoo-mini-game',
-}
-
 /**
  * mini program/game shim
  */
 export class MiniAppShim implements Shim {
   private readonly api: Record<string, any>;
+  private readonly platform: string;
 
-  constructor(private readonly platform: MiniGamePlatform | MiniProgramPlatform | 'uniapp') {
-    switch (platform) {
-      case 'uniapp':
-        this.api = uni;
-        break;
-      case MiniProgramPlatform.WECHAT:
-      case MiniGamePlatform.WECHAT:
-        this.api = wx;
-        break;
-      case MiniProgramPlatform.QQ:
-      case MiniGamePlatform.QQ:
-        this.api = qq;
-        break;
-      case MiniProgramPlatform.BAIDU:
-      case MiniGamePlatform.BAIDU:
-        this.api = swan;
-        break;
-      case MiniProgramPlatform.TOUTIAO:
-      case MiniGamePlatform.TOUTIAO:
-        this.api = tt;
-        break;
-      case MiniProgramPlatform.ALIPAY:
-      case MiniGamePlatform.ALIPAY:
-      case MiniProgramPlatform.TAOBAO:
-        this.api = my;
-        break;
-      case MiniProgramPlatform.DINGDING:
-        this.api = dd;
-        break;
-      case MiniProgramPlatform.KUAISHOU:
-        this.api = ks;
-        break;
-      case MiniProgramPlatform.QIHOO:
-      case MiniGamePlatform.QIHOO:
-        this.api = qh;
-        break;
-      case MiniProgramPlatform.JINGDONG:
-        this.api = jd;
-        break;
-      case MiniGamePlatform.BILIBILI:
-        this.api = bl;
-      default:
-        throw new Error('Unsupported platform');
+  constructor() {
+    if (uni) {
+      this.api = uni;
+      this.platform = 'uniapp';
+    } else if (wx) {
+      this.api = wx;
+      this.platform = 'wechat';
+    } else if (qq) {
+      this.api = qq;
+      this.platform = 'qq';
+    } else if (swan) {
+      this.api = swan;
+      this.platform = 'baidu';
+    } else if (tt) {
+      this.api = tt;
+      this.platform = 'toutiao';
+    } else if (my) {
+      this.api = my;
+      this.platform = 'alipay';
+    } else if (dd) {
+      this.api = dd;
+      this.platform = 'dingding';
+    } else if (ks) {
+      this.api = ks;
+      this.platform = 'kuaishou';
+    } else if (qh) {
+      this.api = qh;
+      this.platform = 'qihoo';
+    } else if (jd) {
+      this.api = jd;
+      this.platform = 'jingdong';
+    } else if (bl) {
+      this.api = bl;
+      this.platform = 'bilibili';
+    } else {
+      throw new Error('Unsupported platform');
     }
   }
 
@@ -103,7 +74,7 @@ export class MiniAppShim implements Shim {
       const { url, params } = options;
 
       switch (this.platform) {
-        case MiniProgramPlatform.TAOBAO:
+        case 'alipay':
           this.api.tb.request({ url, method: 'POST', body: JSON.stringify(JSON.stringify(params)), success, fail });
           break;
         default:
