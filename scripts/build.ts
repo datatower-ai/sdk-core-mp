@@ -10,17 +10,19 @@ import tsup from 'tsup';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-const version = process.env.npm_package_version;
 const root = process.cwd();
 const releasePath = path.join(root, 'release');
+const publishPath = path.join(root, 'publish');
 const distPath = path.join(root, 'bundle');
 const sandbox = <const>['web', 'uniapp', 'wechat-mimi-game', 'wechat-mimi-program'];
 
+type Mode = 'development' | 'release' | 'publish';
 type Platform = 'cocos' | (typeof sandbox)[number];
 type Config = Omit<Options, 'entry' | 'format'> & {
-  entry: { [k in Platform]?: string };
+  entry: { [k in Platform | 'index']?: string };
   format: Format[];
   native?: string;
+  version: string;
 };
 
 const BaseConfig: Options = {
@@ -33,8 +35,13 @@ const BaseConfig: Options = {
     }[format];
   },
 };
-const ModeConfigMap: Record<'production' | 'development', Options> = {
-  production: {
+const ModeConfigMap: Record<Mode, Options> = {
+  development: {
+    watch: true,
+    dts: true,
+    treeshake: false,
+  },
+  release: {
     minify: true,
     clean: true,
     dts: true,
@@ -42,10 +49,12 @@ const ModeConfigMap: Record<'production' | 'development', Options> = {
     skipNodeModulesBundle: false,
     noExternal: ['crypto-es', 'ua-parser-js'],
   },
-  development: {
-    watch: true,
+  publish: {
+    minify: true,
+    clean: true,
     dts: true,
-    treeshake: false,
+    treeshake: true,
+    outExtension: void 0,
   },
 };
 const PlatformConfigs: Config[] = [
@@ -54,12 +63,14 @@ const PlatformConfigs: Config[] = [
     outDir: distPath,
     format: ['esm', 'cjs'],
     native: 'src/native/cc',
+    version: '1.0.0',
   },
   ...(sandbox.map((platform) => ({
     entry: { [platform]: 'src/sandbox/index.ts' },
     outDir: distPath,
     format: ['esm', 'cjs'],
     plugins: [ConditionalAnnotationPlugin({ platform, format: 'esm,cjs' })],
+    version: '1.0.0',
   })) as Config[]),
   {
     entry: { web: 'src/sandbox/index.ts' },
@@ -68,6 +79,7 @@ const PlatformConfigs: Config[] = [
     globalName: 'DataTower',
     target: 'es5',
     plugins: [ConditionalAnnotationPlugin({ platform: 'web', format: 'iife' })],
+    version: '1.0.0',
   },
 ];
 
@@ -91,9 +103,8 @@ function ConditionalAnnotationPlugin(
 
 async function command<P extends string, F extends string>(
   options: Record<P, F[]>,
-): Promise<{ mode: unknown; platform: P | 'all'; format: F | 'all' }> {
+): Promise<{ mode: Mode | unknown; platform: P | 'all'; format: F | 'all' }> {
   const { mode } = await yargs(hideBin(process.argv)).argv;
-  const selectableAll = mode === 'production';
 
   const platforms = Object.keys(options) as P[];
   const { platform } = await inquirer.prompt<{ platform: P }>([
@@ -101,26 +112,29 @@ async function command<P extends string, F extends string>(
       type: 'list',
       name: 'platform',
       message: 'Select a platform to build',
-      choices: selectableAll ? ['all', ...platforms] : platforms,
+      choices: mode !== 'development' ? ['all', ...platforms] : platforms,
     },
   ]);
+  if (mode !== 'development') return { mode, platform, format: 'all' };
   const formats = platform === 'all' ? [...new Set(Object.values(options).flat())] : options[platform];
   const { format } = await inquirer.prompt([
     {
       type: 'list',
       name: 'format',
       message: 'Select a format to build',
-      choices: selectableAll ? ['all', ...formats] : formats,
+      choices: formats,
     },
   ]);
   return { mode, platform, format };
 }
 
-async function buildSingle(config: Config, formats: Format[], defaultConfig: Options) {
+async function build(opts: { config: Config; formats: Format[]; mode: Mode; defaultConfig: Options }) {
+  const { config, formats, mode, defaultConfig } = opts;
   const format = intersection(config.format, formats);
   if (!format.length) return;
   const options = { ...defaultConfig, ...config, format };
   await tsup.build(options);
+  if (mode === 'publish') return;
   await Promise.all(
     Object.keys(options.entry as object).map((entry) => {
       const filename = `${options.outDir}/${entry}`;
@@ -131,24 +145,46 @@ async function buildSingle(config: Config, formats: Format[], defaultConfig: Opt
   );
 }
 
-async function build(platforms: Platform[], formats: Format[], defaultConfig: Options) {
+async function bundle(opts: { platforms: Platform[]; formats: Format[]; mode: Mode; defaultConfig: Options }) {
+  const { platforms, formats, mode, defaultConfig } = opts;
   await Promise.all(
     platforms.map(async (platform) => {
-      const configs = PlatformConfigs.filter((config) => config.entry[platform]);
-      await Promise.all(configs.map(async (config) => buildSingle(config, formats, defaultConfig)));
-      if (defaultConfig.minify) bundle(platform, configs.map((config) => config.native).filter(Boolean) as string[]);
+      let configs = PlatformConfigs.filter((config) => config.entry[platform]);
+      if (mode === 'publish')
+        configs = configs
+          .filter((config) => !config.format.includes('iife'))
+          .map((config) => ({
+            ...config,
+            outDir: path.join(publishPath, platform, 'dist'),
+            entry: { index: config.entry[platform] },
+          }));
+      await Promise.all(configs.map(async (config) => build({ config, formats, mode, defaultConfig })));
+      if (mode === 'release')
+        compression(platform, configs[0].version, configs.map((config) => config.native).filter(Boolean) as string[]);
+      if (mode === 'publish') copyNPM(path.join(publishPath, platform), platform, configs[0].version);
     }),
   );
 }
 
-function bundle(platform: Platform, native?: string[]) {
+function compression(platform: Platform, version: string, native?: string[]) {
   const zip = new Zip();
   fs.readdirSync(distPath).forEach((file) => {
     if (!file.startsWith(platform)) return;
-    zip.addLocalFile(path.join(distPath, file));
+    zip.addLocalFile(path.join(distPath, file), '', `dt.${file}`);
   });
   native?.forEach((file) => zip.addLocalFolder(path.join(root, file)));
   zip.writeZip(path.join(releasePath, `${platform}-${version}.zip`));
+}
+
+function copyNPM(target: string, platform: Platform, version: string) {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf-8'));
+  pkg.name = `@datatower-ai/sdk-core-${platform}`;
+  pkg.version = version;
+  delete pkg.scripts;
+  delete pkg.devDependencies;
+  if (platform !== 'web') delete pkg.dependencies['ua-parser-js'];
+  fs.writeFileSync(path.join(target, 'package.json'), JSON.stringify(pkg, null, 2));
+  fs.copyFileSync(path.join(root, 'LICENSE'), path.join(target, 'LICENSE'));
 }
 
 async function main() {
@@ -156,13 +192,13 @@ async function main() {
     (acc, cur) => (Object.keys(cur.entry).forEach((k) => (acc[k as Platform] ??= []).push(...cur.format)), acc),
     {} as Record<Platform, Format[]>,
   );
-  const platforms = Object.keys(options) as Platform[];
-  const formats = ['esm', 'cjs', 'iife'] as Format[];
+  const platform = Object.keys(options) as Platform[];
+  const format = ['esm', 'cjs', 'iife'] as Format[];
   const params = await command(options);
-  const platform = params.platform === 'all' ? platforms : [params.platform];
-  const format = params.format === 'all' ? formats : [params.format];
-  const mode = params.mode === 'production' ? 'production' : 'development';
-  await build(platform, format, { ...BaseConfig, ...ModeConfigMap[mode] });
+  const platforms = params.platform === 'all' ? platform : [params.platform];
+  const formats = params.format === 'all' ? format : [params.format];
+  const mode = (params.mode ?? 'development') as Mode;
+  await bundle({ platforms, formats, mode, defaultConfig: { ...BaseConfig, ...ModeConfigMap[mode] } });
 }
 
 main();

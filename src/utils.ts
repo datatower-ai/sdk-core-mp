@@ -1,7 +1,9 @@
 import { Utf8 } from 'crypto-es/lib/core';
 import { Base64 } from 'crypto-es/lib/enc-base64';
 import { MD5 } from 'crypto-es/lib/md5';
+/* #if platform === 'web' */
 import { UAParser } from 'ua-parser-js';
+/* #endif */
 
 export function encodeBase64(data: string): string {
   return Base64.stringify(Utf8.parse(data));
@@ -107,9 +109,11 @@ export function stringifyUrl(opts: ParseURLOptions, level: 'href' | 'origin' | '
 }
 
 export function gen8DigitHex() {
-  return Math.floor(Math.random() * 0xFFFFFFFF).toString(16).padStart(8, '0');
+  return Math.floor(Math.random() * 0xffffffff)
+    .toString(16)
+    .padStart(8, '0');
 }
 
 export function gen16DigitHex() {
-    return gen8DigitHex() + gen8DigitHex();
+  return gen8DigitHex() + gen8DigitHex();
 }

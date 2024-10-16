@@ -3,6 +3,7 @@ node_modules
 dist
 bundle
 release
+publish
 
 # local env files
 .env.local

@@ -2,23 +2,40 @@
 
 ## 1. 开始使用
 
-### 1.1 从三方库引入
+### 1.1. 从三方库引入单个平台
 
-- 1. 安装依赖
+- 安装依赖
+
+```bash
+# xxx 为对应平台，例如 `cocos`, `web`, `uniapp`, `mini-program`
+npm i @datatower-ai/sdk-core-xxx
+```
+
+- 引入并使用
+
+```typescript
+import { DataTower } from '@datatower-ai/sdk-core-xxx';
+DataTower.initSDK({/* ... */})
+```
+
+### 1.2. 从三方库引入所有平台
+
+- 安装依赖
+
 ```bash
 npm i @datatower-ai/sdk-core-js
 ```
 
-- 2. 引入并使用
+- 引入并使用
 
 ```typescript
-import { Cocos /* Web, Uniapp, WechatMiniProgram, WechatMiniGame, ... */ } from '@datatower-ai/sdk-core-js';
-Cocos.initSDK({/* ... */})
+import { Web /* Cocos, Uniapp, MiniProgram, ... */ } from '@datatower-ai/sdk-core-js';
+Web.initSDK({/* ... */})
 ```
 
-### 1.2 从本地引入
+### 1.3. 从本地引入
 
-- 1. 下载对应平台的压缩包，解压到项目目录下，例如平台解压到`libs`目录下，以`cocos`为例目录结构如下：
+- 下载对应平台的压缩包，解压到项目目录下，例如平台解压到`libs`目录下，以`cocos`为例目录结构如下：
 
 ```
 assets/
@@ -31,7 +48,7 @@ assets/
     example.ts
 ```
 
-- 2. 引入并使用
+- 引入并使用
 
 ```typescript
 // example.ts
@@ -41,14 +58,17 @@ DataTower.initSDK({/* ... */})
 
 ## 2. 开发指南
 
-- 1. 安装依赖
+- 安装依赖
 
 ```bash
 # 在项目根目录下运行 `install.sh` 脚本
 sh scripts/install.sh
+
+# 若已经安装过 `pnpm`，则可以直接运行
+pnpm install
 ```
 
-- 2. 启动开发环境，编译后的代码后会自动关联到`Example`
+- 启动开发环境，编译后的代码后会自动关联到`Example`
 
 ```bash
 # 在根目录下执行命令:
@@ -56,24 +76,36 @@ pnpm install
 pnpm release:watch
 ```
 
-- 3. 打开运行`Example`目录下的项目，打包到不同平台。
+- 打开运行`Example`目录下的项目，打包到不同平台。
 
 ```bash
-# 为 cocos creator 项目安装依赖
-cd Example/cc
+# 为 xxx 项目安装依赖
+cd Example/xxx
 npm i
 ```
 
 ## 3. 编译打包
 
 ```bash
-# 在项目根目录下运行 `install.sh` 脚本
-sh scripts/install.sh
 # 编译打包，选择对应的平台，生成的文件在 `bundle` 目录下，压缩包在 `release` 目录下
 pnpm release
 ```
 
-## 4. mini app/mini game development documentation
+## 4. 编译发布
+
+- 发布单个平台
+```bash
+# 选择对应的平台，生成的可发布文件在 `publish` 目录下
+pnpm prepublish
+```
+
+- 发布所有平台
+```bash
+# 生成的文件在 `dist` 目录下
+pnpm build
+```
+
+## 5. mini app/mini game development documentation
 
 - [微信小程序](https://developers.weixin.qq.com/miniprogram/dev/api/)
 - [微信小游戏](https://developers.weixin.qq.com/minigame/dev/api/)
