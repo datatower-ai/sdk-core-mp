@@ -3,10 +3,12 @@ import { MultipleInstanceManager } from '@/MultipleInstanceManager';
 import { StaticDataTower, type DataTower } from '@/StaticDataTower';
 import { TaskQueue } from '@/TaskQueue';
 import { DEFAULT_CONFIG } from '@/constant';
+import { gen16DigitHex, parseUrl, stringifyUrl, throttle } from '@/utils';
 import type { ArrayProperties, Config, Properties } from '@/type';
-import { encodeBase64, gen16DigitHex, md5, parseUrl, stringifyUrl, throttle } from '@/utils';
-import { version } from '~/package.json';
+import { encodeBase64, md5 } from '@/tools';
 import type { Shim } from './shim/type';
+
+const version = process.env.VERSION ?? '1.0.0';
 
 /**
  * Sandbox
@@ -35,8 +37,6 @@ export class Sandbox implements DataTower {
 
       '#screen_height': height,
       '#screen_width': width,
-      // '#timezone_offset': 0 - new Date().getTimezoneOffset() / 60,
-      // '#is_first_day': Number(this.settings['#dt_id'].split('-')[0]) + 24 * 60 * 60 * 1000 >= new Date().getTime(),
       '#title': title,
       '#url': this.shim.href,
       '#viewport_height': viewport.height,

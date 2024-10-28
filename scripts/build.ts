@@ -14,18 +14,22 @@ const root = process.cwd();
 const releasePath = path.join(root, 'release');
 const publishPath = path.join(root, 'publish');
 const distPath = path.join(root, 'bundle');
-const sandbox = <const>['web', 'uniapp', 'mimi-program'];
+const sandbox = <const>['web', 'uniapp', 'mini-program'];
 
 type Mode = 'development' | 'release' | 'publish';
 type Platform = 'cocos' | (typeof sandbox)[number];
-type Config = Omit<Options, 'entry' | 'format'> & {
+type Config = Omit<Options, 'entry' | 'format' | 'plugins'> & {
   entry: { [k in Platform | 'index']?: string };
   format: Format[];
   native?: string;
   version: string;
+  dependencies: string[];
+};
+type BaseOptions = Omit<Options, 'plugins'> & {
+  plugins: (opts: { mode: Mode; platform: Platform; format: Format[] }) => Options['plugins'];
 };
 
-const BaseConfig: Options = {
+const BaseConfig: BaseOptions = {
   tsconfig: 'tsconfig.app.json',
   outExtension: ({ format }) => {
     return {
@@ -34,8 +38,9 @@ const BaseConfig: Options = {
       iife: { js: `.js`, dts: `.d.ts` },
     }[format];
   },
+  plugins: ({ mode, platform, format }) => [ConditionalAnnotationPlugin({ mode, platform, format: format.join(',') })],
 };
-const ModeConfigMap: Record<Mode, Options> = {
+const ModeConfigMap: Record<Mode, Omit<Options, 'plugins'>> = {
   development: {
     watch: true,
     dts: true,
@@ -64,13 +69,14 @@ const PlatformConfigs: Config[] = [
     format: ['esm', 'cjs'],
     native: 'src/native/cc',
     version: '1.0.0',
+    dependencies: [],
   },
   ...(sandbox.map((platform) => ({
     entry: { [platform]: 'src/sandbox/index.ts' },
     outDir: distPath,
     format: ['esm', 'cjs'],
-    plugins: [ConditionalAnnotationPlugin({ platform, format: 'esm,cjs' })],
     version: '1.0.0',
+    dependencies: ['crypto-es', platform === 'web' ? 'ua-parser-js' : ''],
   })) as Config[]),
   {
     entry: { web: 'src/sandbox/index.ts' },
@@ -78,8 +84,8 @@ const PlatformConfigs: Config[] = [
     format: ['iife'],
     globalName: 'DataTower',
     target: 'es5',
-    plugins: [ConditionalAnnotationPlugin({ platform: 'web', format: 'iife' })],
     version: '1.0.0',
+    dependencies: ['crypto-es', 'ua-parser-js'],
   },
 ];
 
@@ -128,28 +134,35 @@ async function command<P extends string, F extends string>(
   return { mode, platform, format };
 }
 
-async function build(opts: { config: Config; formats: Format[]; mode: Mode; defaultConfig: Options }) {
-  const { config, formats, mode, defaultConfig } = opts;
-  const format = intersection(config.format, formats);
-  if (!format.length) return;
-  const options = { ...defaultConfig, ...config, format };
-  await tsup.build(options);
-  if (mode === 'publish') return;
+async function build(config: Config, mode: Mode) {
+  if (!config.format.length) return;
+  await tsup.build(config);
+  if (mode === 'publish' || config.format.includes('iife')) return;
   await Promise.all(
-    Object.keys(options.entry as object).map((entry) => {
-      const filename = `${options.outDir}/${entry}`;
+    Object.keys(config.entry as object).map((entry) => {
+      const filename = `${config.outDir}/${entry}`;
       const [source, target] = [`${filename}.d.ts`, `${filename}.d.mts`];
-      if (options.watch) fs.watchFile(source, (curr) => curr && fs.rename(source, target, () => {}));
+      if (config.watch) fs.watchFile(source, (curr) => curr && fs.rename(source, target, () => {}));
       return new Promise((resolve) => fs.rename(source, target, resolve));
     }),
   );
 }
 
-async function bundle(opts: { platforms: Platform[]; formats: Format[]; mode: Mode; defaultConfig: Options }) {
+async function bundle(opts: { platforms: Platform[]; formats: Format[]; mode: Mode; defaultConfig: BaseOptions }) {
   const { platforms, formats, mode, defaultConfig } = opts;
   await Promise.all(
     platforms.map(async (platform) => {
       let configs = PlatformConfigs.filter((config) => config.entry[platform]);
+      configs = configs.map((config) => {
+        const format = intersection(config.format, formats);
+        return {
+          ...defaultConfig,
+          ...config,
+          format,
+          plugins: defaultConfig.plugins({ mode, platform, format }),
+          define: { 'process.env.VERSION': JSON.stringify(config.version) },
+        };
+      });
       if (mode === 'publish')
         configs = configs
           .filter((config) => !config.format.includes('iife'))
@@ -158,10 +171,13 @@ async function bundle(opts: { platforms: Platform[]; formats: Format[]; mode: Mo
             outDir: path.join(publishPath, platform, 'dist'),
             entry: { index: config.entry[platform] },
           }));
-      await Promise.all(configs.map(async (config) => build({ config, formats, mode, defaultConfig })));
+      await Promise.all(configs.map(async (config) => build(config, mode)));
       if (mode === 'release')
         compression(platform, configs[0].version, configs.map((config) => config.native).filter(Boolean) as string[]);
-      if (mode === 'publish') copyNPM(path.join(publishPath, platform), platform, configs[0].version);
+      if (mode === 'publish') {
+        const { version, dependencies } = configs[0];
+        copyNPM({ target: path.join(publishPath, platform), platform, version, dependencies });
+      }
     }),
   );
 }
@@ -176,13 +192,15 @@ function compression(platform: Platform, version: string, native?: string[]) {
   zip.writeZip(path.join(releasePath, `${platform}-${version}.zip`));
 }
 
-function copyNPM(target: string, platform: Platform, version: string) {
+function copyNPM(opts: { target: string; platform: Platform; version: string; dependencies: string[] }) {
+  const { target, platform, version } = opts;
   const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf-8'));
   pkg.name = `@datatower-ai/sdk-core-${platform}`;
   pkg.version = version;
   delete pkg.scripts;
   delete pkg.devDependencies;
-  if (platform !== 'web') delete pkg.dependencies['ua-parser-js'];
+  Object.keys(pkg.dependencies).forEach((dep) => !opts.dependencies.includes(dep) && delete pkg.dependencies[dep]);
+  !Object.keys(pkg.dependencies).length && delete pkg.dependencies;
   fs.writeFileSync(path.join(target, 'package.json'), JSON.stringify(pkg, null, 2));
   fs.copyFileSync(path.join(root, 'LICENSE'), path.join(target, 'LICENSE'));
 }

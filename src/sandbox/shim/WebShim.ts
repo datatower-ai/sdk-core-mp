@@ -1,4 +1,4 @@
-import { parseUserAgent } from '@/utils';
+import { parseUserAgent } from '@/tools';
 import { TaskQueue } from '@/TaskQueue';
 import type { RequestOptions, Shim, SystemInfo } from './type';
 

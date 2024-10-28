@@ -10,7 +10,8 @@ import type {
   ReportSuccessOptions,
 } from '@/type';
 import { fmt, globalNativeCallback } from '@/utils';
-import { version } from '~/package.json';
+
+const version = process.env.VERSION ?? '1.0.0';
 
 type JavaType = keyof (typeof CocosAndroid)['typeMap'];
 type Parameter = ['int', number] | ['float', number] | ['boolean', boolean] | ['String', string];
