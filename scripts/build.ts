@@ -75,7 +75,7 @@ const PlatformConfigs: Config[] = [
     entry: { [platform]: 'src/sandbox/index.ts' },
     outDir: distPath,
     format: ['esm', 'cjs'],
-    version: '1.0.0',
+    version: '1.0.1',
     dependencies: ['crypto-es', platform === 'web' ? 'ua-parser-js' : ''],
   })) as Config[]),
   {
@@ -84,7 +84,7 @@ const PlatformConfigs: Config[] = [
     format: ['iife'],
     globalName: 'DataTower',
     target: 'es5',
-    version: '1.0.0',
+    version: '1.0.1',
     dependencies: ['crypto-es', 'ua-parser-js'],
   },
 ];

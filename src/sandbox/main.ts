@@ -70,7 +70,7 @@ export class Sandbox implements DataTower {
     const dataStr = JSON.stringify(tasks);
     const base64 = encodeBase64(dataStr);
     const check = md5(base64 + '@datatower');
-    const params = <const>`data=${base64}&check=${check}`;
+    const params = <const>`data=${encodeURIComponent(base64)}&check=${check}`;
     if (this.config.isDebug) return Logger.debug('<request>', params);
     try {
       this.shim.request({ url: this.url, params });
