@@ -87,9 +87,10 @@ export class StaticDataTower {
 export class StaticAnalysisDataTower extends StaticDataTower {
   protected static readonly instances: MultipleInstanceManager<AnalysisDataTower>;
 
-  static initSDK(config: NativeConfig): Promise<void> {
-    return this.initSDK(config);
-  }
+  // static initSDK(config: NativeConfig): Promise<void> {
+  //   console.log('===other init');
+  //   return this.instances.get(config);
+  // }
 
   // id
   static setFirebaseAppInstanceId(id: string, appId?: string): void {

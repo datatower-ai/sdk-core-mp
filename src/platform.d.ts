@@ -10,6 +10,8 @@ interface CC {
     isNativeAndroid: boolean;
     platform: number;
     Platform: Record<CCPlatform, number>;
+    OS_ANDROIRD: 'Android';
+    OS_IOS: 'iOS';
   };
 }
 

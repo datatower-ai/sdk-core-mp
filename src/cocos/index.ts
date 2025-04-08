@@ -16,23 +16,30 @@ const CocosWeb = new Sandbox(new WebShim());
  */
 class Cocos extends StaticAnalysisDataTower {
   protected static instances = new MultipleInstanceManager<AnalysisDataTower>(() => {
-    switch (cc.sys.platform) {
-      case cc.sys.Platform.ANDROID:
-        return new CocosAndroid();
-      case cc.sys.Platform.IOS:
-        return new CocosIOS();
-      default:
-        // TODO: Cocos 目前仅支持 native(android/ios)，web 仅供调试使用
-        var target = {};
-        /* #if mode === 'development' */
-        target = CocosWeb;
-        /* #endif */
-        return new Proxy(target, {
-          get(target, key: keyof AnalysisDataTower) {
-            return Reflect.get(target, key) ?? (() => Logger.warn(`method '${key}' not implemented for web platform`));
-          },
-        }) as unknown as AnalysisDataTower;
+    if (cc.sys.os === cc.sys.OS_ANDROIRD) {
+      return new CocosAndroid();
     }
+    if (cc.sys.os === cc.sys.OS_IOS) {
+      return new CocosIOS();
+    }
+
+    // TODO: Cocos 目前仅支持 native(android/ios)，web 仅供调试使用
+    var target = {};
+    /* #if mode === 'development' */
+    target = CocosWeb;
+    /* #endif */
+    return new Proxy(target, {
+      get(target, key: keyof AnalysisDataTower) {
+        return Reflect.get(target, key) ?? (() => Logger.warn(`method '${key}' not implemented for web platform`));
+      },
+    }) as unknown as AnalysisDataTower;
+
+    // switch (cc.sys.platform) {
+    //   case cc.sys.Platform.ANDROID:
+    //     return new CocosAndroid();
+    //   case cc.sys.Platform.IOS:
+    //     return new CocosIOS();
+    //   default:
   });
 }
 
