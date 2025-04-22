@@ -16,7 +16,8 @@ const CocosWeb = new Sandbox(new WebShim());
  */
 class Cocos extends StaticAnalysisDataTower {
   protected static instances = new MultipleInstanceManager<AnalysisDataTower>(() => {
-    if (cc.sys.os === cc.sys.OS_ANDROIRD) {
+    Logger.info(`DataTower,${cc.sys.os},${cc.sys.OS_ANDROID},${cc.sys.OS_IOS}`);
+    if (cc.sys.os === cc.sys.OS_ANDROID) {
       return new CocosAndroid();
     }
     if (cc.sys.os === cc.sys.OS_IOS) {
